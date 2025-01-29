@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_ES_APP', 1, "CFE_ES App Info Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', 1, "CFE_ES App Info Tlm") %>
    APPEND_ITEM APP_INFO_RESOURCE_ID_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
    APPEND_ITEM APP_INFO_TYPE 32 UINT "The type of App: CORE or EXTERNAL"
    APPEND_ITEM APP_INFO_NAME 160 STRING "The Registered Name of the Application"

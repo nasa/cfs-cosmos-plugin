@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_SB_HK', 1, "CFE_SB Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_HK', 1, "CFE_SB Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Count of invalid commands received"
    APPEND_ITEM NO_SUBSCRIBERS_COUNTER 8 UINT "Count pkts sent with no subscribers"
@@ -10,7 +10,7 @@
    APPEND_ITEM PIPE_OPTS_ERROR_COUNTER 8 UINT "Count of errors in set/get pipe options API"
    APPEND_ITEM DUPLICATE_SUBSCRIPTIONS_COUNTER 8 UINT "Count of duplicate subscriptions"
    APPEND_ITEM GET_PIPE_ID_BY_NAME_ERROR_COUNTER 8 UINT "Count of errors in get pipe id by name API"
-<% if $dtnfsw_globals_eds_enabled == false %>
+<% if $cfs_globals_eds_enabled == false %>
    APPEND_ITEM SPARE_TO_ALIGN 8 UINT "Spare padding for alignment"
 <% end %>
    APPEND_ITEM PIPE_OVERFLOW_ERROR_COUNTER 16 UINT "Count of pipe overflow errors"

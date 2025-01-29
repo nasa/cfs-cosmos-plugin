@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_SB_ALLSUBS', 1, "CFE_SB global subscription telemetry") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_ALLSUBS', 1, "CFE_SB global subscription telemetry") %>
    APPEND_ITEM PKT_SEGMENT 32 UINT "Pkt number(starts at 1) in the series"
    APPEND_ITEM TOTAL_SEGMENTS 32 UINT "Total number of pkts needed to complete the request"
    APPEND_ITEM ENTRIES 32 UINT "Number of entries in the pkt"

@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_TBL_HK', 1, "CFE_TBL Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TBL_HK', 1, "CFE_TBL Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Unsigned 8 bit integer"
    APPEND_ITEM NUM_TABLES 16 UINT "Number of Tables Registered"

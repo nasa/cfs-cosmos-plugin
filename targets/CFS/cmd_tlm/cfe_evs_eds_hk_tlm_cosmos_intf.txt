@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_EVS_HK', 1, "CFE_EVS Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_EVS_HK', 1, "CFE_EVS Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "EVS Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "EVS Command Error Counter"
    APPEND_ITEM MESSAGE_FORMAT_MODE 8 UINT "Event message format mode (short/long)"

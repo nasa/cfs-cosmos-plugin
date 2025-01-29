@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_TIME_HK', 1, "CFE_TIME Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TIME_HK', 1, "CFE_TIME Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Time Command Execution Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Unsigned 8 bit integer"
    APPEND_ITEM CLOCK_STATE_FLAGS 16 UINT "State Flags"

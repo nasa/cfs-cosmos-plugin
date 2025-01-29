@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_TBL_REG', 1, "CFE_TBL Reg Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TBL_REG', 1, "CFE_TBL Reg Tlm") %>
    APPEND_ITEM SIZE 64 UINT "Size, in bytes, of Table"
    APPEND_ITEM CRC 32 UINT "Most recently calculated CRC of Table"
    APPEND_ITEM ACTIVE_BUFFER_ADDR 64 UINT "Address of Active Buffer"

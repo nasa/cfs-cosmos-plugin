@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_TIME_DIAG', 1, "CFE_TIME Diagnostics Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TIME_DIAG', 1, "CFE_TIME Diagnostics Tlm") %>
    APPEND_ITEM AT_TONE_MET_SECONDS 32 UINT "Unsigned 32 bit integer"
    APPEND_ITEM AT_TONE_MET_SUBSECONDS 32 UINT "Unsigned 32 bit integer"
    APPEND_ITEM AT_TONE_STCF_SECONDS 32 UINT "Unsigned 32 bit integer"

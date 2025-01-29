@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', 1, "CFE_ES Mem Stats Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', 1, "CFE_ES Mem Stats Tlm") %>
    APPEND_ITEM POOL_HANDLE_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
    APPEND_ITEM POOL_STATS_POOL_SIZE 64 UINT "Size of Memory Pool (in bytes)"
    APPEND_ITEM POOL_STATS_NUM_BLOCKS_REQUESTED 32 UINT "Number of times a memory block has been allocated"

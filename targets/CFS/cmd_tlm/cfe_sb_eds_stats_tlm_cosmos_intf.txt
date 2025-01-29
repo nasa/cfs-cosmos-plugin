@@ -1,4 +1,4 @@
-<%= dtnfsw_tlm_hdr(target_name, 'CFE_SB_STATS', 1, "CFE_SB Stats Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_STATS', 1, "CFE_SB Stats Tlm") %>
    APPEND_ITEM MSG_IDS_IN_USE 32 UINT "Current number of MsgIds with a destination"
    APPEND_ITEM PEAK_MSG_IDS_IN_USE 32 UINT "Peak number of MsgIds with a destination"
    APPEND_ITEM MAX_MSG_IDS_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_MSG_IDS"
