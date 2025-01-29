@@ -23,10 +23,10 @@ VARIABLE cfs_cpu_idx 1
 TARGET CFS <%= cfs_target_name_from_cpu_num(cfs_cpu_idx) %>
 
 # Set up the FSW cmd/tlm interface
-INTERFACE DTNFSW_<%= cfs_cpu_idx %>_INT udp_interface.rb &
+INTERFACE CFS_<%= cfs_cpu_idx %>_INT udp_interface.rb &
         <%= cfs_intf_ip %> &
         <%= cfs_get_port_num_cmd(cfs_cpu_idx) %> &
-        <%= cfs_get_port_num_tlm() %> &
+        <%= cfs_get_port_num_tlm %> &
         nil nil 128 nil nil
     MAP_TARGET <%= cfs_target_name_from_cpu_num(cfs_cpu_idx) %>
     PROTOCOL WRITE ProtocolCcsdsChecksum

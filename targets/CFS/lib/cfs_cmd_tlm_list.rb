@@ -288,7 +288,7 @@ end
 #    - base stream id (without 3-bit cpu number set)
 #    - should have the mask 0xF8FF
 # 2. cpu_num
-#    - must be between 0 and 7 (inclusively)
+#    - must be between 0 and $cfs_total_valid_cpus - 1
 #    - if a number outside this range is provided,
 #      the input stream_id is returned (unmodified)
 #
@@ -300,7 +300,7 @@ end
 def get_cfs_msg_id_from_base(stream_id_base, cpu_num)
     # The cpu num is a 3-bit field, so the max value is b'111' (7)
     cpu_num_min = 0
-    cpu_num_max = 7
+    cpu_num_max = $cfs_total_valid_cpus - 1
     # Set the CPU Number bit field
     if ((cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
         stream_id = stream_id_base
