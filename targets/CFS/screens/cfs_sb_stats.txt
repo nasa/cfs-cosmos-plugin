@@ -6,14 +6,14 @@ SCREEN AUTO AUTO 1.0
 # Created Date: 05/21/2024
 # Author: Stuart Bozievich
 #************************************************************************************
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 HORIZONTAL
 
 
 VERTICALBOX
   TITLE "<%= target_name %> cFS Sofware Bus Status Data" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>  
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>  
   #LABELVALUEDESC <%= target_name %>  CFE_SB_STATS CCSDS_STREAMID
   #LABELVALUEDESC <%= target_name %>  CFE_SB_STATS CCSDS_SEQUENCE
   #LABELVALUEDESC <%= target_name %>  CFE_SB_STATS CCSDS_LENGTH

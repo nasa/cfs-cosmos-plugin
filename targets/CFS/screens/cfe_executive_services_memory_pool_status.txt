@@ -5,13 +5,13 @@ SCREEN AUTO AUTO 1.0
 # Author: S. Bozievich
 ################################################################
 
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 
 
 VERTICAL
   TITLE "<%= target_name %> CFE Executve Services Memory Pool Status" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
   LABELVALUEDESC <%= target_name %> CFE_ES_MEMSTATS POOL_HANDLE_BASE_TYPE "Pool Handle Base Type:"
   LABELVALUEDESC <%= target_name %> CFE_ES_MEMSTATS POOL_STATS_POOL_SIZE "Pool Status Pool Size:"
   LABELVALUEDESC <%= target_name %> CFE_ES_MEMSTATS POOL_STATS_NUM_BLOCKS_REQUESTED "Pool Status Number of Blocks Requested:"

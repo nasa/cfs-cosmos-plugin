@@ -5,13 +5,13 @@ SCREEN AUTO AUTO 1.0
 # Author: S. Bozievich
 ################################################################
 
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 
 
 VERTICAL
   TITLE "<%= target_name %> CI Lab Housekeeping Data" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
   #LABELVALUE <%= target_name %>  CI_LAB_HK CCSDS_STREAMID
   #LABELVALUE <%= target_name %>  CI_LAB_HK CCSDS_SEQUENCE

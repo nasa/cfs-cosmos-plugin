@@ -4,13 +4,13 @@ SCREEN AUTO AUTO 1.0
 #############################
 
 
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 
 
 VERTICAL
   TITLE "<%= target_name %> TO Lab Housekeeping" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
   #LABELVALUE <%= target_name %>  TO_LAB_HK CCSDS_STREAMID
   #LABELVALUE <%= target_name %>  TO_LAB_HK CCSDS_SEQUENCE

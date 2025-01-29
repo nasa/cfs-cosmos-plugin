@@ -1,11 +1,11 @@
 SCREEN AUTO AUTO 1.0
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 
 
 VERTICAL
   TITLE "<%= target_name %> CFE Time Housekeeping Data" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
   LABELVALUEDESC <%= target_name %>  CFE_TIME_HK COMMAND_COUNTER "Time Command Counter:"
   LABELVALUEDESC <%= target_name %>  CFE_TIME_HK COMMAND_ERROR_COUNTER "Time Command Counter:"

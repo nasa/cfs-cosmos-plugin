@@ -5,12 +5,12 @@ SCREEN AUTO AUTO 1.0
 # Author: S. Bozievich
 ################################################################
 
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 TABBOOK
     TABITEM 0-7 PIPE DEPTH STATS
         TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "0 to 3 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_0_PIPE_ID_BASE_TYPE "0 Pipe ID Base Type:"
@@ -63,7 +63,7 @@ TABBOOK
     TABITEM 8-15 PIPE DEPTH STATS
 
         TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
         HORIZONTAL
             VERTICALBOX "8 to 11 PIPE DEPTH STATS"
@@ -117,7 +117,7 @@ TABBOOK
     TABITEM 16-23 PIPE DEPTH STATS
 
     TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "16 to 19 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_16_PIPE_ID_BASE_TYPE "16 Pipe ID Base Type:"
@@ -170,7 +170,7 @@ TABBOOK
     TABITEM 24-31 PIPE DEPTH STATS
 
     TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "24 to 27 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_24_PIPE_ID_BASE_TYPE "24 Pipe ID Base Type:"
@@ -223,7 +223,7 @@ TABBOOK
     TABITEM 32-39 PIPE DEPTH STATS
     
     TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "32 to 35 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_32_PIPE_ID_BASE_TYPE "32 Pipe ID Base Type:"
@@ -276,7 +276,7 @@ TABBOOK
     TABITEM 40-47 PIPE DEPTH STATS
     
     TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "40 to 43 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_40_PIPE_ID_BASE_TYPE "40 Pipe ID Base Type:"
@@ -329,7 +329,7 @@ TABBOOK
     TABITEM 48-55 PIPE DEPTH STATS
 
   TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "48 to 51 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_48_PIPE_ID_BASE_TYPE "0 Pipe ID Base Type:"
@@ -382,7 +382,7 @@ TABBOOK
     TABITEM 56-63 PIPE DEPTH STATS
 
     TITLE "<%= target_name %>  CFE SB PIPE DEPTH STATS" Courier 20 Normal true
-        SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+        SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
         HORIZONTAL
             VERTICALBOX "56 to 59 PIPE DEPTH STATS"
                 LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_56_PIPE_ID_BASE_TYPE "56 Pipe ID Base Type:"

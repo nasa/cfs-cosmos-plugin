@@ -1,10 +1,10 @@
 SCREEN AUTO AUTO 1.0
 
-<% require 'dtnfsw_target_num_color' %>
+<% require 'cfs_target_num_color' %>
 
 VERTICAL
   TITLE "<%= target_name %> EVS Long Message" Courier 20 Normal true
-  SETTING TEXTCOLOR <%= dtnfsw_target_num_color(target_name) %>
+  SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
   LABELVALUE <%= target_name %>  CFE_EVS_LONG_EVENT_MSG CCSDS_STREAMID
   LABELVALUE <%= target_name %>  CFE_EVS_LONG_EVENT_MSG CCSDS_SEQUENCE
