@@ -17,7 +17,7 @@ VERTICAL
   #LABELVALUEDESC <%= target_name %>  CFE_ES_APP CCSDS_STREAMID
   #LABELVALUEDESC <%= target_name %>  CFE_ES_APP CCSDS_SEQUENCE
   #LABELVALUEDESC <%= target_name %>  CFE_ES_APP CCSDS_LENGTH
-  LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_RESOURCE_ID_BASE_TYPE "Resource ID Base Type:"
+  LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_RESOURCE_ID "Resource ID Base Type:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_TYPE "Type:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_NAME "Registered Name:"
   SUBSETTING 1 WIDTH 300
@@ -36,7 +36,7 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_START_ADDRESS "Start Address:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_EXCEPTION_ACTION "Exception Action:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_PRIORITY "Priority:"
-  LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_MAIN_TASK_ID_BASE_TYPE  "Main Task ID Base Type:"
+  LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_MAIN_TASK_ID  "Main Task ID Base Type:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_EXECUTION_COUNTER "Execution Counter:"
   LABELVALUEDESC <%= target_name %>  CFE_ES_APP APP_INFO_MAIN_TASK_NAME "Main Task Name:"
   SUBSETTING 1 WIDTH 300

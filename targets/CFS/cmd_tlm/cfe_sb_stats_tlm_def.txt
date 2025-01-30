@@ -1,0 +1,23 @@
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_STATS', 1, "CFE_SB Stats Tlm") %>
+   APPEND_ITEM MSG_IDS_IN_USE 32 UINT "Current number of MsgIds with a destination"
+   APPEND_ITEM PEAK_MSG_IDS_IN_USE 32 UINT "Peak number of MsgIds with a destination"
+   APPEND_ITEM MAX_MSG_IDS_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_MSG_IDS"
+   APPEND_ITEM PIPES_IN_USE 32 UINT "Number of pipes currently in use"
+   APPEND_ITEM PEAK_PIPES_IN_USE 32 UINT "Peak number of pipes since last reboot"
+   APPEND_ITEM MAX_PIPES_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_PIPES"
+   APPEND_ITEM MEM_IN_USE 32 UINT "Memory bytes currently in use for SB msg transfers"
+   APPEND_ITEM PEAK_MEM_IN_USE 32 UINT "Peak memory bytes in use for SB msg transfers"
+   APPEND_ITEM MAX_MEM_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_BUF_MEMORY_BYTES"
+   APPEND_ITEM SUBSCRIPTIONS_IN_USE 32 UINT "Number of current subscriptions"
+   APPEND_ITEM PEAK_SUBSCRIPTIONS_IN_USE 32 UINT "Peak number of subscriptions"
+   APPEND_ITEM MAX_SUBSCRIPTIONS_ALLOWED 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM SB_BUFFERS_IN_USE 32 UINT "Number of SB message buffers currently in use"
+   APPEND_ITEM PEAK_SB_BUFFERS_IN_USE 32 UINT "Max number of SB message buffers in use"
+   APPEND_ITEM MAX_PIPE_DEPTH_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_PIPE_DEPTH"
+<% 64.times do |pipe_index| %>
+   APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_PIPE_ID_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_MAX_QUEUE_DEPTH 16 UINT "Number of messages the pipe can hold"
+   APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_CURRENT_QUEUE_DEPTH 16 UINT "Number of messages currently on the pipe"
+   APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_PEAK_QUEUE_DEPTH 16 UINT "Peak number of messages in the pipe"
+   APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_SPARE 16 UINT "Spare word to ensure alignment"
+<% end %>

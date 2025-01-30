@@ -15,14 +15,10 @@
    APPEND_ITEM SPARE_1 8 UINT "Spare Alignment Byte 1"
    APPEND_ITEM SPARE_2 8 UINT "Spare Alignment Byte 2"
    APPEND_ITEM SPARE_3 8 UINT "Spare Alignment Byte 3"
-   APPEND_ITEM MEM_POOL_HANDLE_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
-   APPEND_ITEM LAST_UPDATE_TIME_SECONDS 32 UINT "Unsigned 32 bit integer"
-   APPEND_ITEM LAST_UPDATE_TIME_SUBSECONDS 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Handle to TBL's memory pool"
+   APPEND_ITEM LAST_UPDATE_TIME_SECONDS 32 UINT "Time of last table update (seconds)"
+   APPEND_ITEM LAST_UPDATE_TIME_SUBSECONDS 32 UINT "Time of last table update (subseconds)"
    APPEND_ITEM LAST_UPDATED_TABLE 320 STRING "Name of the last table updated"
    APPEND_ITEM LAST_FILE_LOADED 512 STRING "Path and Name of last table image file loaded"
    APPEND_ITEM LAST_FILE_DUMPED 512 STRING "Path and Name of last file dumped to"
    APPEND_ITEM LAST_TABLE_LOADED 320 STRING "Name of the last table loaded"
-
-
-
-

@@ -1,11 +1,16 @@
 <%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', 1, "CFE_ES App Info Tlm") %>
-   APPEND_ITEM APP_INFO_RESOURCE_ID_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM APP_INFO_RESOURCE_ID 32 UINT "Application or Libary ID for this resource"
    APPEND_ITEM APP_INFO_TYPE 32 UINT "The type of App: CORE or EXTERNAL"
    APPEND_ITEM APP_INFO_NAME 160 STRING "The Registered Name of the Application"
    APPEND_ITEM APP_INFO_ENTRY_POINT 160 STRING "The Entry Point label for the Application"
    APPEND_ITEM APP_INFO_FILE_NAME 512 STRING "The Filename of the file containing the Application"
+<% if $cfs_globals_mem_size == 64 %>
    APPEND_ITEM APP_INFO_STACK_SIZE 64 UINT "The Stack Size of the Application"
+<% else %>
+   APPEND_ITEM APP_INFO_STACK_SIZE 32 UINT "The Stack Size of the Application"
+<% end %>
    APPEND_ITEM APP_INFO_ADDRESSES_ARE_VALID 32 UINT "Indicates that the Code, Data, and BSS addresses/sizes are valid"
+<% if $cfs_globals_mem_size == 64 %>
    APPEND_ITEM APP_INFO_CODE_ADDRESS 64 UINT "The Address of the Application Code Segment"
    APPEND_ITEM APP_INFO_CODE_SIZE 64 UINT "The Code Size of the Application"
    APPEND_ITEM APP_INFO_DATA_ADDRESS 64 UINT "The Address of the Application Data Segment"
@@ -13,13 +18,19 @@
    APPEND_ITEM APP_INFO_BSS_ADDRESS 64 UINT "The Address of the Application BSS Segment"
    APPEND_ITEM APP_INFO_BSS_SIZE 64 UINT "The BSS Size of the Application"
    APPEND_ITEM APP_INFO_START_ADDRESS 64 UINT "The Start Address of the Application"
-   APPEND_ITEM APP_INFO_EXCEPTION_ACTION 16 UINT "What should occur if Application has an exception (Restart Application OR Restart Processor)"
+<% else %>
+   APPEND_ITEM APP_INFO_CODE_ADDRESS 32 UINT "The Address of the Application Code Segment"
+   APPEND_ITEM APP_INFO_CODE_SIZE 32 UINT "The Code Size of the Application"
+   APPEND_ITEM APP_INFO_DATA_ADDRESS 32 UINT "The Address of the Application Data Segment"
+   APPEND_ITEM APP_INFO_DATA_SIZE 32 UINT "The Data Size of the Application"
+   APPEND_ITEM APP_INFO_BSS_ADDRESS 32 UINT "The Address of the Application BSS Segment"
+   APPEND_ITEM APP_INFO_BSS_SIZE 32 UINT "The BSS Size of the Application"
+   APPEND_ITEM APP_INFO_START_ADDRESS 32 UINT "The Start Address of the Application"
+<% end %>
+   APPEND_ITEM APP_INFO_EXCEPTION_ACTION 8 UINT "What should occur if Application has an exception (Restart Application OR Restart Processor)"
+   APPEND_ITEM SPARE 8 UINT "Spare for alignment"
    APPEND_ITEM APP_INFO_PRIORITY 16 UINT "The Priority of the Application"
-   APPEND_ITEM APP_INFO_MAIN_TASK_ID_BASE_TYPE 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM APP_INFO_MAIN_TASK_ID 32 UINT "The Application's Main Task ID"
    APPEND_ITEM APP_INFO_EXECUTION_COUNTER 32 UINT "The Application's Main Task Execution Counter"
    APPEND_ITEM APP_INFO_MAIN_TASK_NAME 160 STRING "The Application's Main Task Name"
    APPEND_ITEM APP_INFO_NUM_OF_CHILD_TASKS 32 UINT "Number of Child tasks for an App"
-
-
-
-

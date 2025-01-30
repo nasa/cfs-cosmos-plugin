@@ -14,7 +14,7 @@
 <% else %>
    APPEND_PARAMETER STACK_SIZE 32 UINT MIN_UINT32 MAX_UINT32 0 "Desired stack size for the new application"
 <% end %>
-   APPEND_PARAMETER EXCEPTION_ACTION 16 UINT 0 1 0 "Identifies action to take if exception occurs"
+   APPEND_PARAMETER EXCEPTION_ACTION 8 UINT 0 1 0 "Identifies action to take if exception occurs"
    APPEND_PARAMETER PRIORITY 16 UINT 0 65535 0 "The new Applications runtime priority."
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_STOP_APP',  1,  5, "Telecommand Message") %>
@@ -80,7 +80,3 @@
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_QUERY_ALL_TASKS',  1,  24, "Telecommand Message") %>
    APPEND_PARAMETER FILE_NAME 512 STRING "" "ASCII text string of full path and filename of file"
-
-
-
-
