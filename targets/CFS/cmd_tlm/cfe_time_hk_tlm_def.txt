@@ -9,12 +9,15 @@
       STATE FLYWHEEL 1
    APPEND_ITEM LEAP_SECONDS 16 INT "Signed 16 bit integer"
    APPEND_ITEM SECONDS_MET 32 UINT "Current MET (seconds)"
-   APPEND_ITEM SUBSECS_MET 32 UINT "Current MET (sub-seconds)"
+   APPEND_ITEM SUBSECS_MET 32 UINT "Current MET (subseconds)"
    APPEND_ITEM SECONDS_STCF 32 UINT "Current STCF (seconds)"
-   APPEND_ITEM SUBSECS_STCF 32 UINT "Unsigned 32 bit integer"
-   APPEND_ITEM ADJUSTMENT_FACTOR_SECONDS 32 UINT "Unsigned 32 bit integer"
-   APPEND_ITEM ADJUSTMENT_FACTOR_SUBSECONDS 32 UINT "Unsigned 32 bit integer"
-
-
-
+   APPEND_ITEM SUBSECS_STCF 32 UINT "Current STCF (subseconds)"
+<% if $cfs_time_server_config == false %>
+   APPEND_ITEM ADJUSTMENT_FACTOR_SECONDS 32 UINT "Current 1Hz STCF adjustment (seconds)"
+   APPEND_ITEM ADJUSTMENT_FACTOR_SUBSECONDS 32 UINT "Current 1Hz STCF adjustment (subseconds)"
+<% end %>
+<% if $cfs_time_client_config == false %>
+   APPEND_ITEM SECONDS_DELAY 32 UINT "Current 1Hz STCF delay (seconds)"
+   APPEND_ITEM SUBSECONDS_DELAY 32 UINT "Current 1Hz STCF delay (subseconds)"
+<% end %>
 

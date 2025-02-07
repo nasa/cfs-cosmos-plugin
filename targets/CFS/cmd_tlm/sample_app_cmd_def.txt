@@ -1,0 +1,5 @@
+<%= cfs_cmd_hdr(target_name, 'SAMPLE_APP_CMD_NOOP', 1, 0, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'SAMPLE_APP_CMD_RESET_COUNTERS', 1, 1, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'SAMPLE_APP_CMD_PROCESS', 1, 2, "Telecommand Message") %>

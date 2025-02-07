@@ -25,16 +25,16 @@
    APPEND_ITEM CLOCK_SET_STATE 16 UINT "Time has been set"
       STATE NOT_SET 0
       STATE WAS_SET 1   
-   APPEND_ITEM CLOCK_FLY_STATE 16 UINT "Current fly-wheel state"
+   APPEND_ITEM CLOCK_FLY_STATE 16 INT "Current fly-wheel state"
       STATE NO_FLY 0
       STATE IS_FLY 1   
-   APPEND_ITEM CLOCK_SOURCE 16 UINT "Internal vs external, etc."
+   APPEND_ITEM CLOCK_SOURCE 16 INT "Internal vs external, etc."
       STATE INTERNAL 1
       STATE EXTERNAL 2
-   APPEND_ITEM CLOCK_SIGNAL 16 UINT "Primary vs redundant, etc."
+   APPEND_ITEM CLOCK_SIGNAL 16 INT "Primary vs redundant, etc."
       STATE PRIMARY   1
       STATE REDUNDANT 2  
-   APPEND_ITEM SERVER_FLY_STATE 16 UINT "Used by clients only"
+   APPEND_ITEM SERVER_FLY_STATE 16 INT "Used by clients only"
       STATE NO_FLY 0
       STATE IS_FLY 1   
    APPEND_ITEM FORCED_2_FLY 16 INT "Signed 16 bit integer"
@@ -42,10 +42,10 @@
       STATE TRUE     1
    APPEND_ITEM CLOCK_STATE_FLAGS 16 UINT "Unsigned 16 bit integer"
       FORMAT_STRING "0x%04X"
-   APPEND_ITEM ONE_TIME_DIRECTION 16 UINT "One time STCF adjustment direction (Add = 1, Sub = 2)"
+   APPEND_ITEM ONE_TIME_DIRECTION 16 INT "One time STCF adjustment direction (Add = 1, Sub = 2)"
       STATE ADD      1
       STATE SUBTRACT 2   
-   APPEND_ITEM ONE_HZ_DIRECTION 16 UINT "1Hz STCF adjustment direction"
+   APPEND_ITEM ONE_HZ_DIRECTION 16 INT "1Hz STCF adjustment direction"
       STATE ADD      1
       STATE SUBTRACT 2   
    APPEND_ITEM DELAY_DIRECTION 16 INT "Signed 16 bit integer"
@@ -77,7 +77,3 @@
    APPEND_ITEM TONE_OVER_LIMIT 32 UINT "Max between tone signal interrupts"
    APPEND_ITEM TONE_UNDER_LIMIT 32 UINT "Unsigned 32 bit integer"
    APPEND_ITEM DATA_STORE_STATUS 32 UINT "Unsigned 32 bit integer"
-
-
-
-

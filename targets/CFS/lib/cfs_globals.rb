@@ -101,3 +101,16 @@ def cfs_globals_set_endianness(endianness_input_string)
     $cfs_globals_endianness = "LITTLE_ENDIAN"
   end
 end
+
+
+# -------------------------------------------------------------------------------------------------
+# cFE Time Server Configuration
+#   Note: This value should correspond with CFE_PLATFORM_TIME_CFG_SERVER
+# -------------------------------------------------------------------------------------------------
+$cfs_time_server_config = true
+
+# -------------------------------------------------------------------------------------------------
+# cFE Time Client Configuration
+#   Note: This value should correspond with CFE_PLATFORM_TIME_CFG_CLIENT
+# -------------------------------------------------------------------------------------------------
+$cfs_time_client_config = false

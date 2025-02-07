@@ -142,6 +142,14 @@ $CFS_CMD_TLM_LIST = {
             "TO_LAB_CMD_ENABLE_OUTPUT",
         ]
     ),
+    "SAMPLE_APP_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1882,
+        packet_names: [
+            "SAMPLE_APP_CMD_NOOP",
+            "SAMPLE_APP_CMD_RESET_COUNTERS",
+            "SAMPLE_APP_CMD_PROCESS",
+        ]
+    ),
     "CI_LAB_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1884,
         packet_names: [
@@ -163,12 +171,6 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x0801,
         packet_names: [
             "CFE_EVS_HK",
-        ]
-    ),
-    "CFE_TESTCASE_HK" => FswMsgInfo.new(
-        base_stream_id: 0x0802,
-        packet_names: [
-            "CFE_TESTCASE_HK",
         ]
     ),
     "CFE_SB_HK" => FswMsgInfo.new(
@@ -247,6 +249,12 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x0880,
         packet_names: [
             "TO_LAB_HK",
+        ]
+    ),
+    "SAMPLE_APP_HK" => FswMsgInfo.new(
+        base_stream_id: 0x0883,
+        packet_names: [
+            "SAMPLE_APP_HK",
         ]
     ),
     "CI_LAB_HK" => FswMsgInfo.new(
