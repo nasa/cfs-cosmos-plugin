@@ -14,7 +14,7 @@
    APPEND_ITEM SPARE_2 8 UINT "Spare Alignment Byte 2"
    APPEND_ITEM SPARE_3 8 UINT "Spare Alignment Byte 3"
 <% 16.times do |app_data_index| %>
-   APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_ID 32 UINT " Numerical application identifier"
+   APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_ID 32 UINT "Numerical application identifier"
    APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_MESSAGE_SENT_COUNTER 16 UINT "Application message sent counter"
    APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_ENABLE_STATUS 8 UINT "Application event service enable status"
    APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_MESSAGE_SQUELCHED_COUNTER 8 UINT "Application event squelch count"

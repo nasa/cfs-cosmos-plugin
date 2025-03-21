@@ -1,17 +1,8 @@
 SCREEN AUTO AUTO 1.0
-################################################################
-# Screen: Software Bus House Keeping Data 
-# Released: 07/15/2024
-# Author: S. Bozievich
-################################################################
-
-
 <% require 'cfs_target_num_color' %>
 
-
-
 VERTICAL
-  TITLE "<%= target_name %> CFE Softare Bus HouseKeeping" Courier 20 Normal true
+  TITLE "<%= target_name %> cFE SB Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
   LABELVALUEDESC <%= target_name %> CFE_SB_HK COMMAND_COUNTER "Command Counter:"
@@ -27,14 +18,9 @@ VERTICAL
   LABELVALUEDESC <%= target_name %> CFE_SB_HK GET_PIPE_ID_BY_NAME_ERROR_COUNTER "Get Pipe ID by Name Error Counter:"
   LABELVALUEDESC <%= target_name %> CFE_SB_HK PIPE_OVERFLOW_ERROR_COUNTER "Pipe Overflow Error Counter:"
   LABELVALUEDESC <%= target_name %> CFE_SB_HK MSG_LIMIT_ERROR_COUNTER "Message Limit Error Counter:"
-  LABELVALUEDESC <%= target_name %> CFE_SB_HK MEM_POOL_HANDLE_BASE_TYPE "Memory Pool Handle Base Type:"
+  LABELVALUEDESC <%= target_name %> CFE_SB_HK MEM_POOL_HANDLE "Memory Pool Handle:"
   LABELVALUEDESC <%= target_name %> CFE_SB_HK MEM_IN_USE "Memory in Use:"
   LABELVALUEDESC <%= target_name %> CFE_SB_HK UNMARKED_MEM "Unmarked Memory:"
-  #LABELVALUEDESC <%= target_name %> CFE_SB_HK PACKET_TIMESECONDS
-  #LABELVALUEDESC <%= target_name %> CFE_SB_HK PACKET_TIMEFORMATTED
-  #LABELVALUEDESC <%= target_name %> CFE_SB_HK RECEIVED_TIMESECONDS
-  #LABELVALUEDESC <%= target_name %> CFE_SB_HK RECEIVED_TIMEFORMATTED
-  #LABELVALUEDESC <%= target_name %> CFE_SB_HK RECEIVED_COUNT
 END
 
 HORIZONTAL
@@ -43,7 +29,7 @@ HORIZONTAL
     SETTING TEXTALIGN RIGHT
     LABEL "Packet Time Received:"
     SETTING TEXTALIGN RIGHT
-    LABEL "CFS TBL App Pkts Received:"
+    LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
   VERTICALBOX
