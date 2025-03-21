@@ -1,8 +1,8 @@
 <%= cfs_tlm_hdr(target_name, 'CFE_TBL_HK', 1, "CFE_TBL Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
-   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Unsigned 8 bit integer"
+   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command error counter"
    APPEND_ITEM NUM_TABLES 16 UINT "Number of Tables Registered"
-   APPEND_ITEM NUM_LOAD_PENDING 16 UINT "Unsigned 16 bit integer"
+   APPEND_ITEM NUM_LOAD_PENDING 16 UINT "Number of Pending Loads"
    APPEND_ITEM VALIDATION_COUNTER 16 UINT "Number of completed table validations"
    APPEND_ITEM LAST_VAL_CRC 32 UINT "Data Integrity Value computed for last table validated"
    APPEND_ITEM LAST_VAL_STATUS 32 INT "Returned status from validation function for last table validated"
