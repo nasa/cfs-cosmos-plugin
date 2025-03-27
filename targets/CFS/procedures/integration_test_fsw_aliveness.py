@@ -17,13 +17,15 @@ class integration_test_fsw_aliveness(Group):
         """
         # Create a list of app noops to test
         fsw_apps_to_test = []
-        fsw_apps_to_test.append(["CFE_ES_CMD_NOOP",   "CFE_ES_CMD_RESET_COUNTERS",     "CFE_ES_HK",                   "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["CFE_EVS_CMD_NOOP",  "CFE_EVS_CMD_RESET_COUNTERS",    "CFE_EVS_HK",                  "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["CFE_SB_CMD_NOOP",   "CFE_SB_CMD_RESET_COUNTERS",     "CFE_SB_HK",                   "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["CFE_TBL_CMD_NOOP",  "CFE_TBL_CMD_RESET_COUNTERS",    "CFE_TBL_HK",                  "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["CFE_TIME_CMD_NOOP", "CFE_TIME_CMD_RESET_COUNTERS",   "CFE_TIME_HK",                 "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["CI_LAB_CMD_NOOP",   "CI_LAB_CMD_RESET_COUNTERS",     "CI_LAB_HK",                   "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["TO_LAB_CMD_NOOP",   "TO_LAB_CMD_RESET_COUNTERS",     "TO_LAB_HK",                   "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CFE_ES_CMD_NOOP",     "CFE_ES_CMD_RESET_COUNTERS",     "CFE_ES_HK",                   "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CFE_EVS_CMD_NOOP",    "CFE_EVS_CMD_RESET_COUNTERS",    "CFE_EVS_HK",                  "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CFE_SB_CMD_NOOP",     "CFE_SB_CMD_RESET_COUNTERS",     "CFE_SB_HK",                   "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CFE_TBL_CMD_NOOP",    "CFE_TBL_CMD_RESET_COUNTERS",    "CFE_TBL_HK",                  "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CFE_TIME_CMD_NOOP",   "CFE_TIME_CMD_RESET_COUNTERS",   "CFE_TIME_HK",                 "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["CI_LAB_CMD_NOOP",     "CI_LAB_CMD_RESET_COUNTERS",     "CI_LAB_HK",                   "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["TO_LAB_CMD_NOOP",     "TO_LAB_CMD_RESET_COUNTERS",     "TO_LAB_HK",                   "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["SAMPLE_APP_CMD_NOOP", "SAMPLE_APP_CMD_RESET_COUNTERS", "SAMPLE_APP_HK",               "COMMAND_COUNTER" ])
+
         # For each app in the list, verify its alive by sending a noop, then reset the hk counters
         for noop_cmd_name, reset_counters_cmd_name, hk_packet_name, hk_cmd_count_name in fsw_apps_to_test:
             # Group.print(f"Testing <%= target_name %> with: {noop_cmd_name}, {reset_counters_cmd_name}, {hk_packet_name}, {hk_cmd_count_name}.")
