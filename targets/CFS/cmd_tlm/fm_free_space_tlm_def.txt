@@ -1,0 +1,9 @@
+<%= cfs_tlm_hdr(target_name, 'FM_FREE_SPACE', 1, "FM Freespace/Monitor Tlm") %>
+<% 8.times do |free_space_entry| %>
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_REPORT_TYPE 8 UINT "Report Type"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_1 8  UINT "Spare"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_2 16 UINT "Spare"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_3 32 UINT "Spare"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_BLOCKS  64 UINT "Block count from last check/poll"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_BYTES   64 "Byte count from last check/poll"
+<% end %>

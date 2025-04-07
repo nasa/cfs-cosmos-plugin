@@ -157,7 +157,28 @@ $CFS_CMD_TLM_LIST = {
             "CI_LAB_CMD_RESET_COUNTERS",
         ]
     ),
-
+    "FM_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x188C,
+        packet_names: [
+            "FM_CMD_NOOP",
+            "FM_CMD_RESET_COUNTERS",
+            "FM_CMD_COPY_FILE",
+            "FM_CMD_MOVE_FILE",
+            "FM_CMD_RENAME_FILE",
+            "FM_CMD_DELETE_FILE",
+            "FM_CMD_DELETE_ALL_FILES",
+            "FM_CMD_DECOMPRESS_FILE",
+            "FM_CMD_CONCAT_FILES",
+            "FM_CMD_GET_FILE_INFO",
+            "FM_CMD_GET_OPEN_FILES",
+            "FM_CMD_CREATE_DIRECTORY",
+            "FM_CMD_DELETE_DIRECTORY",
+            "FM_CMD_GET_DIR_LIST_FILE",
+            "FM_CMD_MONITOR_FILESYSTEM_SPACE",
+            "FM_CMD_SET_TABLE_STATE",
+            "FM_CMD_SET_PERMISSIONS",
+        ]
+    ),
     # -------------------------------------------------------------------------
     # Telemetry
     # -------------------------------------------------------------------------
@@ -261,6 +282,36 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x0884,
         packet_names: [
             "CI_LAB_HK",
+        ]
+    ),
+    "FM_HK" => FswMsgInfo.new(
+        base_stream_id: 0x088A,
+        packet_names: [
+            "FM_HK",
+        ]
+    ),
+    "FM_FILE_INFO" => FswMsgInfo.new(
+        base_stream_id: 0x088B,
+        packet_names: [
+            "FM_FILE_INFO",
+        ]
+    ),
+    "FM_DIR_LIST" => FswMsgInfo.new(
+        base_stream_id: 0x088C,
+        packet_names: [
+            "FM_DIR_LIST",
+        ]
+    ),
+    "FM_OPEN_FILES" => FswMsgInfo.new(
+        base_stream_id: 0x088D,
+        packet_names: [
+            "FM_OPEN_FILES",
+        ]
+    ),
+    "FM_FREE_SPACE" => FswMsgInfo.new(
+        base_stream_id: 0x088E,
+        packet_names: [
+            "FM_FREE_SPACE",
         ]
     ),
 }
