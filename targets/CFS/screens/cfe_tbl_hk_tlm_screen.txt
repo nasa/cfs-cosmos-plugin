@@ -12,7 +12,7 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  CFE_TBL_HK VALIDATION_COUNTER "Table Validation Counter:"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_HK LAST_VAL_CRC "Last Validation CRC:"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_HK LAST_VAL_STATUS "Last Validaton Status:"
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_HK ACTIVE_BUFFER "Activite Buffer:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_HK ACTIVE_BUFFER "Active Buffer:"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_HK LAST_VAL_TABLE_NAME "Last Validated Table:"
   SUBSETTING 1 WIDTH 300
   LABELVALUEDESC <%= target_name %>  CFE_TBL_HK SUCCESS_VAL_COUNTER "Succesful Validation Counter:"

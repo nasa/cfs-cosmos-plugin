@@ -174,6 +174,7 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_CREATE_DIRECTORY",
             "FM_CMD_DELETE_DIRECTORY",
             "FM_CMD_GET_DIR_LIST_FILE",
+            "FM_CMD_GET_DIR_LIST_PKT",
             "FM_CMD_MONITOR_FILESYSTEM_SPACE",
             "FM_CMD_SET_TABLE_STATE",
             "FM_CMD_SET_PERMISSIONS",
