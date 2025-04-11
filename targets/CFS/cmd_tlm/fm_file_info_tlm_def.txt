@@ -1,9 +1,9 @@
 <%= cfs_tlm_hdr(target_name, 'FM_FILE_INFO', 1, "FM File Info Tlm") %>
    APPEND_ITEM FILE_STATUS 8 UINT "Open/close status of file"
-      STATE NOT_USED  1
-      STATE OPEN      2
-      STATE CLOSED    3
-      STATE DIRECTORY 4
+      STATE DONT_EXIST  1
+      STATE OPEN_FILE   2
+      STATE CLOSED_FILE 3
+      STATE DIRECTORY   4
    APPEND_ITEM CRC_COMPUTED 8 UINT "Flag indicating whether CRC was computed or not"
       STATE NO   1
       STATE YES  2
