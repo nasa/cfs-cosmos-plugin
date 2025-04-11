@@ -38,7 +38,8 @@ module OpenC3
 
           case eventType
           when "DEBUG", 1
-            Logger.debug "#{eventFormat}"
+            # Mapping to info events because otherwise the debug events don't show up in the CmdTlmServer
+            Logger.info "#{eventFormat}"
           when "INFO", 2
             Logger.info "#{eventFormat}"
           when "ERROR", 3
