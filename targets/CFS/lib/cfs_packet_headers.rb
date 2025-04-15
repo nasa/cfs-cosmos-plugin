@@ -34,3 +34,27 @@ def cfs_tlm_hdr(target_name, tlm_name, cpu_num, pkt_desc)
     tlmPacket << "       READ_CONVERSION unix_time_conversion_epoch_offset.rb SECONDS SUBSECS \n"
     return tlmPacket
 end
+
+# Output a cFS Table Header
+def cfs_tbl_hdr(cfs_tbl_name, tbl_description, cfs_app_name)
+    tblPacket = String.new
+    tblPacket << "TABLE #{cfs_tbl_name} #{$cfs_globals_endianness} KEY_VALUE \" #{tbl_description} \" \n"
+    tblPacket << "    APPEND_PARAMETER \"Content_Type\" 32 UINT 0 0xFFFFFFFF 0x63464531 \"Content Type\" BIG_ENDIAN \n"
+    tblPacket << "      FORMAT_STRING \"0x%08X\" \n"
+    tblPacket << "    APPEND_PARAMETER \"Sub_Type\" 32 UINT 0 0xFFFFFFFF 0x00000008 \"Sub-Type\" BIG_ENDIAN \n"
+    tblPacket << "      FORMAT_STRING \"0x%08X\" \n"
+    tblPacket << "    APPEND_PARAMETER \"Length\" 32 UINT 0 0xFFFFFFFF 0xdeadbeef \"Length\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"Spacecraft_ID\" 32 UINT 0 0xFFFFFFFF 0x00000042 \"Spacecraft ID\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"Processor_ID\" 32 UINT 0 0xFFFFFFFF 0 \"Processor ID\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"Process_ID\" 32 UINT 0 0xFFFFFFFF 0 \"Application ID\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"CreateTime_Seconds\" 32 UINT 0 0xFFFFFFFF 0 \"Create Time: Seconds\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"CreateTime_Subseconds\" 32 UINT 0 0xFFFFFFFF 0 \"Create Time: SubSeconds\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"Description\" 256 STRING \"#{tbl_description}\" \n"
+    tblPacket << "    APPEND_PARAMETER \"Reserved\" 32 UINT 0 0xFFFFFFFF 0 \"Reserved\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"byteOffset\" 32 UINT 0 0xFFFFFFFF 0 \"Offset\" BIG_ENDIAN \n"
+    tblPacket << "      FORMAT_STRING \"0x%08X\" \n"
+    tblPacket << "    APPEND_PARAMETER \"numBytes\" 32 UINT 0 0xFFFFFFFF 0xcafef00d \"Number of Bytes\" BIG_ENDIAN \n"
+    tblPacket << "    APPEND_PARAMETER \"Table_Name\" 320 STRING \"#{cfs_app_name}.#{cfs_tbl_name}\" \n"
+    tblPacket << "\n"
+    return tblPacket
+end
