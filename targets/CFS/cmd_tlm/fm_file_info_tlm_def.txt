@@ -5,8 +5,8 @@
       STATE CLOSED_FILE 3
       STATE DIRECTORY   4
    APPEND_ITEM CRC_COMPUTED 8 UINT "Flag indicating whether CRC was computed or not"
-      STATE NO   1
-      STATE YES  2
+      STATE FALSE 0
+      STATE TRUE  1
    APPEND_ITEM SPARE 16 UINT "Structure padding"
    APPEND_ITEM CRC 32 UINT "CRC value if computed"
       FORMAT_STRING "0x%04X"
