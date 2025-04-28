@@ -1,0 +1,10 @@
+<%= cfs_tlm_hdr(target_name, 'MM_HK', 1, "MM Hk Tlm") %>
+     APPEND_ITEM       Cmdcounter        8 UINT  "MM Application Command Counter"
+     APPEND_ITEM       Errcounter        8 UINT  "MM Application Command Error Counter"
+     APPEND_ITEM       Lastaction        8 UINT  "Last command action executed"
+     APPEND_ITEM       Spare             8 UINT  "Spare byte"
+     APPEND_ITEM       Memtype           32 UINT  "Memory type for last command"
+     APPEND_ITEM       Address           32 UINT  "Fully resolved address used for last command"
+     APPEND_ITEM       Datavalue         32 UINT  "Last command data (fill pattern or peek/poke value)"
+     APPEND_ITEM       Bytesprocessed    32 UINT  "Bytes processed for last command"
+     APPEND_ITEM       Filename          512 STRING "Name of the data file used for last command, where applicable"

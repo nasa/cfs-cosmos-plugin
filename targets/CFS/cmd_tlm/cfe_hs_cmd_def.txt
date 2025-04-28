@@ -1,0 +1,35 @@
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_NOOP', 1, 0, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_RESET_COUNTERS', 1, 1, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_ENA_APP_MON', 1, 2, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_DIS_APP_MON', 1, 3, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_ENA_EVENT_MON', 1, 4, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_DIS_EVENT_MON', 1, 5, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_ENA_ALIVENESS', 1, 6, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_DIS_ALIVENESS', 1, 7, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_CLR_CPU_RESET_CNT', 1, 8, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_SET_MAX_CPU_RESETS', 1, 9, "Telecommand Message") %>
+  APPEND_PARAMETER MAX_RESETS 16 UINT MIN_UINT16 MAX_UINT16 0 " "
+  APPEND_PARAMETER PADDING    16 UINT MIN_UINT16 MAX_UINT16 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_ENA_CPU_HOG', 1, 10, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_DIS_CPU_HOG', 1, 11, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_REPORT_DIAG', 1, 12, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_SET_UTIL_PARAMS', 1, 13, "Telecommand Message") %>
+  APPEND_PARAMETER MULT1 32 INT MIN_INT32 MAX_INT32 1     "CPU Utilization Conversion Factor Multiplication 1"
+  APPEND_PARAMETER DIV   32 INT MIN_INT32 MAX_INT32 10000 "CPU Utilization Conversion Factor Division"
+  APPEND_PARAMETER MULT2 32 INT MIN_INT32 MAX_INT32 1     "CPU Utilization Conversion Factor Multiplication 2"
+
+<%= cfs_cmd_hdr(target_name, 'HS_CMD_SET_UTIL_DIAG', 1, 14, "Telecommand Message") %>
+  APPEND_PARAMETER MASK 32 UINT MIN_UINT32 MAX_UINT32 0xFFFFFFFF "CPU Utilization Diagnostics Mask"
