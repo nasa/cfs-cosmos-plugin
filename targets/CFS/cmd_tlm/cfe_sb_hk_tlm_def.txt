@@ -16,5 +16,6 @@
    APPEND_ITEM PIPE_OVERFLOW_ERROR_COUNTER 16 UINT "Count of pipe overflow errors"
    APPEND_ITEM MSG_LIMIT_ERROR_COUNTER 16 UINT "Count of msg id to pipe errors"
    APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Handle to SB's Memory Pool"
+      FORMAT_STRING "0x%08X"
    APPEND_ITEM MEM_IN_USE 32 UINT "Memory in use"
-   APPEND_ITEM UNMARKED_MEM 32 UINT "Unsigned 32 bit integer"
+   APPEND_ITEM UNMARKED_MEM 32 UINT "Unmarked memory"

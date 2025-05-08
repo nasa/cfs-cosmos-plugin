@@ -14,17 +14,17 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG TIME_OF_LAST_UPDATE_SUBSECONDS "Time of Last Update (subseconds):"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG FILE_CREATE_TIME_SECS "File Creation Time (seconds);"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG FILE_CREATE_TIME_SUB_SECS "File Creation Time (subseconds):"
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG TABLE_LOADED_ONCE "Table Loaded Once Flag:"
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG LOAD_PENDING "Load Pending Flag:"
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG DUMP_ONLY "Dump Only Flag:"
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG DOUBLE_BUFFERED "Double Buffered Flag:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG TABLE_LOADED_ONCE "Table Loaded Once:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG LOAD_PENDING "Load Pending:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG DUMP_ONLY "Dump Only:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG DOUBLE_BUFFERED "Double Buffered:"
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG NAME "Processor Specific Name:"
   SUBSETTING 1 WIDTH 300
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG LAST_FILE_LOADED "Last File Loaded:"
   SUBSETTING 1 WIDTH 300
   LABELVALUEDESC <%= target_name %>  CFE_TBL_REG OWNER_APP_NAME "Owning Application Name:"
   SUBSETTING 1 WIDTH 300
-  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG CRITICAL  "Critical Flag:"
+  LABELVALUEDESC <%= target_name %>  CFE_TBL_REG CRITICAL  "Critical:"
 END
 
 HORIZONTAL

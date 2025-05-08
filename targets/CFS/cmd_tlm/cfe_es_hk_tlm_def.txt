@@ -2,6 +2,7 @@
    APPEND_ITEM COMMAND_COUNTER 8 UINT "The ES Application Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "The ES Application Command Error Counter"
    APPEND_ITEM CFE_CORE_CHECKSUM 16 UINT "Checksum of cFE Core Code"
+      FORMAT_STRING "0x%04X"
    APPEND_ITEM CFE_MAJOR_VERSION 8 UINT "Major Version Number of cFE"
    APPEND_ITEM CFE_MINOR_VERSION 8 UINT "Minor Version Number of cFE"
    APPEND_ITEM CFE_REVISION 8 UINT "Sub-Minor Version Number of cFE"
@@ -23,27 +24,39 @@
 <% end %>
    APPEND_ITEM SYS_LOG_ENTRIES 32 UINT "Number of entries in the system log"
    APPEND_ITEM SYS_LOG_MODE 32 UINT "Write/Overwrite Mode"
+      STATE OVERWRITE 0
+      STATE DISCARD   1
    APPEND_ITEM ER_LOG_INDEX 32 UINT "Current index of the ER Log (wraps around)"
    APPEND_ITEM ER_LOG_ENTRIES 32 UINT "Number of entries made in the ER Log since the power on"
    APPEND_ITEM REGISTERED_CORE_APPS 32 UINT "Number of Applications registered with ES"
    APPEND_ITEM REGISTERED_EXTERNAL_APPS 32 UINT "Number of Applications registered with ES"
-   APPEND_ITEM REGISTERED_TASKS 32 UINT "Number of Tasks ( main AND child tasks ) registered with ES"
+   APPEND_ITEM REGISTERED_TASKS 32 UINT "Number of Tasks (main AND child tasks) registered with ES"
    APPEND_ITEM REGISTERED_LIBS 32 UINT "Number of Libraries registered with ES"
-   APPEND_ITEM RESET_TYPE 32 UINT "Reset type ( PROCESSOR or POWERON )"
-   APPEND_ITEM RESET_SUBTYPE 32 UINT "Reset Sub Type"
+   APPEND_ITEM RESET_TYPE 32 UINT "Reset type"
+      STATE PROCESSOR   1
+      STATE POWER_ON    2
+      STATE APP_RESTART 3
+   APPEND_ITEM RESET_SUBTYPE 32 UINT "Reset Subtype"
+      STATE POWER_CYCLE 1
+      STATE PUSH_BUTTON 2
+      STATE SPECIAL_CMD 3
+      STATE HW_WATCHDOG 4
+      STATE RESET_CMD   5
+      STATE EXCEPTION   6
+      STATE UNDEFINED   7
+      STATE HW_DEBUG    8
+      STATE BANK_SWITCH 9
    APPEND_ITEM PROCESSOR_RESETS 32 UINT "Number of processor resets since last power on"
    APPEND_ITEM MAX_PROCESSOR_RESETS 32 UINT "Max processor resets before a power on is done"
-   APPEND_ITEM BOOT_SOURCE 32 UINT "Boot source ( as provided from BSP )"
+   APPEND_ITEM BOOT_SOURCE 32 UINT "Boot source (as provided from BSP)"
    APPEND_ITEM PERF_STATE 32 UINT "Current state of Performance Analyzer"
       STATE IDLE                0
       STATE WAITING_FOR_TRIGGER 1
       STATE TRIGGERED           2
-
    APPEND_ITEM PERF_MODE 32 UINT "Current mode of Performance Analyzer"
       STATE START  0
       STATE CENTER 1
       STATE END    2
-
    APPEND_ITEM PERF_TRIGGER_COUNT 32 UINT "Number of Times Performance Analyzer has Triggered"
 <% 128.times do |perf_id_index| %>
    APPEND_ITEM PERF_FILTER_MASK_<%= perf_id_index %> 1 UINT "Single true/false status bit"

@@ -7,5 +7,7 @@
    APPEND_ITEM FILE_LIST_<%= dir_list_entry %>_ENTRY_NAME 512 STRING "Directory listing filename"
    APPEND_ITEM FILE_LIST_<%= dir_list_entry %>_ENTRY_SIZE 32 UINT "Directory listing file size"
    APPEND_ITEM FILE_LIST_<%= dir_list_entry %>_MODIFY_TIME 32 UINT "Directory listing file last modification time"
+   ITEM FILE_LIST_<%= dir_list_entry %>_MODIFY_TIME_CONVERTED 0 0 DERIVED "Ruby time based on cFE timestamp"
+      READ_CONVERSION unix_time_conversion_epoch_offset.rb FILE_LIST_<%= dir_list_entry %>_MODIFY_TIME
    APPEND_ITEM FILE_LIST_<%= dir_list_entry %>_MODE 32 UINT "Mode of the file"
 <% end %>

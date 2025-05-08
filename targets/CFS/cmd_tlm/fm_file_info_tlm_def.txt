@@ -12,5 +12,7 @@
       FORMAT_STRING "0x%04X"
    APPEND_ITEM FILE_SIZE 32 UINT "File Size"
    APPEND_ITEM LAST_MODIFIED_TIME 32 UINT "Last Modification Time of File"
+   ITEM LAST_MODIFIED_TIME_CONVERTED 0 0 DERIVED "Ruby time based on cFE timestamp"
+      READ_CONVERSION unix_time_conversion_epoch_offset.rb LAST_MODIFIED_TIME
    APPEND_ITEM MODE 32 UINT "Mode of the file (permissions)"
    APPEND_ITEM FILENAME 512 STRING "File name"

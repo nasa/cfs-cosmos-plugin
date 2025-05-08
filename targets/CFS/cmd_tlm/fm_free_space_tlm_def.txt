@@ -7,6 +7,7 @@
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_1 8  UINT "Spare"
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_2 16 UINT "Spare"
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_SPARE_3 32 UINT "Spare"
+   APPEND_ITEM FILE_SYS_<%= free_space_entry %>_NAME   512 STRING "File system name"
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_BLOCKS  64 UINT "Block count from last check/poll"
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_BYTES   64 UINT "Byte count from last check/poll"
 <% end %>

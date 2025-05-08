@@ -8,6 +8,8 @@
 <% end %>
    APPEND_ITEM ENABLE_CHECKSUMS 8 UINT "Checksums enabled"
    APPEND_ITEM SOCKET_CONNECTED 8 UINT "Socket connected"
+      STATE FALSE 0
+      STATE TRUE  1
 <% if $cfs_globals_eds_enabled == false %>
    APPEND_ITEM SPARE_TO_ALIGN_1 64 UINT "Spare padding for alignment"
 <% end %>
