@@ -19,6 +19,7 @@
    APPEND_PARAMETER EXCEPTION_ACTION 8 UINT 0 1 0 "Identifies action to take if exception occurs"
       STATE RESTART_CPU 0
       STATE RESTART_APP 1  
+   APPEND_PARAMETER SPARE 8 UINT 0 0 0 "Spare for alignment"
    APPEND_PARAMETER PRIORITY 16 UINT 0 MAX_UINT16 0 "The new Applications runtime priority."
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_STOP_APP',  1,  5, "Telecommand Message") %>

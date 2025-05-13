@@ -20,6 +20,8 @@
 
 <%= cfs_cmd_hdr(target_name, 'CFE_EVS_CMD_SET_EVENT_FORMAT_MODE',  1,  4, "Telecommand Message") %>
    APPEND_PARAMETER MSG_FORMAT 8 UINT 0 1 0 "Format to use in the command"
+      STATE SHORT 0
+      STATE LONG  1
    APPEND_PARAMETER SPARE 8 UINT 0 0 0 "Pad to even byte"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_EVS_CMD_ENABLE_APP_EVENT_TYPE',  1,  5, "Telecommand Message") %>
