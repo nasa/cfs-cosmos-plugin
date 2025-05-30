@@ -1,6 +1,6 @@
 <%= cfs_tlm_hdr(target_name, 'CF_HK', 1, "CF Hk Tlm Packet") %>
-    APPEND_ITEM COUNTERS_CMD 16 UINT "Command success counter"
-    APPEND_ITEM COUNTERS_ERR 16 UINT "Command error counter"
+    APPEND_ITEM COMMAND_COUNTER 16 UINT "Command success counter"
+    APPEND_ITEM COMMAND_ERROR_COUNTER 16 UINT "Command error counter"
     APPEND_ITEM SPARE_0 32 UINT "Spare For Alignment"
 <% 2.times do |chan_idx| %>
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SENT_FILE_DATA_BYTES 64 UINT "Sent file data bytes"

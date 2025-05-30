@@ -205,6 +205,13 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_SET_PERMISSIONS",
         ]
     ),
+    "HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x189A,
+        packet_names: [
+            "HK_CMD_NOOP",
+            "HK_CMD_RESET_COUNTERS",
+        ]
+    ),
     "DS_CMD" => FswMsgInfo.new(
         base_stream_id: 0x18BB,
         packet_names: [
@@ -374,6 +381,36 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x088E,
         packet_names: [
             "FM_FREE_SPACE",
+        ]
+    ),
+    "HK_HK" => FswMsgInfo.new(
+        base_stream_id: 0x089B,
+        packet_names: [
+            "HK_HK",
+        ]
+    ),
+    "HK_COMBINED_PKT1" => FswMsgInfo.new(
+        base_stream_id: 0x089C,
+        packet_names: [
+            "HK_COMBINED_PKT1",
+        ]
+    ),
+    "HK_COMBINED_PKT2" => FswMsgInfo.new(
+        base_stream_id: 0x089D,
+        packet_names: [
+            "HK_COMBINED_PKT2",
+        ]
+    ),
+    "HK_COMBINED_PKT3" => FswMsgInfo.new(
+        base_stream_id: 0x089E,
+        packet_names: [
+            "HK_COMBINED_PKT3",
+        ]
+    ),
+    "HK_COMBINED_PKT4" => FswMsgInfo.new(
+        base_stream_id: 0x089F,
+        packet_names: [
+            "HK_COMBINED_PKT4",
         ]
     ),
     "DS_HK" => FswMsgInfo.new(

@@ -1,3 +1,25 @@
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_HK', 1, "CFE_SB Hk Tlm") %>
+   APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
+   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Count of invalid commands received"
+   APPEND_ITEM NO_SUBSCRIBERS_COUNTER 8 UINT "Count pkts sent with no subscribers"
+   APPEND_ITEM MSG_SEND_ERROR_COUNTER 8 UINT "Count of message send errors"
+   APPEND_ITEM MSG_RECEIVE_ERROR_COUNTER 8 UINT "Count of message receive errors"
+   APPEND_ITEM INTERNAL_ERROR_COUNTER 8 UINT "Count of queue read or write errors"
+   APPEND_ITEM CREATE_PIPE_ERROR_COUNTER 8 UINT "Count of errors in create pipe API"
+   APPEND_ITEM SUBSCRIBE_ERROR_COUNTER 8 UINT "Count of errors in subscribe API"
+   APPEND_ITEM PIPE_OPTS_ERROR_COUNTER 8 UINT "Count of errors in set/get pipe options API"
+   APPEND_ITEM DUPLICATE_SUBSCRIPTIONS_COUNTER 8 UINT "Count of duplicate subscriptions"
+   APPEND_ITEM GET_PIPE_ID_BY_NAME_ERROR_COUNTER 8 UINT "Count of errors in get pipe id by name API"
+<% if $cfs_globals_eds_enabled == false %>
+   APPEND_ITEM SPARE_TO_ALIGN 8 UINT "Spare padding for alignment"
+<% end %>
+   APPEND_ITEM PIPE_OVERFLOW_ERROR_COUNTER 16 UINT "Count of pipe overflow errors"
+   APPEND_ITEM MSG_LIMIT_ERROR_COUNTER 16 UINT "Count of msg id to pipe errors"
+   APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Handle to SB's Memory Pool"
+      FORMAT_STRING "0x%08X"
+   APPEND_ITEM MEM_IN_USE 32 UINT "Memory in use"
+   APPEND_ITEM UNMARKED_MEM 32 UINT "Unmarked memory"
+
 <%= cfs_tlm_hdr(target_name, 'CFE_SB_STATS', 1, "CFE_SB Stats Tlm") %>
    APPEND_ITEM MSG_IDS_IN_USE 32 UINT "Current number of MsgIds with a destination"
    APPEND_ITEM PEAK_MSG_IDS_IN_USE 32 UINT "Peak number of MsgIds with a destination"

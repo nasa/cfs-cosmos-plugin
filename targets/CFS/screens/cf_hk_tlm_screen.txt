@@ -5,8 +5,8 @@ VERTICAL
   TITLE "<%= target_name %> CFDP Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-  LABELVALUEDESC <%= target_name %> CF_HK COUNTERS_CMD "Command Counter:"
-  LABELVALUEDESC <%= target_name %> CF_HK COUNTERS_ERR "Error Counter:"
+  LABELVALUEDESC <%= target_name %> CF_HK COMMAND_COUNTER "Command Counter:"
+  LABELVALUEDESC <%= target_name %> CF_HK COMMAND_ERROR_COUNTER "Error Counter:"
 
   HORIZONTAL
     <% 2.times do |chan_idx| %>

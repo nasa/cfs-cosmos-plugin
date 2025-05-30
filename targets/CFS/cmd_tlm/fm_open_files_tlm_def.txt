@@ -1,6 +1,0 @@
-<%= cfs_tlm_hdr(target_name, 'FM_OPEN_FILES', 1, "FM Open Files Tlm") %>
-   APPEND_ITEM NUM_OPEN_FILES 32 UINT "Number of files opened via cFE"
-<% 50.times do |file_idx| %>
-   APPEND_ITEM OPEN_FILES_LIST_<%= file_idx %>_LOGICAL_NAME 512 STRING "Logical filename"
-   APPEND_ITEM OPEN_FILES_LIST_<%= file_idx %>_APP_NAME     160 STRING "Application that opened file"
-<% end %>
