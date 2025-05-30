@@ -180,6 +180,30 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_SET_PERMISSIONS",
         ]
     ),
+    "DS_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18BB,
+        packet_names: [
+            "DS_CMD_NOOP",
+            "DS_CMD_RESET_COUNTERS",
+            "DS_CMD_SET_APP_STATE",
+            "DS_CMD_SET_FILTER_FILE",
+            "DS_CMD_SET_FILTER_TYPE",
+            "DS_CMD_SET_FILTER_PARAMS",
+            "DS_CMD_SET_DEST_TYPE",
+            "DS_CMD_SET_DEST_STATE",
+            "DS_CMD_SET_DEST_PATH",
+            "DS_CMD_SET_DEST_BASE",
+            "DS_CMD_SET_DEST_EXT",
+            "DS_CMD_SET_DEST_SIZE",
+            "DS_CMD_SET_DEST_AGE",
+            "DS_CMD_SET_DEST_COUNT",
+            "DS_CMD_CLOSE_FILE",
+            "DS_CMD_GET_FILE_INFO",
+            "DS_CMD_ADD_MID",
+            "DS_CMD_CLOSE_ALL",
+            "DS_CMD_REMOVE_MID",
+        ]
+    ),
     # -------------------------------------------------------------------------
     # Telemetry
     # -------------------------------------------------------------------------
@@ -313,6 +337,24 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x088E,
         packet_names: [
             "FM_FREE_SPACE",
+        ]
+    ),
+    "DS_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08B8,
+        packet_names: [
+            "DS_HK",
+        ]
+    ),
+    "DS_DIAG" => FswMsgInfo.new(
+        base_stream_id: 0x08B9,
+        packet_names: [
+            "DS_DIAG",
+        ]
+    ),
+    "DS_COMP" => FswMsgInfo.new(
+        base_stream_id: 0x08BA,
+        packet_names: [
+            "DS_COMP",
         ]
     ),
 }
