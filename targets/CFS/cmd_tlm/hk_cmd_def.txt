@@ -1,0 +1,3 @@
+<%= cfs_cmd_hdr(target_name, 'HK_CMD_NOOP',  1,  0, "HK No-Op Cmd") %>
+
+<%= cfs_cmd_hdr(target_name, 'HK_CMD_RESET_COUNTERS',  1,  1, "HK Reset Counters Cmd") %>

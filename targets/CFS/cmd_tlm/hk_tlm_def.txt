@@ -1,0 +1,19 @@
+<%= cfs_tlm_hdr(target_name, 'HK_HK', 1, "HK Hk Tlm Packet") %>
+    APPEND_ITEM COMMAND_COUNTER 8 UINT "Command success counter"
+    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command error counter"
+    APPEND_ITEM PADDING 16 UINT "Padding"
+    APPEND_ITEM COMBINED_PKTS_SENT 16 UINT "Count of combined tlm pkts sent"
+    APPEND_ITEM MISSING_DATA_CTR 16 UINT "Number of times missing data was detected"
+    APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Memory pool handle used to get mempool diags"
+
+# Packet definition depends on HK copy table
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 1, "HK Combined Packet 1") %>
+
+# Packet definition depends on HK copy table
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT2', 2, "HK Combined Packet 2") %>
+
+# Packet definition depends on HK copy table
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 3, "HK Combined Packet 3") %>
+
+# Packet definition depends on HK copy table
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 4, "HK Combined Packet 4") %>
