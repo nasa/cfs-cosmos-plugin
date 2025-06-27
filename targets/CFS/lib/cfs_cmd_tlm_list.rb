@@ -205,6 +205,42 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_SET_PERMISSIONS",
         ]
     ),
+	"MM_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1888,
+        packet_names: [
+            "MM_CMD_NOOP",
+            "MM_CMD_RESET_COUNTERS",
+            "MM_CMD_PEEK",
+            "MM_CMD_POKE",
+            "MM_CMD_LOAD_MEM_WID",
+            "MM_CMD_LOAD_MEM_FROM_FILE",
+            "MM_CMD_DUMP_MEM_TO_FILE",
+            "MM_CMD_DUMP_IN_EVENT",
+            "MM_CMD_FILL_MEM",
+            "MM_CMD_LOOKUPSYM",
+            "MM_CMD_DUMP_SYM_TABLE",
+            "MM_CMD_ENABLE_EEPROM_WRITE",
+            "MM_CMD_DISABLE_EEPROM_WRITE",
+        ]
+    ),
+		"HS_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18AE,
+        packet_names: [
+            "HS_CMD_NOOP",
+            "HS_CMD_RESET_COUNTERS",
+            "HS_CMD_ENA_APP_MON",
+            "HS_CMD_DIS_APP_MON",
+            "HS_CMD_ENA_EVENT_MON",
+            "HS_CMD_DIS_EVENT_MON",
+            "HS_CMD_ENA_ALIVENESS",
+            "HS_CMD_DIS_ALIVENESS",
+            "HS_CMD_CLR_CPU_RESET_CNT",
+            "HS_CMD_SET_MAX_CPU_RESETS",
+            "HS_CMD_ENA_CPU_HOG",
+            "HS_CMD_DIS_CPU_HOG",
+            "HS_CMD_REPORT_DIAG",
+			"HS_CMD_SET_UTIL_PARAMS",
+			"HS_CMD_SET_UTIL_DIAG",
     "HK_CMD" => FswMsgInfo.new(
         base_stream_id: 0x189A,
         packet_names: [
@@ -383,6 +419,16 @@ $CFS_CMD_TLM_LIST = {
             "FM_FREE_SPACE",
         ]
     ),
+	"MM_HK" => FswMsgInfo.new(
+        base_stream_id: 0x0887,
+        packet_names: [
+            "MM_HK",
+        ]
+    ),
+	"HS_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08AD,
+        packet_names: [
+            "HS_HK",
     "HK_HK" => FswMsgInfo.new(
         base_stream_id: 0x089B,
         packet_names: [
