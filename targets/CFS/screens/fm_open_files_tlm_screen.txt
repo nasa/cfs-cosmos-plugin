@@ -11,7 +11,7 @@ VERTICAL
 
   # COSMOS has trouble with tabbooks with more than 17 items so the entries are split
   # here into multiple tabbooks
-  <% 2.times do |tab_num| %>
+  <% 5.times do |tab_num| %>
   TABBOOK
     <% 10.times do |entry_idx| %>
     TABITEM "File <%= entry_idx + (10 * tab_num) %>" 

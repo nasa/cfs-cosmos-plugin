@@ -142,6 +142,31 @@ $CFS_CMD_TLM_LIST = {
             "TO_LAB_CMD_ENABLE_OUTPUT",
         ]
     ),
+    "CF_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18B3,
+        packet_names: [
+            "CF_CMD_NOOP",
+            "CF_CMD_RESET",
+            "CF_CMD_TX_FILE",
+            "CF_CMD_PLAYBACK_DIR",
+            "CF_CMD_FREEZE",
+            "CF_CMD_THAW",
+            "CF_CMD_SUSPEND",
+            "CF_CMD_RESUME",
+            "CF_CMD_CANCEL",
+            "CF_CMD_ABANDON",
+            "CF_CMD_SET_PARAM",
+            "CF_CMD_GET_PARAM",
+            "CF_CMD_WRITE_QUEUE",
+            "CF_CMD_ENABLE_DEQUEUE",
+            "CF_CMD_DISABLE_DEQUEUE",
+            "CF_CMD_ENABLE_DIR_POLLING",
+            "CF_CMD_DISABLE_DIR_POLLING",
+            "CF_CMD_PURGE_QUEUE",
+            "CF_CMD_ENABLE_ENGINE",
+            "CF_CMD_DISABLE_ENGINE",
+        ]
+    ),
     "SAMPLE_APP_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1882,
         packet_names: [
@@ -180,7 +205,7 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_SET_PERMISSIONS",
         ]
     ),
-	    "MM_CMD" => FswMsgInfo.new(
+	"MM_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1888,
         packet_names: [
             "MM_CMD_NOOP",
@@ -216,6 +241,35 @@ $CFS_CMD_TLM_LIST = {
             "HS_CMD_REPORT_DIAG",
 			"HS_CMD_SET_UTIL_PARAMS",
 			"HS_CMD_SET_UTIL_DIAG",
+    "HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x189A,
+        packet_names: [
+            "HK_CMD_NOOP",
+            "HK_CMD_RESET_COUNTERS",
+        ]
+    ),
+    "DS_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18BB,
+        packet_names: [
+            "DS_CMD_NOOP",
+            "DS_CMD_RESET_COUNTERS",
+            "DS_CMD_SET_APP_STATE",
+            "DS_CMD_SET_FILTER_FILE",
+            "DS_CMD_SET_FILTER_TYPE",
+            "DS_CMD_SET_FILTER_PARAMS",
+            "DS_CMD_SET_DEST_TYPE",
+            "DS_CMD_SET_DEST_STATE",
+            "DS_CMD_SET_DEST_PATH",
+            "DS_CMD_SET_DEST_BASE",
+            "DS_CMD_SET_DEST_EXT",
+            "DS_CMD_SET_DEST_SIZE",
+            "DS_CMD_SET_DEST_AGE",
+            "DS_CMD_SET_DEST_COUNT",
+            "DS_CMD_CLOSE_FILE",
+            "DS_CMD_GET_FILE_INFO",
+            "DS_CMD_ADD_MID",
+            "DS_CMD_CLOSE_ALL",
+            "DS_CMD_REMOVE_MID",
         ]
     ),
     # -------------------------------------------------------------------------
@@ -311,6 +365,18 @@ $CFS_CMD_TLM_LIST = {
             "TO_LAB_HK",
         ]
     ),
+    "CF_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08B0,
+        packet_names: [
+            "CF_HK",
+        ]
+    ),
+    "CF_EOT" => FswMsgInfo.new(
+        base_stream_id: 0x08B3,
+        packet_names: [
+            "CF_EOT",
+        ]
+    ),
     "SAMPLE_APP_HK" => FswMsgInfo.new(
         base_stream_id: 0x0883,
         packet_names: [
@@ -363,6 +429,52 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x08AD,
         packet_names: [
             "HS_HK",
+    "HK_HK" => FswMsgInfo.new(
+        base_stream_id: 0x089B,
+        packet_names: [
+            "HK_HK",
+        ]
+    ),
+    "HK_COMBINED_PKT1" => FswMsgInfo.new(
+        base_stream_id: 0x089C,
+        packet_names: [
+            "HK_COMBINED_PKT1",
+        ]
+    ),
+    "HK_COMBINED_PKT2" => FswMsgInfo.new(
+        base_stream_id: 0x089D,
+        packet_names: [
+            "HK_COMBINED_PKT2",
+        ]
+    ),
+    "HK_COMBINED_PKT3" => FswMsgInfo.new(
+        base_stream_id: 0x089E,
+        packet_names: [
+            "HK_COMBINED_PKT3",
+        ]
+    ),
+    "HK_COMBINED_PKT4" => FswMsgInfo.new(
+        base_stream_id: 0x089F,
+        packet_names: [
+            "HK_COMBINED_PKT4",
+        ]
+    ),
+    "DS_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08B8,
+        packet_names: [
+            "DS_HK",
+        ]
+    ),
+    "DS_DIAG" => FswMsgInfo.new(
+        base_stream_id: 0x08B9,
+        packet_names: [
+            "DS_DIAG",
+        ]
+    ),
+    "DS_COMP" => FswMsgInfo.new(
+        base_stream_id: 0x08BA,
+        packet_names: [
+            "DS_COMP",
         ]
     ),
 }

@@ -22,7 +22,7 @@ VERTICAL
     TABITEM "App Data <%= app_data_index %>" 
       	LABELVALUEDESC <%= target_name %> CFE_EVS_HK APP_DATA_<%= app_data_index %>_APP_ID "App ID:"
       	LABELVALUEDESC <%= target_name %> CFE_EVS_HK APP_DATA_<%= app_data_index %>_APP_MESSAGE_SENT_COUNTER "Message Sent Counter:"
-      	LABELVALUEDESC <%= target_name %> CFE_EVS_HK APP_DATA_<%= app_data_index %>_APP_ENABLE_STATUS "Enable Status:"
+      	LABELVALUEDESC <%= target_name %> CFE_EVS_HK APP_DATA_<%= app_data_index %>_APP_ENABLED "Enable Status:"
       	LABELVALUEDESC <%= target_name %> CFE_EVS_HK APP_DATA_<%= app_data_index %>_APP_MESSAGE_SQUELCHED_COUNTER " Message Squelched Counter:"
 	  END
   <% end %>
