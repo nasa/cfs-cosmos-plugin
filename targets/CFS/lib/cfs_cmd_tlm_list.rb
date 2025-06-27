@@ -223,7 +223,82 @@ $CFS_CMD_TLM_LIST = {
             "MM_CMD_DISABLE_EEPROM_WRITE",
         ]
     ),
-		"HS_CMD" => FswMsgInfo.new(
+    "MD_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1890,
+        packet_names: [
+            "MD_CMD_NOOP",
+            "MD_CMD_RESET_COUNTERS",
+            "MD_CMD_START_DWELL",
+            "MD_CMD_STOP_DWELL",
+            "MD_CMD_JAM_DWELL",
+            "MD_CMD_SET_SIGNATURE",
+        ]
+    ),
+    "CS_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x189F,
+        packet_names: [
+            "CS_CMD_NOOP",
+            "CS_CMD_RESET_COUNTERS",
+            "CS_CMD_ONE_SHOT",
+            "CS_CMD_CANCEL_ONE_SHOT",
+            "CS_CMD_ENABLE_ALL_CS",
+            "CS_CMD_DISABLE_ALL_CS",
+            "CS_CMD_ENABLE_CFE_CORE",
+            "CS_CMD_DISABLE_CFE_CORE",
+            "CS_CMD_REPORT_BASELINE_CFE_CORE",
+            "CS_CMD_RECOMPUTE_BASELINE_CFE_CORE",
+            "CS_CMD_ENABLE_OS",
+            "CS_CMD_DISABLE_OS",
+            "CS_CMD_REPORT_BASELINE_OS",
+            "CS_CMD_RECOMPUTE_BASELINE_OS",
+            "CS_CMD_ENABLE_EEPROM",
+            "CS_CMD_DISABLE_EEPROM",
+            "CS_CMD_REPORT_BASELINE_EEPROM",
+            "CS_CMD_RECOMPUTE_BASELINE_EEPROM",
+            "CS_CMD_ENABLE_ENTRY_EEPROM",
+            "CS_CMD_DISABLE_ENTRY_EEPROM",
+            "CS_CMD_GET_ENTRY_ID_EEPROM",
+            "CS_CMD_ENABLE_MEMORY",
+            "CS_CMD_DISABLE_MEMORY",
+            "CS_CMD_REPORT_BASELINE_MEMORY",
+            "CS_CMD_RECOMPUTE_BASELINE_MEMORY",
+            "CS_CMD_ENABLE_ENTRY_MEMORY",
+            "CS_CMD_DISABLE_ENTRY_MEMORY",
+            "CS_CMD_GET_ENTRY_ID_MEMORY",
+            "CS_CMD_ENABLE_TABLES",
+            "CS_CMD_DISABLE_TABLES",
+            "CS_CMD_REPORT_BASELINE_TABLE",
+            "CS_CMD_RECOMPUTE_BASELINE_TABLE",
+            "CS_CMD_ENABLE_NAME_TABLE",
+            "CS_CMD_DISABLE_NAME_TABLE",
+            "CS_CMD_ENABLE_APPS",
+            "CS_CMD_DISABLE_APPS",
+            "CS_CMD_REPORT_BASELINE_APP",
+            "CS_CMD_RECOMPUTE_BASELINE_APP",
+            "CS_CMD_ENABLE_NAME_APP",
+            "CS_CMD_DISABLE_NAME_APP",
+        ]
+    ),    
+    "HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x189A,
+        packet_names: [
+            "HK_CMD_NOOP",
+            "HK_CMD_RESET_COUNTERS",
+        ]
+    ),
+    "LC_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18A4,
+        packet_names: [
+            "LC_CMD_NOOP",
+            "LC_CMD_RESET_COUNTERS",
+            "LC_CMD_SET_APP_STATE",
+            "LC_CMD_SET_AP_STATE",
+            "LC_CMD_SET_AP_PERM_OFF",
+            "LC_CMD_RESET_AP_STATS",
+            "LC_CMD_RESET_WP_STATS",
+        ]
+    ),    
+    "HS_CMD" => FswMsgInfo.new(
         base_stream_id: 0x18AE,
         packet_names: [
             "HS_CMD_NOOP",
@@ -241,13 +316,29 @@ $CFS_CMD_TLM_LIST = {
             "HS_CMD_REPORT_DIAG",
 			"HS_CMD_SET_UTIL_PARAMS",
 			"HS_CMD_SET_UTIL_DIAG",
-    "HK_CMD" => FswMsgInfo.new(
-        base_stream_id: 0x189A,
-        packet_names: [
-            "HK_CMD_NOOP",
-            "HK_CMD_RESET_COUNTERS",
         ]
     ),
+    "SC_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18A9,
+        packet_names: [
+            "SC_CMD_NOOP",
+            "SC_CMD_RESET_COUNTERS",
+            "SC_CMD_START_ATS",
+            "SC_CMD_STOP_ATS",
+            "SC_CMD_START_RTS",
+            "SC_CMD_STOP_RTS",
+            "SC_CMD_DISABLE_RTS",
+            "SC_CMD_ENABLE_RTS",
+            "SC_CMD_SWITCH_ATS",
+            "SC_CMD_JUMP_ATS",
+            "SC_CMD_CONTINUE_ATS_ON_FAILURE",
+            "SC_CMD_APPEND_ATS",
+            "SC_CMD_START_RTS_GROUP",
+            "SC_CMD_STOP_RTS_GROUP",
+            "SC_CMD_DISABLE_RTS_GROUP",
+            "SC_CMD_ENABLE_RTS_GROUP",
+        ]
+    ),    
     "DS_CMD" => FswMsgInfo.new(
         base_stream_id: 0x18BB,
         packet_names: [
@@ -425,10 +516,36 @@ $CFS_CMD_TLM_LIST = {
             "MM_HK",
         ]
     ),
-	"HS_HK" => FswMsgInfo.new(
-        base_stream_id: 0x08AD,
+	"MD_HK" => FswMsgInfo.new(
+        base_stream_id: 0x0890,
         packet_names: [
-            "HS_HK",
+            "MD_HK",
+        ]
+    ),
+	"MD_DWELL_PKT_1" => FswMsgInfo.new(
+        base_stream_id: 0x0891,
+        packet_names: [
+            "MD_DWELL_PKT_1",
+        ]
+    ),
+	"MD_DWELL_PKT_2" => FswMsgInfo.new(
+        base_stream_id: 0x0892,
+        packet_names: [
+            "MD_DWELL_PKT_2",
+        ]
+    ),
+	"MD_DWELL_PKT_3" => FswMsgInfo.new(
+        base_stream_id: 0x0893,
+        packet_names: [
+            "MD_DWELL_PKT_3",
+        ]
+    ),
+	"MD_DWELL_PKT_4" => FswMsgInfo.new(
+        base_stream_id: 0x0894,
+        packet_names: [
+            "MD_DWELL_PKT_4",
+        ]
+    ),
     "HK_HK" => FswMsgInfo.new(
         base_stream_id: 0x089B,
         packet_names: [
@@ -457,6 +574,30 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x089F,
         packet_names: [
             "HK_COMBINED_PKT4",
+        ]
+    ),
+    "CS_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08A4,
+        packet_names: [
+            "CS_HK",
+        ]
+    ),    
+    "LC_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08A7,
+        packet_names: [
+            "LC_HK",
+        ]
+    ),    
+    "SC_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08AA,
+        packet_names: [
+            "SC_HK",
+        ]
+    ),    
+	"HS_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08AD,
+        packet_names: [
+            "HS_HK",
         ]
     ),
     "DS_HK" => FswMsgInfo.new(

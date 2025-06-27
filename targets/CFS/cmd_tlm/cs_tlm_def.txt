@@ -1,0 +1,49 @@
+<%= cfs_tlm_hdr(target_name, 'CS_HK', 1, "CS Hk Tlm") %>
+    APPEND_ITEM Cmdcounter                    8 UINT  "CS Application Command Counter"
+    APPEND_ITEM Cmderrcounter                 8 UINT  "CS Application Command Error Counter"
+    APPEND_ITEM Checksumstate                 8 UINT  "CS Application global checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Eepromcsstate                 8 UINT  "CS Eeprom table checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Memorycsstate                 8 UINT  "CS Memory table checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Appcsstate                    8 UINT  "CS App table checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Tablescsstate                 8 UINT  "CS Tables table checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Oscsstate                     8 UINT  "OS code segment checksum state"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Cfecorecsstate                8 UINT  "cFE Core code segment checksum stat"
+        STATE ENABLED  1
+        STATE DISABLED 2
+    APPEND_ITEM Recomputeinprogress           8 UINT  "CS 'Recompute In Progress' flag"
+    APPEND_ITEM Oneshotinprogress             8 UINT  "CS 'OneShot In Progress' flag"
+    APPEND_ITEM Filler8                       8 UINT  "8 bit padding"
+    APPEND_ITEM Eepromcserrcounter           16 UINT  "Eeprom miscompare counter"
+    APPEND_ITEM Memorycserrcounter           16 UINT  "Memory miscompare counter"
+    APPEND_ITEM Appcserrcounter              16 UINT  "App miscompare counter"
+    APPEND_ITEM Tablescserrcounter           16 UINT  "Tables miscompare counter"
+    APPEND_ITEM Cfecorecserrcounter          16 UINT  "cFE core miscompare counter"
+    APPEND_ITEM Oscserrcounter               16 UINT  "OS code segment miscopmare counter"
+    APPEND_ITEM Currentcstable               16 UINT  "Current table being checksummed"
+        STATE CFE    0
+        STATE OS     1
+        STATE EEPROM 2
+        STATE MEMORY 3
+        STATE TABLES 4
+        STATE APPS   5
+    APPEND_ITEM Currententryintable          16 UINT  "Current entry ID in table being checksummed"
+    APPEND_ITEM Eeprombaseline               32 UINT  "Baseline checksum for all of Eeprom"
+    APPEND_ITEM Osbaseline                   32 UINT  "Baseline checksum for the OS code segment"
+    APPEND_ITEM Cfecorebaseline              32 UINT  "Basline checksum for the cFE core"
+    APPEND_ITEM Lastoneshotaddress           32 UINT  "Address used in last one shot checksum command"
+    APPEND_ITEM Lastoneshotsize              32 UINT  "Size used in the last one shot checksum command"
+    APPEND_ITEM Lastoneshotmaxbytespercycle  32 UINT  "Max bytes per cycle for last one shot checksum command"
+    APPEND_ITEM Lastoneshotchecksum          32 UINT  "Checksum of the last one shot checksum command"
+    APPEND_ITEM Passcounter                  32 UINT  "Number of times CS has passed through all of its tables"

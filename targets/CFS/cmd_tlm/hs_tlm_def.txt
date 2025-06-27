@@ -2,37 +2,23 @@
    APPEND_ITEM CMD_COUNTER 8 UINT "Application command counter"
    APPEND_ITEM CMD_ERR_COUNTER 8 UINT "Application command error counter"
    APPEND_ITEM APP_MON_STATE   8 UINT "Critical Application Monitor operational state"
+      STATE DISABLED 0
+      STATE ENABLED  1
+      STATE NO_EVENT 2
    APPEND_ITEM EVENT_MON_STATE 8 UINT "Critical Events Monitor operational state"
+      STATE DISABLED 0
+      STATE ENABLED  1
+      STATE NO_EVENT 2
    APPEND_ITEM ALIVENESS_STATE 8 UINT "Terminal window aliveness indicator operational state"
+      STATE DISABLED 0
+      STATE ENABLED  1
+      STATE NO_EVENT 2
    APPEND_ITEM CPU_HOG_STATE   8 UINT "HS Hogging Indicator operational state"
-   # Byte 19  
-   #   HS_LOADED_XCT = 0x01
-   #   HS_LOADED_MAT = 0x02
-   #   HS_LOADED_AMT = 0x04
-   #   HS_LOADED_EMT = 0x08
-   #   HS_CDS_IN_USE = 0x10   
-   # Cmd & Tlm Server will output the following warning that can be ignored:
-   #   WARN: Bit definition overlap at bit offset 152 for packet HS HK_TLM_PKT items STATE_BITS and EXEC_CNT_TBL
+      STATE DISABLED 0
+      STATE ENABLED  1
+      STATE NO_EVENT 2
    APPEND_ITEM STATE_BITS    8 UINT "Operational states."
       FORMAT_STRING  "0x%04X"
-      ITEM SPARE_BIT_7   144 1 UINT
-      ITEM SPARE_BIT_6   145 1 UINT
-      ITEM SPARE_BIT_5   146 1 UINT
-      ITEM CDS_IN_USE    147 1 UINT
-         STATE FALSE  0
-         STATE TRUE   1 GREEN
-      ITEM EVENT_MON_TBL 148 1 UINT
-         STATE UNDEF  0
-         STATE LOADED 1 GREEN
-      ITEM APP_MON_TBL   149 1 UINT
-         STATE UNDEF  0
-         STATE LOADED 1 GREEN
-      ITEM MSG_ACT_TBL   150 1 UINT
-         STATE UNDEF  0
-         STATE LOADED 1 GREEN
-      ITEM EXEC_CNT_TBL  151 1 UINT
-         STATE UNDEF  0
-         STATE LOADED 1 GREEN
    APPEND_ITEM PAD8 8 UINT "Alignment Spares."
    APPEND_ITEM CPU_RESET_CNT       16 UINT "Number of processor resets"
    APPEND_ITEM MAX_RESETS          16 UINT "Maximum number of processor resets before a power on reset"
@@ -46,4 +32,3 @@
    APPEND_ITEM PROC_UPTIME_SECS    32 UINT "Current Processor Uptime in Seconds."
    APPEND_ITEM PROC_IDLE_TIME_SECS 32 UINT "Current Processor Idle Time in Seconds."
    APPEND_ARRAY_ITEM EXEC_CNTS     32 UINT 1024 "Execution Counters"
-

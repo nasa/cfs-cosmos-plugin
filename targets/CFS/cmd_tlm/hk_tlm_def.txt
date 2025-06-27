@@ -13,7 +13,7 @@
 <%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT2', 2, "HK Combined Packet 2") %>
 
 # Packet definition depends on HK copy table
-<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 3, "HK Combined Packet 3") %>
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT3', 3, "HK Combined Packet 3") %>
 
 # Packet definition depends on HK copy table
-<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 4, "HK Combined Packet 4") %>
+<%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT4', 4, "HK Combined Packet 4") %>

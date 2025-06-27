@@ -10,7 +10,7 @@
 		STATE MEM8   3
 		STATE MEM16  4
 		STATE MEM32  5
-	 APPEND_PARAMETER       Padding                                        32 UINT  MIN MAX 0 "Padding"
+	APPEND_PARAMETER       Padding                                        32 UINT  0 0 0 "Padding"
      APPEND_PARAMETER       SrcsymaddressOffset                            64 UINT  MIN MAX 0 "Symbolic source peek address"
      APPEND_PARAMETER       SrcsymaddressSymname                          512 STRING "" "Symbolic source peek address"
 
@@ -23,13 +23,13 @@
 		STATE MEM16  4
 		STATE MEM32  5
      APPEND_PARAMETER       Data                                            32 UINT  MIN MAX 0 "Data to be written"
-     APPEND_PARAMETER       Padding                                         64 UINT  MIN MAX 0 "Structure padding"
+     APPEND_PARAMETER       Padding                                         64 UINT  0 0 0 "Structure padding"
      APPEND_PARAMETER       DestsymaddressOffset                            64 UINT  MIN MAX 0 "Symbolic destination poke address"
      APPEND_PARAMETER       DestsymaddressSymname                          512 STRING "" "Symbolic destination poke address"
 
 <%= cfs_cmd_hdr(target_name, 'MM_CMD_LOAD_MEM_WID', 1, 4, "Telecommand Message") %>
      APPEND_PARAMETER       Numofbytes                                    8 UINT  MIN MAX 0 "Number of bytes to be loaded"
-     APPEND_ARRAY_PARAMETER Padding                                       8 UINT   24 "Structure padding"
+     APPEND_ARRAY_PARAMETER Padding                                       8 UINT  24 "Structure padding"
      APPEND_PARAMETER       Crc                                          32 UINT  MIN MAX 0 "Data check value"
      APPEND_PARAMETER       DestsymaddressOffset                         64 UINT  MIN MAX 0 "Symbolic destination load address"
      APPEND_PARAMETER       DestsymaddressSymname                       512 STRING "" "Symbolic destination load address"
@@ -45,7 +45,7 @@
 		STATE MEM8   3
 		STATE MEM16  4
 		STATE MEM32  5
-	 APPEND_PARAMETER       Numofbytes                                     32 UINT  MIN MAX 0 "Number of bytes to be dumped"
+	APPEND_PARAMETER       Numofbytes                                     32 UINT  MIN MAX 0 "Number of bytes to be dumped"
      APPEND_PARAMETER       SrcsymaddressOffset                            64 UINT  MIN MAX 0 "Symbol plus optional offset"
      APPEND_PARAMETER       SrcsymaddressSymname                          512 STRING "" "Symbol plus optional offset"
      APPEND_PARAMETER       Filename                                      512 STRING "" "Name of memory dump file"
@@ -57,7 +57,7 @@
 		STATE MEM8   3
 		STATE MEM16  4
 		STATE MEM32  5
-	 APPEND_PARAMETER       Numofbytes                                     8 UINT  MIN MAX 0 "Number of bytes to be dumped"
+	APPEND_PARAMETER       Numofbytes                                     8 UINT  MIN MAX 0 "Number of bytes to be dumped"
      APPEND_ARRAY_PARAMETER Padding                                        8 UINT   24 "Structure padding"
      APPEND_PARAMETER       SrcsymaddressOffset                           64 UINT  MIN MAX 0 "Symbolic source address"
      APPEND_PARAMETER       SrcsymaddressSymname                         512 STRING "" "Symbolic source address"
@@ -69,7 +69,7 @@
 		STATE MEM8   3
 		STATE MEM16  4
 		STATE MEM32  5
-	 APPEND_PARAMETER       Numofbytes                                     32 UINT  MIN MAX 0 "Number of bytes to fill"
+	APPEND_PARAMETER       Numofbytes                                     32 UINT  MIN MAX 0 "Number of bytes to fill"
      APPEND_PARAMETER       Fillpattern                                    32 UINT  MIN MAX 0 "Fill pattern to use"
      APPEND_PARAMETER       Padding                                        32 UINT  MIN MAX 0 "Structure padding"
      APPEND_PARAMETER       DestsymaddressOffset                           64 UINT  MIN MAX 0 "Symbol plus optional offset"

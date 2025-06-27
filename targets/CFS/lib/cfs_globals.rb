@@ -114,3 +114,13 @@ $cfs_time_server_config = true
 #   Note: This value should correspond with CFE_PLATFORM_TIME_CFG_CLIENT
 # -------------------------------------------------------------------------------------------------
 $cfs_time_client_config = false
+
+$sc_num_ats = 2
+
+$sc_num_rts = 64
+
+$sc_num_rts_in_uint16 = 16
+
+$sc_num_rts_status_fields = (($sc_num_rts + $sc_num_rts_in_uint16 - 1) / $sc_num_rts_in_uint16)
+
+$md_num_dwell_tables = 4
