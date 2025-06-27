@@ -143,7 +143,7 @@ $CFS_CMD_TLM_LIST = {
         ]
     ),
     "CF_CMD" => FswMsgInfo.new(
-        base_stream_id: 0x183C,
+        base_stream_id: 0x18B3,
         packet_names: [
             "CF_CMD_NOOP",
             "CF_CMD_RESET",
@@ -330,13 +330,13 @@ $CFS_CMD_TLM_LIST = {
         ]
     ),
     "CF_HK" => FswMsgInfo.new(
-        base_stream_id: 0x083C,
+        base_stream_id: 0x08B0,
         packet_names: [
             "CF_HK",
         ]
     ),
     "CF_EOT" => FswMsgInfo.new(
-        base_stream_id: 0x083D,
+        base_stream_id: 0x08B3,
         packet_names: [
             "CF_EOT",
         ]
