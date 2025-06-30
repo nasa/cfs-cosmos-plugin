@@ -24,7 +24,12 @@
           STATE MEM8   3
           STATE MEM16  4
           STATE MEM32  5
+<% if $cpu_addr_var_len == 64 %>
+     APPEND_ITEM       Padding           64 UINT  "Padding"
+     APPEND_ITEM       Address           64 UINT  "Fully resolved address used for last command"
+<% else %>
      APPEND_ITEM       Address           32 UINT  "Fully resolved address used for last command"
+<% end %>
      APPEND_ITEM       Datavalue         32 UINT  "Last command data (fill pattern or peek/poke value)"
      APPEND_ITEM       Bytesprocessed    32 UINT  "Bytes processed for last command"
      APPEND_ITEM       Filename          512 STRING "Name of the data file used for last command, where applicable"
