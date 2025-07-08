@@ -70,12 +70,5 @@ MATRIXBYCOLUMNS 6 2
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_RESET_COUNTERS")'
 
-  LABEL "FM"
-  VALUE <%= target_name %> FM_HK CCSDS_SEQUENCE
-  VALUE <%= target_name %> FM_HK COMMAND_COUNTER
-  VALUE <%= target_name %> FM_HK COMMAND_ERROR_COUNTER
-  BUTTON 'No-Op' 'api.cmd("<%= target_name %> FM_CMD_NOOP")'
-  BUTTON 'Reset' 'api.cmd("<%= target_name %> FM_CMD_RESET_COUNTERS")'
-
 END
 
