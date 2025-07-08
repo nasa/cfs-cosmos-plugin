@@ -122,7 +122,7 @@
         STATE ACTIVE  1
         STATE HISTORY 2
         STATE ALL     3
-    APPEND_PARAMETER SPARE   16 UINT 0 0 0 "Spare"
+    APPEND_PARAMETER SPARE   8 UINT 0 0 0 "Spare"
     APPEND_PARAMETER FILENAME 512 STRING "" "Filename written to"
 
 <%= cfs_cmd_hdr(target_name, 'CF_CMD_ENABLE_DEQUEUE',  1,  16, "Enable dequeue (tx file) for a channel") %>

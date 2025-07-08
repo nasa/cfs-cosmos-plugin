@@ -23,13 +23,3 @@
 <%= cfs_cmd_hdr(target_name, 'HS_CMD_ENA_CPU_HOG', 1, 10, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'HS_CMD_DIS_CPU_HOG', 1, 11, "Telecommand Message") %>
-
-<%= cfs_cmd_hdr(target_name, 'HS_CMD_REPORT_DIAG', 1, 12, "Telecommand Message") %>
-
-<%= cfs_cmd_hdr(target_name, 'HS_CMD_SET_UTIL_PARAMS', 1, 13, "Telecommand Message") %>
-  APPEND_PARAMETER MULT1 32 INT MIN_INT32 MAX_INT32 1     "CPU Utilization Conversion Factor Multiplication 1"
-  APPEND_PARAMETER DIV   32 INT MIN_INT32 MAX_INT32 10000 "CPU Utilization Conversion Factor Division"
-  APPEND_PARAMETER MULT2 32 INT MIN_INT32 MAX_INT32 1     "CPU Utilization Conversion Factor Multiplication 2"
-
-<%= cfs_cmd_hdr(target_name, 'HS_CMD_SET_UTIL_DIAG', 1, 14, "Telecommand Message") %>
-  APPEND_PARAMETER MASK 32 UINT MIN_UINT32 MAX_UINT32 0xFFFFFFFF "CPU Utilization Diagnostics Mask"
