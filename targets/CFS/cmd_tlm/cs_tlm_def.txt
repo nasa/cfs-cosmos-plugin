@@ -41,7 +41,7 @@
     APPEND_ITEM Currententryintable          16 UINT  "Current entry ID in table being checksummed"
     APPEND_ITEM Eeprombaseline               32 UINT  "Baseline checksum for all of Eeprom"
     APPEND_ITEM Osbaseline                   32 UINT  "Baseline checksum for the OS code segment"
-    APPEND_ITEM Cfecorebaseline              32 UINT  "Basline checksum for the cFE core"
+    APPEND_ITEM Cfecorebaseline              32 UINT  "Baseline checksum for the cFE core"
 <% if $cpu_addr_var_len == 64 %>
     APPEND_ITEM Lastoneshotaddress           64 UINT  "Address used in last one shot checksum command"
 <% else %>

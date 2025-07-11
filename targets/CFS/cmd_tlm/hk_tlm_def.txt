@@ -5,7 +5,8 @@
     APPEND_ITEM COMBINED_PKTS_SENT 16 UINT "Count of combined tlm pkts sent"
     APPEND_ITEM MISSING_DATA_CTR 16 UINT "Number of times missing data was detected"
     APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Memory pool handle used to get mempool diags"
-
+        FORMAT_STRING "0x%08X"
+        
 # Packet definition depends on HK copy table
 <%= cfs_tlm_hdr(target_name, 'HK_COMBINED_PKT1', 1, "HK Combined Packet 1") %>
 

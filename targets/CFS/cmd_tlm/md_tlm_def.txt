@@ -36,7 +36,7 @@
     APPEND_ITEM ADDR_COUNT  8 UINT "Number of addresses being sent"
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
     APPEND_ITEM RATE       32 UINT "Number of counts between packet sends"
-    APPEND_ITEM SIGNATURE 256 STRING "Signature
+    APPEND_ITEM SIGNATURE 256 STRING "Signature"
     APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
 
 # The dwell telemetry packets all have the same structure, just different message IDs

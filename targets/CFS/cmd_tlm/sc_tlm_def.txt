@@ -35,22 +35,16 @@
   APPEND_ITEM APPEND_ENTRY_COUNT 16 UINT "Number of cmd entries in current Append ATS table"
   APPEND_ITEM APPEND_BYTE_COUNT  16 UINT "Size of cmd entries in current Append ATS table"
   APPEND_ITEM APPEND_LOAD_COUNT  16 UINT "Total number of Append ATS table loads"
-  APPEND_ITEM ATP_CMD_NUMBER     32 UINT "current command number"
+  APPEND_ITEM ATP_CMD_NUMBER     32 UINT "Current command number"
 <% $sc_num_ats.times do |n|  %>
   APPEND_ITEM ATP_<%=n+1%>_FREE_BYTES 32 UINT "Free Bytes in ATS <%=n+1%>"
 <% end %>
   APPEND_ITEM NEXT_RTS_TIME      32 UINT "Next RTS cmd Absolute Time"
   APPEND_ITEM NEXT_ATS_TIME      32 UINT "Next ATS Command Time (seconds)"
-  # Byte 76
-  # Cmd & Tlm Server will output the following warning that can be ignored:
-  #   WARN: Bit definition overlap at bit offset 608 for packet SC HK_TLM_PKT items RTS_1_EXE and RTS_W1_EXE_STATUS
 <% $sc_num_rts_status_fields.times do |n|  %>
   APPEND_ITEM RTS_W<%=n%>_EXE_STATUS 16 UINT "RTS Executing Status Word <%=n%> Bit Map"
     FORMAT_STRING "0x%04X"
 <% end %>
-  # Byte 84
-  # Cmd & Tlm Server will output the following warning that can be ignored:
-  #   WARN: Bit definition overlap at bit offset 672 for packet SC HK_TLM_PKT items RTS_1_DIS and RTS_W1_DIS_STATUS
 <% $sc_num_rts_status_fields.times do |n|  %>
   APPEND_ITEM RTS_W<%=n%>_DIS_STATUS 16 UINT "RTS Disabled Status Word <%=n%> Bit Map"
     FORMAT_STRING "0x%04X"

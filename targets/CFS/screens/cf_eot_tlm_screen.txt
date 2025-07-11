@@ -11,7 +11,7 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  CF_EOT STATE "State:"
   LABELVALUEDESC <%= target_name %>  CF_EOT TXN_STAT "Transmission Status:"
   LABELVALUEDESC <%= target_name %>  CF_EOT SRC_EID "Source EID:"
-  LABELVALUEDESC <%= target_name %>  CF_EOT PEER_EID "Peer EIT:"
+  LABELVALUEDESC <%= target_name %>  CF_EOT PEER_EID "Peer EID:"
   LABELVALUEDESC <%= target_name %>  CF_EOT FSIZE "File Size:"
   LABELVALUEDESC <%= target_name %>  CF_EOT CRC_RESULT "CRC Result:"
   LABELVALUEDESC <%= target_name %>  CF_EOT FNAMES_SRC_FILENAME "Source File Name:"
