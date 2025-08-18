@@ -6,6 +6,12 @@
 <% 25.times do |entry_idx| %>
     APPEND_PARAMETER LENGTH_<%= entry_idx %> 16 UINT 0 MAX_UINT16 0
     APPEND_PARAMETER DELAY_<%= entry_idx %> 16 UINT 0 MAX_UINT16 0
+  <% if $cpu_addr_var_len == 64 %>
+    APPEND_PARAMETER PADDING_<%= entry_idx %> 32 UINT 0 0 0
+    APPEND_PARAMETER OFFSET_<%= entry_idx %> 64 UINT 0 MAX_UINT64 0
+  <% else %>
     APPEND_PARAMETER OFFSET_<%= entry_idx %> 32 UINT 0 MAX_UINT32 0
+  <% end %>  
     APPEND_PARAMETER SYM_NAME_<%= entry_idx %> 512 STRING ""
 <% end %>
+    APPEND_PARAMETER PADDING 32 UINT 0 0 0

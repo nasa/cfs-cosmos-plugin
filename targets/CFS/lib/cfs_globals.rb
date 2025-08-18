@@ -126,3 +126,5 @@ $sc_num_rts_status_fields = (($sc_num_rts + $sc_num_rts_in_uint16 - 1) / $sc_num
 $md_num_dwell_tables = 4
 
 $cpu_addr_var_len = 64
+
+$ds_move_files = true
