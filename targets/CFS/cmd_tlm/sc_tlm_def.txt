@@ -13,8 +13,8 @@
   APPEND_ITEM CONT_ATS_ON_FAIL    8 UINT "In the event of ATS execution failure (ats command fails checksum) , the ATS execution will continue if this flag is set to TRUE and will stop if this flag is set to FALSE"
     STATE FALSE 0
     STATE TRUE  1
-  APPEND_ITEM CMD_ERROR_COUNT     8 UINT "Counts Request Errors"
-  APPEND_ITEM CMD_VALID_COUNT     8 UINT "Counts Ground Requests"
+  APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Counts Request Errors"
+  APPEND_ITEM COMMAND_COUNTER     8 UINT "Counts Ground Requests"
   APPEND_ITEM PADDING8            8 UINT ""
   APPEND_ITEM SWITCH_PEND_FLAG   16 UINT "Is an ats switch pending? 0 = NO, 1 = YES This means that the ATS switch is waiting until a safe time"
     STATE NO  0

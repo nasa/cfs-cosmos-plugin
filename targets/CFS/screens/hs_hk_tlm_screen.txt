@@ -5,8 +5,8 @@ VERTICAL
   TITLE "<%= target_name %> HS Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-  LABELVALUEDESC <%= target_name %>  HS_HK CMD_COUNTER  "Command Count:"
-  LABELVALUEDESC <%= target_name %>  HS_HK CMD_ERR_COUNTER  "Command Error Count:"
+  LABELVALUEDESC <%= target_name %>  HS_HK COMMAND_COUNTER  "Command Count:"
+  LABELVALUEDESC <%= target_name %>  HS_HK COMMAND_ERROR_COUNTER  "Command Error Count:"
   LABELVALUEDESC <%= target_name %>  HS_HK APP_MON_STATE "Application Monitor State:"
   LABELVALUEDESC <%= target_name %>  HS_HK EVENT_MON_STATE "Events Monitor State:"
   LABELVALUEDESC <%= target_name %>  HS_HK ALIVENESS_STATE "Aliveness Indicator State:"

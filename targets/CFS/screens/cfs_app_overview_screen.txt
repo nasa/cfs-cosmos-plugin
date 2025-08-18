@@ -1,0 +1,109 @@
+SCREEN AUTO AUTO 1.0
+<% require 'cfs_target_num_color' %>
+
+VERTICAL
+  TITLE "<%= target_name %> cFE Overview Screen" Courier 20 Normal true
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
+
+MATRIXBYCOLUMNS 6 2
+
+  LABEL "App Name"
+  LABEL "Seq Count"
+  LABEL "Cmd Count"
+  LABEL "Err Count"
+  LABEL "No-Op Cmd"
+  LABEL "Reset Cmd"
+
+  LABEL "CF"
+  VALUE <%= target_name %> CF_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> CF_HK COMMAND_COUNTER
+  VALUE <%= target_name %> CF_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> CF_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> CF_CMD_RESET_COUNTERS")'
+
+  LABEL "CI_LAB"
+  VALUE <%= target_name %> CI_LAB_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> CI_LAB_HK COMMAND_COUNTER
+  VALUE <%= target_name %> CI_LAB_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> CI_LAB_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> CI_LAB_CMD_RESET_COUNTERS")'
+
+  LABEL "CS"
+  VALUE <%= target_name %> CS_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> CS_HK COMMAND_COUNTER
+  VALUE <%= target_name %> CS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> CS_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> CS_CMD_RESET_COUNTERS")'
+
+  LABEL "DS"
+  VALUE <%= target_name %> DS_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> DS_HK COMMAND_COUNTER
+  VALUE <%= target_name %> DS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> DS_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> DS_CMD_RESET_COUNTERS")'
+
+  LABEL "FM"
+  VALUE <%= target_name %> FM_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> FM_HK COMMAND_COUNTER
+  VALUE <%= target_name %> FM_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> FM_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> FM_CMD_RESET_COUNTERS")'
+
+  LABEL "HK"
+  VALUE <%= target_name %> HK_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> HK_HK COMMAND_COUNTER
+  VALUE <%= target_name %> HK_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> HK_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> HK_CMD_RESET_COUNTERS")'
+
+  LABEL "HS"
+  VALUE <%= target_name %> HS_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> HS_HK COMMAND_COUNTER
+  VALUE <%= target_name %> HS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> HS_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> HS_CMD_RESET_COUNTERS")'
+
+  LABEL "LC"
+  VALUE <%= target_name %> LC_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> LC_HK COMMAND_COUNTER
+  VALUE <%= target_name %> LC_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> LC_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> LC_CMD_RESET_COUNTERS")'
+
+  LABEL "MD"
+  VALUE <%= target_name %> MD_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> MD_HK COMMAND_COUNTER
+  VALUE <%= target_name %> MD_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> MD_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> MD_CMD_RESET_COUNTERS")'
+
+  LABEL "MM"
+  VALUE <%= target_name %> MM_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> MM_HK COMMAND_COUNTER
+  VALUE <%= target_name %> MM_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> MM_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> MM_CMD_RESET_COUNTERS")'
+
+  LABEL "SAMPLE_APP"
+  VALUE <%= target_name %> SAMPLE_APP_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER
+  VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_RESET_COUNTERS")'
+
+  LABEL "SC"
+  VALUE <%= target_name %> SC_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> SC_HK COMMAND_COUNTER
+  VALUE <%= target_name %> SC_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> SC_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> SC_CMD_RESET_COUNTERS")'
+
+  LABEL "TO_LAB"
+  VALUE <%= target_name %> TO_LAB_HK CCSDS_SEQUENCE
+  VALUE <%= target_name %> TO_LAB_HK COMMAND_COUNTER
+  VALUE <%= target_name %> TO_LAB_HK COMMAND_ERROR_COUNTER
+  BUTTON 'No-Op' 'api.cmd("<%= target_name %> TO_LAB_CMD_NOOP")'
+  BUTTON 'Reset' 'api.cmd("<%= target_name %> TO_LAB_CMD_RESET_COUNTERS")'
+
+END
+

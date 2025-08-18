@@ -2,7 +2,7 @@ SCREEN AUTO AUTO 1.0
 <% require 'cfs_target_num_color' %>
 
 VERTICAL
-  TITLE "<%= target_name %> FSW Overview Screen" Courier 20 Normal true
+  TITLE "<%= target_name %> cFE Overview Screen" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
 MATRIXBYCOLUMNS 6 2
@@ -48,27 +48,6 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> CFE_TIME_HK COMMAND_ERROR_COUNTER
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> CFE_TIME_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> CFE_TIME_CMD_RESET_COUNTERS")'
-
-  LABEL "CI_LAB"
-  VALUE <%= target_name %> CI_LAB_HK CCSDS_SEQUENCE
-  VALUE <%= target_name %> CI_LAB_HK COMMAND_COUNTER
-  VALUE <%= target_name %> CI_LAB_HK COMMAND_ERROR_COUNTER
-  BUTTON 'No-Op' 'api.cmd("<%= target_name %> CI_LAB_CMD_NOOP")'
-  BUTTON 'Reset' 'api.cmd("<%= target_name %> CI_LAB_CMD_RESET_COUNTERS")'
-
-  LABEL "TO_LAB"
-  VALUE <%= target_name %> TO_LAB_HK CCSDS_SEQUENCE
-  VALUE <%= target_name %> TO_LAB_HK COMMAND_COUNTER
-  VALUE <%= target_name %> TO_LAB_HK COMMAND_ERROR_COUNTER
-  BUTTON 'No-Op' 'api.cmd("<%= target_name %> TO_LAB_CMD_NOOP")'
-  BUTTON 'Reset' 'api.cmd("<%= target_name %> TO_LAB_CMD_RESET_COUNTERS")'
-
-  LABEL "SAMPLE_APP"
-  VALUE <%= target_name %> SAMPLE_APP_HK CCSDS_SEQUENCE
-  VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER
-  VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_ERROR_COUNTER
-  BUTTON 'No-Op' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_NOOP")'
-  BUTTON 'Reset' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_RESET_COUNTERS")'
 
 END
 

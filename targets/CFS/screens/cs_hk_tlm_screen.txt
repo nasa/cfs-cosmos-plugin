@@ -5,8 +5,8 @@ VERTICAL
   TITLE "<%= target_name %> CS Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-  LABELVALUEDESC <%= target_name %>  CS_HK Cmdcounter  "Command Count:"
-  LABELVALUEDESC <%= target_name %>  CS_HK Cmderrcounter  "Command Error Count:"
+  LABELVALUEDESC <%= target_name %>  CS_HK COMMAND_COUNTER  "Command Count:"
+  LABELVALUEDESC <%= target_name %>  CS_HK COMMAND_ERROR_COUNTER  "Command Error Count:"
   LABELVALUEDESC <%= target_name %>  CS_HK Checksumstate "Global Checksum State:"
   LABELVALUEDESC <%= target_name %>  CS_HK Recomputeinprogress "Recompute in Progress?"
   LABELVALUEDESC <%= target_name %>  CS_HK Oneshotinprogress "Oneshot in Progress?"

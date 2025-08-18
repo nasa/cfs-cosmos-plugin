@@ -146,7 +146,7 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x18B3,
         packet_names: [
             "CF_CMD_NOOP",
-            "CF_CMD_RESET",
+            "CF_CMD_RESET_COUNTERS",
             "CF_CMD_TX_FILE",
             "CF_CMD_PLAYBACK_DIR",
             "CF_CMD_FREEZE",

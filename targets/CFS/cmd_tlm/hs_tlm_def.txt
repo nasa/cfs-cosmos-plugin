@@ -1,6 +1,6 @@
 <%= cfs_tlm_hdr(target_name, 'HS_HK', 1, "HS Hk Tlm") %>
-   APPEND_ITEM CMD_COUNTER 8 UINT "Application command counter"
-   APPEND_ITEM CMD_ERR_COUNTER 8 UINT "Application command error counter"
+   APPEND_ITEM COMMAND_COUNTER 8 UINT "Application command counter"
+   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Application command error counter"
    APPEND_ITEM APP_MON_STATE   8 UINT "Critical Application Monitor operational state"
       STATE DISABLED 0
       STATE ENABLED  1

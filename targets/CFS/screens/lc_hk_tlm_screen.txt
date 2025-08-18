@@ -5,8 +5,8 @@ VERTICAL
   TITLE "<%= target_name %> LC Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-  LABELVALUEDESC <%= target_name %>  LC_HK CMD_VALID_COUNT  "Command Count:"
-  LABELVALUEDESC <%= target_name %>  LC_HK CMD_ERROR_COUNT  "Command Error Count:"
+  LABELVALUEDESC <%= target_name %>  LC_HK COMMAND_COUNTER  "Command Count:"
+  LABELVALUEDESC <%= target_name %>  LC_HK COMMAND_ERROR_COUNTER  "Command Error Count:"
   LABELVALUEDESC <%= target_name %>  LC_HK APP_STATE        "App State:"
   LABELVALUEDESC <%= target_name %>  LC_HK PASSIVE_RTS_EXE_CNT "Uninitiated RTSs due to Passive State:"
   LABELVALUEDESC <%= target_name %>  LC_HK WPS_IN_USE        "Active WPs Count:"

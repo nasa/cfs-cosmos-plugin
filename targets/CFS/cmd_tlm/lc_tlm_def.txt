@@ -1,7 +1,7 @@
 <%= cfs_tlm_hdr(target_name, 'LC_HK', 1, "LC Hk Tlm") %>
-  APPEND_ITEM CMD_VALID_COUNT      8 UINT "LC Application Command Counter"
-  APPEND_ITEM CMD_ERROR_COUNT      8 UINT "LC Application Command Error Counter"
-  APPEND_ITEM APP_STATE            8 UINT "Current LC application operating state"
+  APPEND_ITEM COMMAND_COUNTER       8 UINT "LC Application Command Counter"
+  APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "LC Application Command Error Counter"
+  APPEND_ITEM APP_STATE             8 UINT "Current LC application operating state"
     STATE UNDEF    0
     STATE ACTIVE   1
     STATE PASSIVE  2

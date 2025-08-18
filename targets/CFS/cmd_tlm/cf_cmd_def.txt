@@ -1,6 +1,6 @@
 <%= cfs_cmd_hdr(target_name, 'CF_CMD_NOOP',  1,  0, "CF No-Op Cmd") %>
 
-<%= cfs_cmd_hdr(target_name, 'CF_CMD_RESET', 1,  1, "Resets HK TLM parent and child task counters") %>
+<%= cfs_cmd_hdr(target_name, 'CF_CMD_RESET_COUNTERS', 1,  1, "Resets HK TLM parent and child task counters") %>
     APPEND_PARAMETER RESET_TYPE 8 UINT 0 4 0 "Reset Value Type"
         STATE ALL 0
         STATE CMD_COUNT 1

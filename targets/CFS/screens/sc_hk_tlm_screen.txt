@@ -5,8 +5,8 @@ VERTICAL
   TITLE "<%= target_name %> SC Housekeeping" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-  LABELVALUEDESC <%= target_name %>  SC_HK CMD_VALID_COUNT  "Command Count:"
-  LABELVALUEDESC <%= target_name %>  SC_HK CMD_ERROR_COUNT  "Command Error Count:"
+  LABELVALUEDESC <%= target_name %>  SC_HK COMMAND_COUNTER  "Command Count:"
+  LABELVALUEDESC <%= target_name %>  SC_HK COMMAND_ERROR_COUNTER  "Command Error Count:"
 
   TABBOOK
     TABITEM "ATS Info" 

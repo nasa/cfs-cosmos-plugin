@@ -1,6 +1,6 @@
 <%= cfs_tlm_hdr(target_name, 'MD_HK', 1, "MD Hk Tlm") %>
-    APPEND_ITEM CMD_ERROR_COUNT 8 UINT "Command Error Counter"
-    APPEND_ITEM CMD_VALID_COUNT 8 UINT "Command Valid Counter"
+    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
+    APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Valid Counter"
     APPEND_ITEM DWELL_ENABLED_MASK 16 UINT "Mask of enabled dwell tables"
 <% $md_num_dwell_tables.times do |tbl_idx| %>
     APPEND_ITEM DWELL_TBL_ADDR_COUNT_<%=tbl_idx+1%> 16 UINT "Number of dwell addresses for tbl <%=tbl_idx+1%>"
