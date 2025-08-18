@@ -115,16 +115,42 @@ $cfs_time_server_config = true
 # -------------------------------------------------------------------------------------------------
 $cfs_time_client_config = false
 
+# -------------------------------------------------------------------------------------------------
+# Number of Absolute Time Sequences in SC
+#   Note: This value should correspond with SC_NUMBER_OF_ATS
+# -------------------------------------------------------------------------------------------------
 $sc_num_ats = 2
 
+# -------------------------------------------------------------------------------------------------
+# Number of Relative Time Sequences in SC
+#   Note: This value should correspond with SC_NUMBER_OF_RTS
+# -------------------------------------------------------------------------------------------------
 $sc_num_rts = 64
 
+# -------------------------------------------------------------------------------------------------
+# Number of RTSs that can fit their statuses in a uint16
+#   Note: This value should correspond with SC_NUMBER_OF_RTS_IN_UINT16
+# -------------------------------------------------------------------------------------------------
 $sc_num_rts_in_uint16 = 16
 
+# -------------------------------------------------------------------------------------------------
+# Number of uint16 RTS status fields in the SC housekeeping telemetry
+# -------------------------------------------------------------------------------------------------
 $sc_num_rts_status_fields = (($sc_num_rts + $sc_num_rts_in_uint16 - 1) / $sc_num_rts_in_uint16)
 
+# -------------------------------------------------------------------------------------------------
+# Number of MD dwell tables defined in the system
+#   Note: This value should correspond with MD_NUM_DWELL_TABLES
+# -------------------------------------------------------------------------------------------------
 $md_num_dwell_tables = 4
 
+# -------------------------------------------------------------------------------------------------
+# Length of the cpuaddr type (this is 64-bit on Linux but 32-bit on some other systems)
+# -------------------------------------------------------------------------------------------------
 $cpu_addr_var_len = 64
 
+# -------------------------------------------------------------------------------------------------
+# Whether to move files to the downlink directory after closing
+#   Note: This value should correspond with DS_MOVE_FILES
+# -------------------------------------------------------------------------------------------------
 $ds_move_files = true
