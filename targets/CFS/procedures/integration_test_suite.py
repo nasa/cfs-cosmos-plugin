@@ -1,6 +1,7 @@
 from openc3.script.suite import Suite, Group
 
 load_utility("<%= target_name %>/procedures/integration_test_fsw_aliveness.py")
+load_utility("<%= target_name %>/procedures/integration_test_fsw_all_app_aliveness.py")
 
 class FSW_Integration_Test_Suite(Suite):
   def __init__(self):
@@ -12,6 +13,7 @@ class FSW_Integration_Test_Suite(Suite):
       # these are added in alphabetical order
       # ------------------------------------------------------------------------
       self.add_group(integration_test_fsw_aliveness)
+      #self.add_group(integration_test_fsw_all_app_aliveness)
 
   def setup(self):
       # Run when Suite Setup button is pressed
@@ -19,13 +21,17 @@ class FSW_Integration_Test_Suite(Suite):
       Group.print(f"Starting FSW Integration Test Suite against the following target:")
       Group.print(f"cFS Target Name (target_name): <%= target_name %>")
       
-      #send the command, TO_LAB_CMD_ENABLE_OUT
+      # Send the command, TO_LAB_CMD_ENABLE_OUTPUT
       to_lab_dest_ip = "127.0.0.1"
       cmd(f"<%= target_name %> TO_LAB_CMD_ENABLE_OUTPUT with DEST_IP '{to_lab_dest_ip}'")
+
       Group.print(f"Sent TO_LAB_CMD_ENABLE_OUTPUT command to <%= target_name %> with DEST_IP '{to_lab_dest_ip}'")
 
       # Wait for one TO packet to be received
-      wait_check_packet(f"<%= target_name %>", "TO_LAB_HK", 1, 6)
+      wait_check_packet(f"<%= target_name %>", "TO_LAB_HK", 1, 10)
+
+      # Wait for other packets to start getting received
+      wait(10)
 
   def teardown(self):
       # Run when Suite Teardown button is pressed

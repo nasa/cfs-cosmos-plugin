@@ -1,22 +1,22 @@
 from openc3.script.suite import Group
 
 # Group class name should indicate what the scripts are testing
-class integration_test_fsw_aliveness(Group):
+class integration_test_fsw_all_app_aliveness(Group):
     """
     Test cases for checking FSW "aliveness"
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
 
-    def test_fsw_aliveness(self):
+    def test_fsw_all_app_aliveness(self):
         """
-        FSW Aliveness Test for standard cFS bundle apps
-        - Send a no-op command to each cFS bundle app in the system
+        FSW Aliveness Test for all open source apps
+        - Send a no-op command to each cFS FSW app in the system
             then verify the command was received (by checking telemetry)
         - Reset the command counter
             then verify the command was received (by checking telemetry)
         """
         # Create a list of apps to test
-        fsw_apps_to_test = ["CFE_ES", "CFE_EVS", "CFE_SB", "CFE_TBL", "CFE_TIME", "CI_LAB", "TO_LAB", "SAMPLE_APP"]
+        fsw_apps_to_test = ["CF", "CS", "DS", "FM", "HK", "HS", "LC", "MD", "MM", "SC"]
 
         # For each app in the list, verify its alive by sending a noop, then reset the hk counters
         for app_name in fsw_apps_to_test:

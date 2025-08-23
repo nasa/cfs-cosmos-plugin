@@ -62,3 +62,6 @@
       FORMAT_STRING "0x%08X"
     APPEND_ITEM FNAMES_SRC_FILENAME 512 STRING "Source filename"
     APPEND_ITEM FNAMES_DST_FILENAME 512 STRING "Destination filename"
+    APPEND_ITEM PADDING_0 32 UINT "Padding for alignment"
+    APPEND_ITEM PADDING_1 64 UINT "Padding for alignment"
+    
