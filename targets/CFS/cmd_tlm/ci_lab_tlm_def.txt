@@ -1,11 +1,6 @@
 <%= cfs_tlm_hdr(target_name, 'CI_LAB_HK', 1, "CI_LAB Hk Tlm") %>
-<% if $cfs_globals_eds_enabled == true %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
-<% else %>
-   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
-   APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Counter"
-<% end %>
    APPEND_ITEM ENABLE_CHECKSUMS 8 UINT "Checksums enabled"
    APPEND_ITEM SOCKET_CONNECTED 8 UINT "Socket connected"
       STATE FALSE 0

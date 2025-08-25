@@ -173,6 +173,7 @@ $CFS_CMD_TLM_LIST = {
             "SAMPLE_APP_CMD_NOOP",
             "SAMPLE_APP_CMD_RESET_COUNTERS",
             "SAMPLE_APP_CMD_PROCESS",
+            "SAMPLE_APP_CMD_DISPLAY_PARAM",
         ]
     ),
     "CI_LAB_CMD" => FswMsgInfo.new(

@@ -48,12 +48,12 @@ VERTICAL
 
   # COSMOS has trouble with tabbooks with more than 17 items so the entries are split
   # here into multiple tabbooks
-  <% 8.times do |tab_num| %>
+  <% 16.times do |tab_num| %>
   TABBOOK
-    <% 16.times do |perf_id_index| %>   
-    TABITEM "PerfID <%= perf_id_index + (16 * tab_num) %>" 
-      LABELVALUEDESC <%= target_name %> CFE_ES_HK PERF_FILTER_MASK_<%= perf_id_index + (16 * tab_num) %> "Filter Mask:"
-      LABELVALUEDESC <%= target_name %> CFE_ES_HK PERF_TRIGGER_MASK_<%= perf_id_index + (16 * tab_num) %> "Trigger Mask:"
+    <% 8.times do |perf_id_index| %>   
+    TABITEM "PerfID <%= perf_id_index + (8 * tab_num) %>" 
+      LABELVALUEDESC <%= target_name %> CFE_ES_HK PERF_FILTER_MASK_<%= perf_id_index + (8 * tab_num) %> "Filter Mask:"
+      LABELVALUEDESC <%= target_name %> CFE_ES_HK PERF_TRIGGER_MASK_<%= perf_id_index + (8 * tab_num) %> "Trigger Mask:"
     END
     <% end %>
   END

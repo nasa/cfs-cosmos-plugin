@@ -36,7 +36,7 @@
    APPEND_ITEM SB_BUFFERS_IN_USE 32 UINT "Number of SB message buffers currently in use"
    APPEND_ITEM PEAK_SB_BUFFERS_IN_USE 32 UINT "Max number of SB message buffers in use"
    APPEND_ITEM MAX_PIPE_DEPTH_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_PIPE_DEPTH"
-<% 64.times do |pipe_index| %>
+<% 32.times do |pipe_index| %>
    APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_PIPE_ID 32 UINT "Pipe ID"
       FORMAT_STRING "0x%08X"
    APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_MAX_QUEUE_DEPTH 16 UINT "Number of messages the pipe can hold"

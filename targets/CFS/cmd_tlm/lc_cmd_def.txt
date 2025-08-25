@@ -12,7 +12,7 @@
 
 <%= cfs_cmd_hdr(target_name, 'LC_CMD_SET_AP_STATE', 1, 3, "Telecommand Message") %>
   APPEND_PARAMETER AP_ID     16 UINT MIN_UINT16 MAX_UINT16 0 "Which actionpoint(s) to change"
-  APPEND_PARAMETER NEW_STATE 16 UINT MIN_UINT16 MAX_UINT16 0 "1=Active, 2=Passive, 3=Disabled"
+  APPEND_PARAMETER NEW_STATE 16 UINT MIN_UINT16 MAX_UINT16 1 "1=Active, 2=Passive, 3=Disabled"
     STATE ACTIVE   1
     STATE PASSIVE  2
     STATE DISABLED 3

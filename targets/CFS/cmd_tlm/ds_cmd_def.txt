@@ -74,11 +74,9 @@
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_GET_FILE_INFO', 1, 15, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_ADD_MID', 1, 16, "Telecommand Message") %>
-   APPEND_PARAMETER PADDING           64 UINT 0 0 0 "Padding?"
    APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID to add to Packet Filter Table"
 
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_CLOSE_ALL', 1, 17, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_REMOVE_MID', 1, 18, "Telecommand Message") %>
-    APPEND_PARAMETER PADDING           64 UINT 0 0 0 "Padding?"
-    APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID to remove from Packet Filter Table"
+   APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID to remove from Packet Filter Table"
