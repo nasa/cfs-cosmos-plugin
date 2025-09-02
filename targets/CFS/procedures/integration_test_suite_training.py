@@ -1,3 +1,8 @@
+#
+# This integration test suite is intended for use in the cFS training. For all other purposes,
+# the integration_test_suite.py is recommended.
+#
+
 from openc3.script.suite import Suite, Group
 
 load_utility("<%= target_name %>/procedures/integration_test_fsw_aliveness.py")
