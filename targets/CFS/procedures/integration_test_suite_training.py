@@ -1,7 +1,6 @@
 from openc3.script.suite import Suite, Group
 
 load_utility("<%= target_name %>/procedures/integration_test_fsw_aliveness.py")
-load_utility("<%= target_name %>/procedures/integration_test_fsw_all_app_aliveness.py")
 
 class FSW_Integration_Test_Suite(Suite):
   def __init__(self):
@@ -13,7 +12,6 @@ class FSW_Integration_Test_Suite(Suite):
       # these are added in alphabetical order
       # ------------------------------------------------------------------------
       self.add_group(integration_test_fsw_aliveness)
-      self.add_group(integration_test_fsw_all_app_aliveness)
 
   def setup(self):
       # Run when Suite Setup button is pressed
