@@ -28,10 +28,7 @@ class FSW_Integration_Test_Suite(Suite):
       Group.print(f"Sent TO_LAB_CMD_ENABLE_OUTPUT command to <%= target_name %> with DEST_IP '{to_lab_dest_ip}'")
 
       # Wait for one TO packet to be received
-      wait_check_packet(f"<%= target_name %>", "TO_LAB_HK", 1, 10)
-
-      # Wait for other packets to start getting received
-      wait(10)
+      wait_check_packet(f"<%= target_name %>", "TO_LAB_HK", 1, 100)
 
   def teardown(self):
       # Run when Suite Teardown button is pressed

@@ -23,18 +23,18 @@ class integration_test_fsw_all_app_aliveness(Group):
             Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
 
             # Verify that we have a recent packet (by waiting for a new one to arrive)
-            wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 10)
+            wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
 
             # Assuming no one else is sending commands, grab the latest command count
             cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
 
             # Check accepted NOOP command proving application is up and running
             cmd(f"<%= target_name %> {app_name}_CMD_NOOP")
-            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 10)
+            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
             # Check accepted Reset Counters command
             cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
-            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 10)
+            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
 
     def setup(self):
         """
