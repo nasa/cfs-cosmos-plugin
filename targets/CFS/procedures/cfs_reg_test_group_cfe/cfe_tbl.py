@@ -3,7 +3,6 @@ from openc3.script.suite import Group
 # Group class name should indicate what the scripts are testing
 class cfs_reg_test_group_cfe_tbl(Group):
     """
-    Test cases for checking FSW "aliveness"
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
 
