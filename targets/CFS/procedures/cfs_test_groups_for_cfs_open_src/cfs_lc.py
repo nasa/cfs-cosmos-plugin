@@ -1,7 +1,7 @@
 from openc3.script.suite import Group
 
 # Group class name should indicate what the scripts are testing
-class cfs_reg_test_group_cfs_lc(Group):
+class cfs_test_group_cfs_lc(Group):
     """
     - Methods beginning with script_ or test_ are added to Script dropdown
     """

@@ -1,7 +1,7 @@
 from openc3.script.suite import Group
 
 # Group class name should indicate what the scripts are testing
-class cfs_reg_test_group_cfs_sample_app(Group):
+class cfs_test_group_cfs_hk(Group):
     """
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
@@ -15,7 +15,7 @@ class cfs_reg_test_group_cfs_sample_app(Group):
             then verify the command was received (by checking the command counter was cleared)
         """
         # Create a list of apps to test
-        fsw_apps_to_test = ["SAMPLE_APP"]
+        fsw_apps_to_test = ["HK"]
 
         # For each app in the list, verify its alive by sending a noop, then reset the hk counters
         for app_name in fsw_apps_to_test:
