@@ -9,11 +9,11 @@ class cfs_reg_test_group_cfs_fm(Group):
 
     def test_aliveness(self):
         """
-        FSW Aliveness Test for standard cFS bundle apps
-        - Send a no-op command to each cFS bundle app in the system
-            then verify the command was received (by checking telemetry)
+        FSW Aliveness Test
+        - Send a no-op command
+            then verify the command was received (by checking the command counter incremented)
         - Reset the command counter
-            then verify the command was received (by checking telemetry)
+            then verify the command was received (by checking the command counter was cleared)
         """
         # Create a list of apps to test
         fsw_apps_to_test = ["FM"]
