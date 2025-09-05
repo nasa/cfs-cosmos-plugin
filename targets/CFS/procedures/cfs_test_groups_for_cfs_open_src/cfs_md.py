@@ -14,26 +14,24 @@ class cfs_test_group_cfs_md(Group):
         - Reset the command counter
             then verify the command was received (by checking the command counter was cleared)
         """
-        # Create a list of apps to test
-        fsw_apps_to_test = ["MD"]
+        app_name = "MD"
 
-        # For each app in the list, verify its alive by sending a noop, then reset the hk counters
-        for app_name in fsw_apps_to_test:
-            Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
+        Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
 
-            # Verify that we have a recent packet (by waiting for a new one to arrive)
-            wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
+        # Verify that we have a recent packet (by waiting for a new one to arrive)
+        wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
 
-            # Assuming no one else is sending commands, grab the latest command count
-            cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
+        # Assuming no one else is sending commands, grab the latest command count
+        cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
 
-            # Check accepted NOOP command proving application is up and running
-            cmd(f"<%= target_name %> {app_name}_CMD_NOOP")
-            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        # Check accepted NOOP command proving application is up and running
+        cmd(f"<%= target_name %> {app_name}_CMD_NOOP")
+        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-            # Check accepted Reset Counters command
-            cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
-            wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
+        # Check accepted Reset Counters command
+        cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
+        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
+
 
     def setup(self):
         """
