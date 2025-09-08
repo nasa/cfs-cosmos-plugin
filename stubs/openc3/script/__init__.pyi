@@ -1,0 +1,43 @@
+"""Stub file for openc3.script module - based on COSMOS OpenC3 documentation."""
+from typing import Any, Dict, List, Optional, Tuple, overload
+
+# COSMOS command functions
+def cmd(*args, **kwargs) -> None: ...
+
+# COSMOS telemetry functions  
+def tlm(telemetry_string: str, type: str = 'CONVERTED') -> Any: ...
+
+def get_tlm_packet(
+    packet_string: str, 
+    type: str = 'CONVERTED'
+) -> List[Tuple[str, Any]]: ...
+
+# COSMOS waiting functions
+#wait has two different signatures
+@overload
+def wait(expression: str, timeout: float = 30.0, poll_interval: float = 0.1) -> bool: ...
+
+@overload  
+def wait(seconds: float) -> None: ...
+
+# COSMOS packet subscription functions
+def subscribe_packets(packet_list: List[List[str]]) -> int: ...
+
+def get_packets(
+    subscription_id: int, 
+    block: Optional[int] = None, 
+    count: Optional[int] = None
+) -> Tuple[int, List[Dict[str, Any]]]: ...
+
+# COSMOS script management functions
+def script_run(script_path: str, *args) -> int: ...
+def running_script_stop(script_id: int) -> None: ...
+
+# COSMOS stash functions (persistent key-value storage)
+def stash_set(key: str, value: Any, scope: str = 'SCRIPT') -> None: ...
+def stash_get(key: str, scope: str = 'SCRIPT') -> Any: ...
+
+# COSMOS system information functions
+def get_all_tlm_names(target_name: str) -> List[str]: ...
+def get_target_list() -> List[str]: ...
+
