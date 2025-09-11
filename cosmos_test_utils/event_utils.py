@@ -421,7 +421,7 @@ def start_background_event_logging(filename: Optional[str] = None):
         '''
         
         # Use script_create to create the script
-        script_name = "event_logger_dynamic"
+        script_name = "event_logger_report"
         script_create(script_name, script_content)
         
         # Start the script
