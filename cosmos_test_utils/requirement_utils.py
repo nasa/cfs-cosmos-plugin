@@ -158,11 +158,9 @@ class RequirementTracker:
             set_message = self._format_set_message(requirement_id, set_state, message)
         
         # Display messages
-        print("")
         print(state_transition_msg)
         if set_state != "U":
             print(set_message)
-        print("")
         
         return {
             "result": "success",
