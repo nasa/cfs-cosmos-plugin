@@ -83,15 +83,15 @@ def report_telemetry(
     
     # Calculate deltas for timing fields if this isn't the first run
     if current_packet.get('Num_Updates_Run') != 1:
-        secs_delta = current_packet.get(COMMON_PACKET_TIME_SECONDS_FIELD, 0) - previous_packet.get(COMMON_PACKET_TIME_SECONDS_FIELD, 0)
-        subsecs_delta = current_packet.get(COMMON_PACKET_TIME_SUBSECS_FIELD, 0) - previous_packet.get(COMMON_PACKET_TIME_SUBSECS_FIELD, 0)
-        seq_delta = current_packet.get(COMMON_PACKET_SEQUENCE_COUNT_FIELD, 0) - previous_packet.get(COMMON_PACKET_SEQUENCE_COUNT_FIELD, 0)
+        secs_delta = int(current_packet.get(COMMON_PACKET_TIME_SECONDS_FIELD, 0)) - int(previous_packet.get(COMMON_PACKET_TIME_SECONDS_FIELD, 0))
+        subsecs_delta = int(current_packet.get(COMMON_PACKET_TIME_SUBSECS_FIELD, 0)) - int(previous_packet.get(COMMON_PACKET_TIME_SUBSECS_FIELD, 0))
+        seq_delta = int(current_packet.get(COMMON_PACKET_SEQUENCE_COUNT_FIELD, 0)) - int(previous_packet.get(COMMON_PACKET_SEQUENCE_COUNT_FIELD, 0))
     
         # Handle potential missing fields without crashing
         if all(field in current_packet and field in previous_packet for field in ['PACKET_TIMESECONDS', 'RECEIVED_TIMESECONDS', 'RECEIVED_COUNT']):
             pkt_time_sec_delta = float(current_packet.get('PACKET_TIMESECONDS', '0')) - float(previous_packet.get('PACKET_TIMESECONDS', '0'))
             rec_time_sec_delta = float(current_packet.get('RECEIVED_TIMESECONDS', '0')) - float(previous_packet.get('RECEIVED_TIMESECONDS', '0'))
-            cosmos_rec_cnt_delta = current_packet.get('RECEIVED_COUNT', 0) - previous_packet.get('RECEIVED_COUNT', 0)
+            cosmos_rec_cnt_delta = int(current_packet.get('RECEIVED_COUNT', 0)) - int(previous_packet.get('RECEIVED_COUNT', 0))
         else:
             pkt_time_sec_delta = 0
             rec_time_sec_delta = 0
