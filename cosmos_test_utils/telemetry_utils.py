@@ -47,7 +47,7 @@ def _update_telemetry_values(
     current_vals[target_name][packet_name]["Num_Updates_Run"] += 1
     
     # Get all telemetry points for this packet
-    all_tlm_points = get_tlm_packet(f"{target_name} {packet_name}", type='FORMATTED')
+    all_tlm_points = get_tlm_packet(f"{target_name} {packet_name}", type='RAW')
     
     # Store each telemetry point in the current_vals dictionary
     for tlm_point in all_tlm_points:
