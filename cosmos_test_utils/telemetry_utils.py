@@ -144,15 +144,15 @@ def report_telemetry(
         if 'RECEIVED_COUNT' in current_packet and 'RECEIVED_COUNT' in previous_packet:
             if cosmos_rec_cnt_delta > 0:
                 rate = float(rec_time_sec_delta) / cosmos_rec_cnt_delta
-                print(f">>>  Calculated Rate based on COSMOS derived data = {rate} pkts/sec. "
-                      f"(rounded to 4 significant digits: {rate:.4f} pkts/sec)")
+                print(f">>>  Calculated Rate based on COSMOS derived data = 1 pkt per {rate} secs. "
+                      f"(rounded to 4 significant digits: 1 pkt per {rate:.4f} secs)")
             else:
                 print(">>>  <!> No new Packet was received ")
             
             if seq_delta > 0:
                 rate = float(pkt_time_sec_delta) / seq_delta
-                print(f">>>  Calculated Rate based on CCSDS header data = {rate} pkts/sec. "
-                      f"(rounded to 4 significant digits: {rate:.4f} pkts/sec)")
+                print(f">>>  Calculated Rate based on CCSDS header data = 1 pkt per {rate} secs. "
+                      f"(rounded to 4 significant digits: 1 pkt per {rate:.4f} secs)")
                 if all(field in current_packet for field in ['RECEIVED_TIMEFORMATTED', 'PACKET_TIMEFORMATTED']):
                     if str(current_packet.get('RECEIVED_TIMEFORMATTED')) == str(current_packet.get('PACKET_TIMEFORMATTED')):
                         print(">>>  <!> PACKET_TIMESECONDS and PACKET_TIMEFORMATTED need to be fixed to be calculated from the CCSDS header,")
