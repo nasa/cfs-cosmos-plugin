@@ -62,4 +62,4 @@ from .timing_utils import (
 from .command_utils import CommandSender
 
 # Define the version
-__version__ = '1.0.1'
+__version__ = '1.0.2'
