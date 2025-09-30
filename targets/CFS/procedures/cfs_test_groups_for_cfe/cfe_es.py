@@ -7,7 +7,9 @@ class cfs_test_group_cfe_es(Group):
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
 
-    def test_aliveness(self):
+    # FIXME: Add numbering to each test definition
+
+    def test_00_aliveness(self):
         """
         FSW Aliveness Test
         - Send a no-op command
@@ -19,6 +21,8 @@ class cfs_test_group_cfe_es(Group):
 
         Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
 
+        # FIXME: This checks for 1 - that relies on this test being run first.  Change this.
+        #
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
 
@@ -38,18 +42,20 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the no-op command.
         """
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd(f"<%= target_name %> ES_CMD_NOOP")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
+
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        cmd(f"<%= target_name %> CFE_ES_CMD_NOOP")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-
-        # Enable EVS events
-        # FIXME: Are these not enabled by default?  If not, should this go in setup() in this file, or in the suite?
-        #cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
-        #cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'SAMPLE_APP'")
-        #wait(1)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -64,10 +70,16 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the Restart command specifying Processor Restart.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
 
-        cmd(f"<%= target_name %> ES_CMD_RESTART RESTART_TYPE PROCESSOR")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
 
         # Wait for event
         event_expression = (
@@ -82,10 +94,16 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the Restart command specifying Power-On Restart.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
 
-        cmd(f"<%= target_name %> ES_CMD_RESTART RESTART_TYPE POWER_ON")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE POWER_ON")
 
         # Wait for event
         event_expression = (
@@ -100,15 +118,23 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the StopApp command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        cmd(f"<%= target_name %> ES_CMD_STOP_APP APPLICATION c")
+        # FIXME: Change this function & others so there are no dependencies between functions.
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'SAMPLE_APP'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -123,15 +149,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the StartApp command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        cmd(f"<%= target_name %> ES_CMD_START_APP APPLICATION SAMPLE_APP APP_ENTRY_POINT SAMPLE_APP_Main APP_FILE_NAME sample_app STACK_SIZE 16384 EXCEPTION_ACTION 0 PRIORITY 50")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'SAMPLE_APP', APP_ENTRY_POINT 'SAMPLE_APP_Main', APP_FILE_NAME 'sample_app', STACK_SIZE 16384 EXCEPTION_ACTION 0 PRIORITY 50")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -146,15 +178,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the RestartApp command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        cmd(f"<%= target_name %> ES_CMD_RESTART_APP APPLICATION SAMPLE_APP")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RESTART_APP with APPLICATION 'SAMPLE_APP'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -168,15 +206,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the ReloadApp command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        cmd(f"<%= target_name %> ES_CMD_RELOAD_APP APPLICATION SAMPLE_APP APP_FILE_NAME sample_app")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RELOAD_APP with APPLICATION 'SAMPLE_APP' APP_FILE_NAME 'sample_app'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -190,16 +234,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the QueryOne command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        cmd_count = tlm(f"<%= target_name %> ES_HK COMMAND_COUNTER")
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_QUERY_ONE APPLICATION SAMPLE_APP")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'SAMPLE_APP'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -214,14 +263,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the QueryAll command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_QUERY_ALL FILE_NAME apps.txt")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL with FILE_NAME 'apps.txt'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -236,14 +292,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the QueryAllTasks command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_QUERY_ALL_TASKS FILE_NAME sample_app")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under tests
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL_TASKS with FILE_NAME 'sample_app'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -258,13 +321,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the ClearSysLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_CLEAR_SYS_LOG")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_CLEAR_SYS_LOG")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -279,13 +350,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the WriteSysLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_WRITE_SYS_LOG FILE_NAME logfile.txt")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_WRITE_SYS_LOG with FILE_NAME 'logfile.txt'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -300,17 +379,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the OverwriteSysLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_OVERWRITE_SYS_LOG MODE DISCARD")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_OVER_WRITE_SYS_LOG with MODE DISCARD")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -325,14 +408,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the OverwriteSysLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_OVERWRITE_SYS_LOG MODE OVERWRITE")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_OVER_WRITE_SYS_LOG with MODE OVERWRITE")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -347,16 +437,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the ClearERLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_CLEAR_ER_LOG")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_CLEAR_ER_LOG")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -371,14 +466,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the WriteERLog command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_WRITE_ER_LOG FILE_NAME logfile.txt")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_WRITE_ER_LOG with FILE_NAME 'logfile.txt'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -393,14 +495,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the StartPerfData command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_START_PERF_DATA TRIGGER_MODE START")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_START_PERF_DATA with TRIGGER_MODE START")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -415,14 +524,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the StopPerfData command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_STOP_PERF_DATA DATA_FILE_NAME datafile.txt")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_PERF_DATA with DATA_FILE_NAME 'datafile.txt'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -437,14 +553,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the SetPerfFilterMask command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_SET_PERF_FILTER_MASK FILTER_MASK_NUM 1 FILTER_MASK 10")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_SET_PERF_FILTER_MASK with FILTER_MASK_NUM 1, FILTER_MASK 10")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -459,14 +582,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the SetPerfTriggerMask command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_SET_PERF_TRIGGER_MASK TRIGGER_MASK_NUM 1 TRIGGER_MASK 10")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_SET_PERF_TRIGGER_MASK with TRIGGER_MASK_NUM 1, TRIGGER_MASK 10")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -481,13 +611,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the ResetPRCount command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_RESET_PR_COUNT")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RESET_PR_COUNT")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -502,13 +640,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the SetMaxPRCount command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_SET_MAX_PR_COUNT MAX_PR_COUNT 1")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_SET_MAX_PR_COUNT with MAX_PR_COUNT 1")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -523,13 +669,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the DeleteCDS command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd(f"<%= target_name %> ES_CMD_DELETE_CDS CDS_NAME 'cdsfile'")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'cdsfile'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -544,14 +698,21 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the SendMemPoolStats command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_SEND_MEM_POOL_STATS APPLICATION 'TO' POOL_HANDLE 0x00000000")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with APPLICATION 'TO' POOL_HANDLE 0x00000000")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
@@ -566,20 +727,27 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the DumpCDSRegistry command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
 
-        # FIXME: Verify correct names for command, parameter name, and parameter value.  Also in other tests.
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        # FIXME: Debug events need to be enabled before this command - probably in setup function, if not enabled by default.
-        cmd(f"<%= target_name %> ES_CMD_DUMP_CDS_REGISTRY DUMP_FILENAME 'dumpfile.txt'")
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_DUMP_CDS_REGISTRY with DUMP_FILENAME 'dumpfile.txt'")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Wait for event
         event_expression = (
             f"tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'ES' and " +
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 83 and " +
-            "'Successfully dumped CDS Registry to \'dumpfile.txt\'' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+            "'Successfully dumped CDS Registry to '/ram/dumpfile.txt'' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
             )
         wait_check_expression(event_expression, 5, 0.5, globals())
 
@@ -588,16 +756,24 @@ class cfs_test_group_cfe_es(Group):
         """
         Test the ResetCounters command.
         """
+        # Enable EVS events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'ES'")
+        wait(1)
+
+        # Enable DEBUG events and INFO events
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
 
         # FIXME: First, cause command error counter to increment
 
-        cmd(f"<%= target_name %> ES_CMD_RESET_COUNTERS")
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_RESET_COUNTERS")
 
         # Verify command count is reset to zero
-        wait_check(f"<%= target_name %> ES_HK COMMAND_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 100)
 
         # Verify command error count is reset to zero
-        wait_check(f"<%= target_name %> ES_HK COMMAND_ERROR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_ERROR_COUNTER == 0", 100)
 
         # Wait for event
         event_expression = (
