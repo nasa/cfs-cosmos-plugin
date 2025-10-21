@@ -147,6 +147,14 @@ VERTICAL
                     BUTTON 'No-Op' 'api.cmd("<%= cfs_target_name_from_cpu_num(cpu_index) %> MM_CMD_NOOP")'
                     BUTTON 'Reset' 'api.cmd("<%= cfs_target_name_from_cpu_num(cpu_index) %> MM_CMD_RESET_COUNTERS")'
 
+                    LABEL "SBN"
+                    VALUE <%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_HK CCSDS_SEQUENCE
+                    VALUE <%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_HK COMMAND_COUNTER
+                    VALUE <%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_HK COMMAND_ERROR_COUNTER
+                    BUTTON 'Send Hk' 'api.cmd("<%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_CMD_HK")'
+                    BUTTON 'No-Op' 'api.cmd("<%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_CMD_NOOP")'
+                    BUTTON 'Reset' 'api.cmd("<%= cfs_target_name_from_cpu_num(cpu_index) %> SBN_CMD_RESET_COUNTERS")'
+
                     LABEL "SC"
                     VALUE <%= cfs_target_name_from_cpu_num(cpu_index) %> SC_HK CCSDS_SEQUENCE
                     VALUE <%= cfs_target_name_from_cpu_num(cpu_index) %> SC_HK COMMAND_COUNTER
