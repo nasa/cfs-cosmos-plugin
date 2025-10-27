@@ -1,5 +1,6 @@
 <% require 'cfs_packet_headers' %>
 <% require 'cfs_globals' %>
+<% require 'cfs_fleet_globals' %>
 
 # To expose the EDS enabled flag to the plugin install, uncomment the lines below
 # VARIABLE cfs_eds_enabled false
@@ -14,22 +15,50 @@
 # <% cfs_globals_set_endianness(cfs_endianness) %>
 
 # This should map to the IP address that the FSW is running from
-VARIABLE cfs_intf_ip X.X.X.X
+VARIABLE cfs_1_intf_ip X.X.X.X
+VARIABLE cfs_1_intf_cmd_rx_port 1234
+VARIABLE cfs_1_intf_tlm_tx_port 2234
 
-# This should map to the CPU number of the FSW to connect to
-VARIABLE cfs_cpu_idx 1
+VARIABLE cfs_2_intf_ip X.X.X.X
+VARIABLE cfs_2_intf_cmd_rx_port 1235
+VARIABLE cfs_2_intf_tlm_tx_port 2235
 
-# Declare a new instance of the CFS target
-TARGET CFS <%= cfs_target_name_from_cpu_num(cfs_cpu_idx) %>
+<% (1..$cfs_fleet_globals_num_cfs_targets).each do |cfs_cpu_index| %>
 
-# Set up the FSW cmd/tlm interface
-INTERFACE CFS_<%= cfs_cpu_idx %>_INT udp_interface.rb &
-        <%= cfs_intf_ip %> &
-        <%= cfs_get_port_num_cmd(cfs_cpu_idx) %> &
-        <%= cfs_get_port_num_tlm %> &
-        nil nil 128 nil nil
-    MAP_TARGET <%= cfs_target_name_from_cpu_num(cfs_cpu_idx) %>
-    PROTOCOL WRITE ProtocolCcsdsChecksum
-    PROTOCOL WRITE ProtocolCcsdsLength
-    PROTOCOL READ LengthProtocol 32 16 7 1 BIG_ENDIAN 0 nil
-    PROTOCOL READ ProtocolEvsLog
+    # Declare a new instance of the CFS target
+    TARGET CFS <%= cfs_target_name_from_cpu_num(cfs_cpu_index) %>
+
+    # Select the appropriate IP config input variable (declared above) for this cpu number
+    <% if cfs_cpu_index == 1 %>
+        <% current_cfs_intf_ip     = cfs_1_intf_ip %>
+        <% current_cfs_cmd_rx_port = cfs_1_intf_cmd_rx_port %>
+        <% current_cfs_tlm_tx_port = cfs_1_intf_tlm_tx_port %>
+    <% elsif cfs_cpu_index == 2 %>
+        <% current_cfs_intf_ip     = cfs_2_intf_ip %>
+        <% current_cfs_cmd_rx_port = cfs_2_intf_cmd_rx_port %>
+        <% current_cfs_tlm_tx_port = cfs_2_intf_tlm_tx_port %>
+    <% else %>
+        # This line should cause a plugin compilation error
+        # If this line is hit, the loop count doesn't match the supported number of interfaces
+        <% current_cfs_intf_ip = error %>
+        <% current_cfs_cmd_rx_port = error %>
+        <% current_cfs_tlm_tx_port = error %>
+    <% end %>
+
+    # Set up the FSW cmd/tlm interface
+    INTERFACE CFS_<%= cfs_cpu_index %>_INT udp_interface.rb &
+            <%= current_cfs_intf_ip %> &
+            <%= current_cfs_cmd_rx_port %> &
+            <%= current_cfs_tlm_tx_port %> &
+            nil nil 128 nil nil
+        MAP_TARGET <%= cfs_target_name_from_cpu_num(cfs_cpu_index) %>
+        PROTOCOL WRITE ProtocolCcsdsChecksum
+        PROTOCOL WRITE ProtocolCcsdsLength
+        PROTOCOL READ LengthProtocol 32 16 7 1 BIG_ENDIAN 0 nil
+        PROTOCOL READ ProtocolEvsLog
+<% end %>
+
+# Instantiate one "fleet" target
+# this target does not add new commands/telemetry,
+# it just contains procedures used to test multiple cFS instances
+TARGET CFS_FLEET CFS_FLEET

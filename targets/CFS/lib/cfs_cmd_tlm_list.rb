@@ -1,3 +1,5 @@
+require 'cfs_globals.rb'
+
 #------------------------------------------------------------------------------
 # Class to maintain FSW Message Info
 #------------------------------------------------------------------------------
@@ -647,6 +649,7 @@ end
 
 #------------------------------------------------------------------------------
 # Given the 2-byte stream id, fill in the cpu number and return the result
+# If EDS is not enabled, the base MIDs are used for all MIDs
 #
 # 1. stream_id_base
 #    - base stream id (without 3-bit cpu number set)
@@ -666,7 +669,7 @@ def get_cfs_msg_id_from_base(stream_id_base, cpu_num)
     cpu_num_min = 0
     cpu_num_max = $cfs_total_valid_cpus - 1
     # Set the CPU Number bit field
-    if ((cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
+    if (($cfs_globals_eds_enabled) && (cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
         stream_id = stream_id_base
         stream_id = stream_id & 0xF8FF # clear the 3-bit cpu-num field
         stream_id = stream_id | (cpu_num << 8)
