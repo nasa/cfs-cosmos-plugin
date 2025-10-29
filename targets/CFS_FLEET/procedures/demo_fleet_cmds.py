@@ -4,9 +4,6 @@ from openc3.script import *
 fsw_targets_to_test = []
 fsw_targets_to_test.append("CFS-1")
 fsw_targets_to_test.append("CFS-2")
-fsw_targets_to_test.append("CFS-3")
-fsw_targets_to_test.append("CFS-4")
-fsw_targets_to_test.append("CFS-5")
 
 # Enable Telemetry for all FSW nodes
 cosmos_ip_addr = ask("Enter the IP address that FSW nodes should send telemetry to (default: 127.0.0.1):")
