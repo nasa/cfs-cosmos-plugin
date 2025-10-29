@@ -669,7 +669,7 @@ def get_cfs_msg_id_from_base(stream_id_base, cpu_num)
     cpu_num_min = 0
     cpu_num_max = $cfs_total_valid_cpus - 1
     # Set the CPU Number bit field
-    if (($cfs_globals_eds_enabled) && (cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
+    if ((cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
         stream_id = stream_id_base
         stream_id = stream_id & 0xF8FF # clear the 3-bit cpu-num field
         stream_id = stream_id | (cpu_num << 8)
@@ -699,9 +699,6 @@ def get_cfs_pkt_msg_id(pkt_name, cpu_num_input)
     elsif ((cpu_num < 1) && (cpu_num > 2))
         msg_id << "cpu_num_input error: should be 1 or 2. instead got: #{cpu_num}."
     else
-        # Set all cpu numbers to be 1 to get default msgids
-        cpu_num = 1
-
         msg_id_with_cpu_num = get_cfs_msg_id_from_base(
             $CFS_CMD_TLM_LIST[pkt_list_key].fsw_msg_base_stream_id,
             cpu_num-1)

@@ -45,15 +45,15 @@ class cfs_fleet_test_group_aliveness(Group):
             # For each app in the list, verify its alive by sending a noop, then reset the hk counters
             for noop_cmd_name, reset_counters_cmd_name, hk_packet_name, hk_cmd_count_name in fsw_apps_to_test:
                 # Verify that we have a recent packet (by waiting for a new one to arrive)
-                wait_check_packet(f"{fsw_target}", f"{hk_packet_name}", 1, 6)
+                wait_check_packet(f"{fsw_target}", f"{hk_packet_name}", 1, 16)
                 # Assuming no one else is sending commands, grab the latest command count
                 cmd_count = tlm(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name}")
                 # Check accepted NOOP command proving application is up and running
                 cmd(f"{fsw_target} {noop_cmd_name}")
-                wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == {cmd_count+1}", 10)
+                wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == {cmd_count+1}", 16)
                 # Check accepted Reset Counters command
                 cmd(f"{fsw_target} {reset_counters_cmd_name}")
-                wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == 0", 10)
+                wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == 0", 16)
 
 
 

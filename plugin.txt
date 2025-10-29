@@ -46,7 +46,7 @@ VARIABLE cfs_2_intf_tlm_tx_port 2235
     <% end %>
 
     # Set up the FSW cmd/tlm interface
-    INTERFACE CFS_<%= cfs_cpu_index %>_INT udp_interface.rb &
+    INTERFACE CFS-<%= cfs_cpu_index %>_INT udp_interface.rb &
             <%= current_cfs_intf_ip %> &
             <%= current_cfs_cmd_rx_port %> &
             <%= current_cfs_tlm_tx_port %> &
