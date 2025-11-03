@@ -3,7 +3,7 @@ from openc3.script.suite import Suite, Group
 # Load the cFE Fleet Test Groups
 load_utility("<%= target_name %>/procedures/cfs_fleet_test_group_aliveness.py")
 
-class cfs_test_suite(Suite):
+class cfs_fleet_test_suite(Suite):
     def __init__(self):
         # Add each test group
         # ------------------------------------------------------------------------
