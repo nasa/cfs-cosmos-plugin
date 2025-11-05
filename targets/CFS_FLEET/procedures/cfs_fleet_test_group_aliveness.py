@@ -1,5 +1,8 @@
 from openc3.script.suite import Group
 
+# Load the cFE Fleet Class Utility Methods
+load_utility('<%= target_name %>/lib/cfs_fleet.py')
+
 # Group class name should indicate what the scripts are testing
 class cfs_fleet_test_group_aliveness(Group):
     """
@@ -15,11 +18,13 @@ class cfs_fleet_test_group_aliveness(Group):
             then verify the command was received (by checking telemetry)
         """
         # Create a list of fsw targets
-        num_cfs_targets = <%= $cfs_fleet_globals_num_cfs_targets %>
-        fsw_targets_to_test = []
-        for cpu_index in range(num_cfs_targets):
-            cfs_target_name = f"CFS-{cpu_index + 1}"
-            fsw_targets_to_test.append(cfs_target_name)
+        # num_cfs_targets = <%= $cfs_fleet_globals_num_cfs_targets %>
+        # fsw_targets_to_test = []
+        # for cpu_index in range(num_cfs_targets):
+        #     cfs_target_name = f"CFS-{cpu_index + 1}"
+        #     fsw_targets_to_test.append(cfs_target_name)
+        fleet = CFS_Fleet()
+        fsw_targets_to_test = fleet.get_cfs_fleet_target_name_list()
 
         # Create a list of app noops to test
         fsw_apps_to_test = []
@@ -51,9 +56,11 @@ class cfs_fleet_test_group_aliveness(Group):
                 # Check accepted NOOP command proving application is up and running
                 cmd(f"{fsw_target} {noop_cmd_name}")
                 wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == {cmd_count+1}", 16)
+                Group.print(f"{fsw_target} passed the {noop_cmd_name} command test (using {hk_cmd_count_name} from {hk_packet_name}).")
                 # Check accepted Reset Counters command
                 cmd(f"{fsw_target} {reset_counters_cmd_name}")
                 wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == 0", 16)
+                Group.print(f"{fsw_target} passed the {reset_counters_cmd_name} command test (using {hk_cmd_count_name} from {hk_packet_name}).")
 
 
 

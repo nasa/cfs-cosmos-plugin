@@ -1,5 +1,8 @@
 from openc3.script.suite import Suite, Group
 
+# Load the cFE Fleet Class Utility Methods
+load_utility('<%= target_name %>/lib/cfs_fleet.py')
+
 # Load the cFE Fleet Test Groups
 load_utility("<%= target_name %>/procedures/cfs_fleet_test_group_aliveness.py")
 
@@ -19,13 +22,15 @@ class cfs_fleet_test_suite(Suite):
         # Run before all groups when Suite Start is pressed
 
         # Create a list of fsw targets
-        num_cfs_targets = <%= $cfs_fleet_globals_num_cfs_targets %>
-        Group.print(f"Starting cFS Fleet Test Suite against {num_cfs_targets} target(s).")
-        fsw_targets_to_test = []
-        for cpu_index in range(num_cfs_targets):
-            cfs_target_name = f"CFS-{cpu_index + 1}"
-            fsw_targets_to_test.append(cfs_target_name)
-            Group.print(f"cFS Target Name: {cfs_target_name}")
+        fleet = CFS_Fleet()
+        fsw_targets_to_test = fleet.get_cfs_fleet_target_name_list()
+        # num_cfs_targets = <%= $cfs_fleet_globals_num_cfs_targets %>
+        # Group.print(f"Starting cFS Fleet Test Suite against {num_cfs_targets} target(s).")
+        # fsw_targets_to_test = []
+        # for cpu_index in range(num_cfs_targets):
+        #     cfs_target_name = f"CFS-{cpu_index + 1}"
+        #     fsw_targets_to_test.append(cfs_target_name)
+        #     Group.print(f"cFS Target Name: {cfs_target_name}")
 
         # Determine the correct IP address for FSW to send telemetry to
         # cosmos_ip_addr = ask("Enter the COSMOS IP address (that FSW nodes should send telemetry to):",
