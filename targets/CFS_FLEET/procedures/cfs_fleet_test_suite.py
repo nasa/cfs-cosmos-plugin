@@ -26,7 +26,7 @@ class cfs_fleet_test_suite(Suite):
         fsw_targets_to_test = fleet.get_cfs_fleet_target_name_list()
 
         # Determine the correct IP address for FSW to send telemetry to
-        cosmos_ip_addr = <%= global_tlm_output_ip %>
+        cosmos_ip_addr = "<%= global_tlm_output_ip %>"
 
         # Enable Telemetry for all FSW nodes
         for fsw_target in fsw_targets_to_test:
