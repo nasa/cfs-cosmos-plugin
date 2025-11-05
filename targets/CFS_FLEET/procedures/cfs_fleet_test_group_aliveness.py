@@ -54,13 +54,13 @@ class cfs_fleet_test_group_aliveness(Group):
                 # Assuming no one else is sending commands, grab the latest command count
                 cmd_count = tlm(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name}")
                 # Check accepted NOOP command proving application is up and running
+                Group.print(f"Sending {fsw_target} the {noop_cmd_name} command.")
                 cmd(f"{fsw_target} {noop_cmd_name}")
                 wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == {cmd_count+1}", 16)
-                Group.print(f"{fsw_target} passed the {noop_cmd_name} command test (using {hk_cmd_count_name} from {hk_packet_name}).")
                 # Check accepted Reset Counters command
+                Group.print(f"Sending {fsw_target} the {reset_counters_cmd_name} command.")
                 cmd(f"{fsw_target} {reset_counters_cmd_name}")
                 wait_check(f"{fsw_target} {hk_packet_name} {hk_cmd_count_name} == 0", 16)
-                Group.print(f"{fsw_target} passed the {reset_counters_cmd_name} command test (using {hk_cmd_count_name} from {hk_packet_name}).")
 
 
 
