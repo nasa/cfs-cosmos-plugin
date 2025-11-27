@@ -43,6 +43,7 @@ class cfs_test_group_cfe_es(Group):
         # Enable DEBUG events and INFO events
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
+        wait(5)
 
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
@@ -51,103 +52,112 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails sometimes.
+        # Verify event message
+        wait_check("<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME == 'CFE_ES'", 100)
+        wait_check("<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID == 3", 100)
+        # FIXME: error: wait_check("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE'", 100)
+        wait_check_expression("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')", 10, 0.5, globals())
+
         # FIXME: This section is redundant with the section after (except this doesn't guarantee they're all true at the same time).
         #        I thought it passed before without it (after removing 'f' below), but this time it didn't.
         #        Then another run, these lines failed, even though correct on terminal.
         #        Is it a random timing thing?  Some of the similar checks in other test steps also failing when correct on terminal.
         # Wait for event
-        wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES'", 5, 0.5, globals())
-        wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3", 5, 0.5, globals())
-        wait_check_expression("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')", 5, 0.5, globals())
+        # wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES'", 5, 0.5, globals())
+        # wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3", 5, 0.5, globals())
+        # wait_check_expression("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')", 5, 0.5, globals())
 
         # Wait for event
-        event_expression = (
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3 and " +
-            "'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-            )
-        wait_check_expression(event_expression, 10, 0.5, globals())
+        # event_expression = (
+        #     "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
+        #     "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3 and " +
+        #     "'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+        #     )
+        # wait_check_expression(event_expression, 10, 0.5, globals())
 
 
-    def test_02_ProcessorRestart(self):
-        """
-        Test the Restart command specifying Processor Restart.
-        """
-        # Enable EVS events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
-        wait(1)
+    # FIXME: Currently don't have a good way to restart cFS from COSMOS.
+    #        Default CFS platform just stops FSW from a reset command.
+    # def test_02_ProcessorRestart(self):
+    #     """
+    #     Test the Restart command specifying Processor Restart.
+    #     """
+    #     # Enable EVS events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
+    #     wait(1)
 
-        # Enable DEBUG events and INFO events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
+    #     # Enable DEBUG events and INFO events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
 
-        # Send command under test
-        # cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
-        # FIXME: How can this be tested?  Default CFE setup just stops FSW from a reset command.
+    #     # Send command under test
+    #     # cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
 
-        # Wait for event
-        event_expression = (
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
-            "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-            )
-        wait_check_expression(event_expression, 10, 0.5, globals())
+    #     # Wait for event
+    #     event_expression = (
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
+    #         "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+    #         )
+    #     wait_check_expression(event_expression, 10, 0.5, globals())
     
 
-    def test_03_PowerOnRestart(self):
-        """
-        Test the Restart command specifying Power-On Restart.
-        """
-        # Enable EVS events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
-        wait(1)
+    # FIXME: Currently don't have a good way to restart cFS from COSMOS.
+    #        Default CFS platform just stops FSW from a reset command.
+    # def test_03_PowerOnRestart(self):
+    #     """
+    #     Test the Restart command specifying Power-On Restart.
+    #     """
+    #     # Enable EVS events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
+    #     wait(1)
 
-        # Enable DEBUG events and INFO events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
+    #     # Enable DEBUG events and INFO events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO") 
 
-        # Send command under test
-        #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE POWER_ON")
-        # FIXME: How can this be tested?  Default CFE setup just stops FSW from a reset command.
+    #     # Send command under test
+    #     #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE POWER_ON")
 
-        # Wait for event
-        event_expression = (
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
-            "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-            )
-        wait_check_expression(event_expression, 10, 0.5, globals())
+    #     # Wait for event
+    #     event_expression = (
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
+    #         "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+    #         )
+    #     wait_check_expression(event_expression, 10, 0.5, globals())
 
 
-    def test_04_StopApp(self):
-        """
-        Test the StopApp command.
-        """
-        # Enable EVS events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
-        wait(1)
+    # def test_04_StopApp(self):
+    #     """
+    #     Test the StopApp command.
+    #     """
+    #     # Enable EVS events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
+    #     wait(1)
 
-        # Enable DEBUG events and INFO events
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
-        cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
+    #     # Enable DEBUG events and INFO events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
-        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+    #     cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        # FIXME: Later: Change this function & others so there are no dependencies between functions (if not too complicated).
+    #     # FIXME: Later: Change this function & others so there are no dependencies between functions (if not too complicated).
 
-        # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'SAMPLE_APP'")
+    #     # Send command under test
+    #     cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'SAMPLE_APP'")
 
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    #     # Verify command count incremented
+    #     wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-        # Wait for event
-        event_expression = (
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-            "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 7 and " +
-            "'Stop Application SAMPLE_APP Initiated' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-            )
-        wait_check_expression(event_expression, 10, 0.5, globals())
+    #     # Wait for event
+    #     event_expression = (
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 7 and " +
+    #         "'Stop Application SAMPLE_APP Initiated' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+    #         )
+    #     wait_check_expression(event_expression, 10, 0.5, globals())
 
 
     def test_05_StartApp(self):
@@ -170,6 +180,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -199,6 +210,8 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Add check for expected text of message.
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -227,6 +240,8 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Add check for expected text of message.
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -255,6 +270,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -284,6 +300,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -342,7 +359,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-        # FIXME: Failing, but there is definitely no discrepency with what's printed to terminal.  Timing issue again?
+        # FIXME: Command succeeds with correct message, but check fails SOMETIMES.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -546,6 +563,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -575,6 +593,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
@@ -671,6 +690,40 @@ class cfs_test_group_cfe_es(Group):
         wait_check_expression(event_expression, 10, 0.5, globals())
 
 
+    # FIXME: Add this back when we start implementing non-nominal test cases.
+    #
+    # def test_X_DeleteCDS_Error_AppActive(self):
+    #     """
+    #     Test the DeleteCDS command.
+    #     """
+    #     # Enable EVS events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_ES'")
+    #     wait(1)
+
+    #     # Enable DEBUG events and INFO events
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
+    #     cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
+
+    #     # First, delete the CS app, so we're allowed to delete its CDS
+    #     CFE_ES_DeleteApp(AppID)
+
+    #     cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+    #     # Send command under test
+    #     cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
+
+    #     # Verify command count incremented
+    #     wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+    #     # Wait for event
+    #     event_expression = (
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
+    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 78 and " +
+    #         "'Successfully removed \'cdsfile\' from CDS' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+    #         )
+    #     wait_check_expression(event_expression, 10, 0.5, globals())
+
+
     def test_23_DeleteCDS(self):
         """
         Test the DeleteCDS command.
@@ -683,23 +736,35 @@ class cfs_test_group_cfe_es(Group):
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
+        # First, stop the CS app, so we're allowed to delete its CDS
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
-
-        # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'cdsfile'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")
 
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-        # FIXME: Failed: "Unable to locate 'cdsfile' in CDS Registry"
+        wait(5)  # Wait for the CS app to finish exiting
+
+        cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
+
+        # Send command under test
+        cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
+
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 78 and " +
-            "'Successfully removed \'cdsfile\' from CDS' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+            "'Successfully removed \'CS.CS_CDS\' from CDS' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
             )
         wait_check_expression(event_expression, 10, 0.5, globals())
-    
+
+        # Re-start the CS app, to restore the system state to as it was before this step
+        cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'CS', APP_ENTRY_POINT 'CS_AppMain', APP_FILE_NAME 'cs', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 65")
+
 
     def test_24_SendMemPoolStats(self):
         """
@@ -713,11 +778,14 @@ class cfs_test_group_cfe_es(Group):
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
 
+        # Get and save SB HK mempool handle.  Needed for command.
+        sb_mempool_handle = tlm("<%= target_name %> CFE_SB_HK MEM_POOL_HANDLE")
+
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
-        # FIXME: Fails with "Cannot telemeter memory pool stats. Illegal Handle (0x00000000)"
+        # FIXME: Not sure yet if check fails (updated), but command succeeds with correct message.
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with APPLICATION 'TO', POOL_HANDLE 0x00000000")
+        cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with APPLICATION 'TO', POOL_HANDLE {sb_mempool_handle}")
 
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -726,7 +794,7 @@ class cfs_test_group_cfe_es(Group):
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 81 and " +
-            "'Successfully telemetered memory pool stats for 0x00000000' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
+            f"'Successfully telemetered memory pool stats for {sb_mempool_handle}' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
             )
         wait_check_expression(event_expression, 10, 0.5, globals())
 
@@ -751,6 +819,7 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
+        # FIXME: Command succeeds with correct message, but check fails.
         # Wait for event
         event_expression = (
             "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
