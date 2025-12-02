@@ -125,7 +125,7 @@ $sc_num_ats = 2
 # Number of Relative Time Sequences in SC
 #   Note: This value should correspond with SC_NUMBER_OF_RTS
 # -------------------------------------------------------------------------------------------------
-$sc_num_rts = 64
+$sc_num_rts = 4
 
 # -------------------------------------------------------------------------------------------------
 # Number of RTSs that can fit their statuses in a uint16
