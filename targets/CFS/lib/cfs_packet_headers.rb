@@ -4,9 +4,11 @@ require 'unix_time_conversion_epoch_offset.rb'
 
 # Output a CCSDS Command Packet with the GSFC Secondary Header (Command Code and Checksum fields)
 def cfs_cmd_hdr(target_name, cmd_name, cpu_num, func_code, pkt_desc)
+    current_cfs_cpu_num = cfs_cpu_num_from_target_name(target_name)
+    current_cfs_pkt_msg_id = get_cfs_pkt_msg_id(cmd_name, current_cfs_cpu_num)
     cmdPacket = String.new
     cmdPacket << "COMMAND #{target_name} #{cmd_name} #{$cfs_globals_endianness} \"#{pkt_desc}\" \n"
-    cmdPacket << "   APPEND_ID_PARAMETER CCSDS_STREAMID 16 UINT MIN_UINT16 MAX_UINT16 #{get_cfs_pkt_msg_id(cmd_name, cpu_num)} \"CCSDS Packet Identification\" BIG_ENDIAN \n"
+    cmdPacket << "   APPEND_ID_PARAMETER CCSDS_STREAMID 16 UINT MIN_UINT16 MAX_UINT16 #{current_cfs_pkt_msg_id} \"CCSDS Packet Identification\" BIG_ENDIAN \n"
     cmdPacket << "      FORMAT_STRING \"0x%04X\"\n"
     cmdPacket << "   APPEND_PARAMETER CCSDS_SEQUENCE 16 UINT MIN_UINT16 MAX_UINT16 0xC000 \"CCSDS Packet Sequence Control\" BIG_ENDIAN \n"
     cmdPacket << "      FORMAT_STRING \"0x%04X\"\n"
@@ -18,9 +20,11 @@ end
 
 # Output a CCSDS Telemetry Packet with the GSFC Secondary Header (timestamp)
 def cfs_tlm_hdr(target_name, tlm_name, cpu_num, pkt_desc)
+    current_cfs_cpu_num = cfs_cpu_num_from_target_name(target_name)
+    current_cfs_pkt_msg_id = get_cfs_pkt_msg_id(tlm_name, current_cfs_cpu_num)
     tlmPacket = String.new
     tlmPacket << "TELEMETRY #{target_name} #{tlm_name} #{$cfs_globals_endianness} \"#{pkt_desc}\" \n"
-    tlmPacket << "     APPEND_ID_ITEM CCSDS_STREAMID       16 UINT #{get_cfs_pkt_msg_id(tlm_name, cpu_num)}  \"CCSDS Packet Identification\" BIG_ENDIAN \n"
+    tlmPacket << "     APPEND_ID_ITEM CCSDS_STREAMID       16 UINT #{current_cfs_pkt_msg_id}  \"CCSDS Packet Identification\" BIG_ENDIAN \n"
     tlmPacket << "      FORMAT_STRING \"0x%04X\"\n"
     tlmPacket << "     APPEND_ITEM CCSDS_SEQUENCE 16 UINT \"CCSDS Packet Sequence Control\" BIG_ENDIAN \n"
     tlmPacket << "      FORMAT_STRING \"0x%04X\"\n"

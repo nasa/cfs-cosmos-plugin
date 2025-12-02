@@ -20,4 +20,4 @@
 <%= cfs_cmd_hdr(target_name, 'TO_LAB_CMD_REMOVE_ALL', 1, 5, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'TO_LAB_CMD_ENABLE_OUTPUT', 1, 6, "Telecommand Message") %>
-   APPEND_PARAMETER DEST_IP 128 STRING "127.0.0.1" "IP Address to send telemetry to"
+   APPEND_PARAMETER DEST_IP 128 STRING "<%= global_tlm_output_ip %>" "IP Address to send telemetry to"
