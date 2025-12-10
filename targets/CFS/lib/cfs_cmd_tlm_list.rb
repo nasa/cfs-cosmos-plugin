@@ -1,3 +1,5 @@
+require 'cfs_globals.rb'
+
 #------------------------------------------------------------------------------
 # Class to maintain FSW Message Info
 #------------------------------------------------------------------------------
@@ -647,6 +649,7 @@ end
 
 #------------------------------------------------------------------------------
 # Given the 2-byte stream id, fill in the cpu number and return the result
+# If EDS is not enabled, the base MIDs are used for all MIDs
 #
 # 1. stream_id_base
 #    - base stream id (without 3-bit cpu number set)
@@ -696,9 +699,6 @@ def get_cfs_pkt_msg_id(pkt_name, cpu_num_input)
     elsif ((cpu_num < 1) && (cpu_num > 2))
         msg_id << "cpu_num_input error: should be 1 or 2. instead got: #{cpu_num}."
     else
-        # Set all cpu numbers to be 1 to get default msgids
-        cpu_num = 1
-
         msg_id_with_cpu_num = get_cfs_msg_id_from_base(
             $CFS_CMD_TLM_LIST[pkt_list_key].fsw_msg_base_stream_id,
             cpu_num-1)

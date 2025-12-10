@@ -19,38 +19,7 @@ end
 # -------------------------------------------------------------------------------------------------
 # Number of CPU instances of the FSW that can be interfaced with
 # -------------------------------------------------------------------------------------------------
-$cfs_total_valid_cpus = 1
-
-# -------------------------------------------------------------------------------------------------
-# Get the cmd port based on the cpu_num
-#     Context: CI_LAB has a base port number of 1234 but it increments it for CPUs past 1
-# -------------------------------------------------------------------------------------------------
-def cfs_get_port_num_cmd(cpu_num_input)
-  cpu_num = cpu_num_or_nil(cpu_num_input)
-  port_num = 1234
-  port_num_str = String.new
-  if (cpu_num == nil)
-      port_num_str << "cfs_get_port_num_cmd error: could not convert #{cpu_num_input} to an integer"
-  elsif ((cpu_num < 1) && (cpu_num > $cfs_total_valid_cpus))
-      port_num_str << "cfs_get_port_num_cmd error: should be between 1 and #{$cfs_total_valid_cpus} (inclusive). instead got: #{cpu_num}."
-  else
-      port_num = port_num + (cpu_num - 1)
-      port_num_str << sprintf("%d", port_num)
-  end
-  return port_num_str
-end
-
-# -------------------------------------------------------------------------------------------------
-# Port number of the TO_LAB output port
-# -------------------------------------------------------------------------------------------------
-$cfs_tlm_port = 1235
-
-# -------------------------------------------------------------------------------------------------
-# Get the tlm port of the FSW
-# -------------------------------------------------------------------------------------------------
-def cfs_get_port_num_tlm
-  return $cfs_tlm_port
-end
+$cfs_total_valid_cpus = 2
 
 # -------------------------------------------------------------------------------------------------
 # EDS Enabled / Disabled Flag
@@ -125,7 +94,7 @@ $sc_num_ats = 2
 # Number of Relative Time Sequences in SC
 #   Note: This value should correspond with SC_NUMBER_OF_RTS
 # -------------------------------------------------------------------------------------------------
-$sc_num_rts = 64
+$sc_num_rts = 4
 
 # -------------------------------------------------------------------------------------------------
 # Number of RTSs that can fit their statuses in a uint16
