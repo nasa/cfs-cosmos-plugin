@@ -44,7 +44,7 @@ class cfs_test_group_cfs_mm(Group):
         cmd_count = tlm(f"<%= target_name %> {_app_name}_HK COMMAND_COUNTER")
         
         # Check accepted MM_CMD_LOOKUPSYM command and LASTACTION set correctly
-        cmd("CFS-1 MM_CMD_LOOKUPSYM with SYMNAME 'SAMPLE_LIB_Buffer'")
+        cmd(f"<%= target_name %> MM_CMD_LOOKUPSYM with SYMNAME 'SAMPLE_LIB_Buffer'")
         wait_check(f"<%= target_name %> {_app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> {_app_name}_HK LASTACTION == 'SYM_LOOKUP'", 100) 
         
