@@ -456,7 +456,6 @@ cosmos_test_utils/
 - Verify packet names match your telemetry definitions
 - Ensure field names match your packet structures
 
-
 ## Support
 
 For questions, issues, or support:
@@ -464,3 +463,6 @@ For questions, issues, or support:
 - **Issues**: Report bugs and feature requests through [TBD]
 - **Contact**: Damon Stewart at NASA GSFC (damon.stewart@nasa.gov)
 
+## License
+
+This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
