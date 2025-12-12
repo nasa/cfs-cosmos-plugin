@@ -45,37 +45,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # DS: I found that the cFS-integration-sandbox version of cFS was sending out all packets at 1/sec
-        #     This is causing many packets to be dropped. Issue is: https://developer.nasa.gov/cFS/cFS/issues/435
-        #     That is why the event verification is spotty throughout the test. Sometimes the event message gets dropped.
-        #     Regardless, The event verification is being descoped for now, so I'm commenting out all EM verification 
-        #     sections for the initial iteration of this function.
-        #     I will be adding a python package I created that will make finding event messages way simpler in future revisions.
-        
-        # FIXME: Command succeeds with correct message, but check fails sometimes.
-        # Verify event message
-        #wait_check("<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME == 'CFE_ES'", 100)
-        #wait_check("<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID == 3", 100)
-        # FIXME: error: wait_check("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE'", 100)
-        #wait_check_expression("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')", 10, 0.5, globals())
-        
-        # FIXME: This section is redundant with the section after (except this doesn't guarantee they're all true at the same time).
-        #        I thought it passed before without it (after removing 'f' below), but this time it didn't.
-        #        Then another run, these lines failed, even though correct on terminal.
-        #        Is it a random timing thing?  Some of the similar checks in other test steps also failing when correct on terminal.
-        # Wait for event
-        # wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES'", 5, 0.5, globals())
-        # wait_check_expression("tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3", 5, 0.5, globals())
-        # wait_check_expression("'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')", 5, 0.5, globals())
-        
-        # Wait for event
-        # event_expression = (
-        #     "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #     "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 3 and " +
-        #     "'No-op command' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #     )
-        # wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     # FIXME: Currently don't have a good way to restart cFS from COSMOS.
@@ -91,15 +60,6 @@ class cfs_test_group_cfe_es(Group):
         ## Send command under test
         #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
         #
-        ##    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        ##        See my comment about event messages in the test_01_NoOp function
-        ## Wait for event
-        ##event_expression = (
-        ##    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        ##    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
-        ##    "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        ##    )
-        ##wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     # FIXME: Currently don't have a good way to restart cFS from COSMOS.
@@ -114,15 +74,6 @@ class cfs_test_group_cfe_es(Group):
         ## Send command under test
         #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE POWER_ON")
         #
-        ##    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        ##        See my comment about event messages in the test_01_NoOp function
-        ## Wait for event
-        ##event_expression = (
-        ##    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        ##    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 1 and " +
-        ##    "'cFE ES Initialized' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        ##    )
-        ##wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_04_StopApp_StartApp(self):
@@ -169,18 +120,6 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
-        # FIXME: Add check for expected text of message.
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: Same issue as the StartApp event. Right after ES sends the restart event, the sample app sends it's 
-        #        init event, so the event you are checking against is the sample app message.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 10"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
-        
         wait(10) # Wait for the app to fully restart (5 for stop, 5 for start).
         
         if(stopSampleAppAtEnd):
@@ -208,18 +147,6 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
-        # FIXME: Add check for expected text of message.
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: Same issue as the StartApp and RestartApp event. Right after ES sends the reload event, the sample app sends it's 
-        #        init event, so the event you are checking against is the sample app message.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 12"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
-        
         wait(10) # Wait for the app to fully restart (5 for stop, 5 for start).
 
         if(stopSampleAppAtEnd):
@@ -238,17 +165,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: This is due to an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 15 and " +
-        #    "'Sent CS application data' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_08_QueryAll(self):
@@ -263,17 +179,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: This is due to an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 16 and " +
-        #    "'App Info file written to /ram/apps.txt' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_09_QueryAllTasks(self):
@@ -288,16 +193,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: This is due to an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 87 and " +
-        #    "'Task Info file written to /ram/sample_app' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_10_WriteSysLog(self):
@@ -312,16 +207,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 18 and " +
-        #    "'/ram/logfile.txt written' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_11_ClearSysLog(self):
@@ -336,17 +221,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails SOMETIMES.
-        #    DS: This is due to an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 17 and " +
-        #    "'Cleared Executive Services log data' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_12_OverwriteSysLog_Discard(self):
@@ -361,16 +235,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 70 and " +
-        #    "'Set OverWriteSysLog Command Received with Mode setting = 1' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_13_OverwriteSysLog_Overwrite(self):
@@ -385,16 +249,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 70 and " +
-        #    "'Set OverWriteSysLog Command Received with Mode setting = 0' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_14_WriteERLog(self):
@@ -409,16 +263,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 20 and " +
-        #    "'/ram/logfile.txt written' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_15_ClearERLog(self):
@@ -433,16 +277,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 19 and " +
-        #    "'Cleared ES Exception and Reset Log data' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_16_StartPerfData(self):
@@ -457,16 +291,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 57 and " +
-        #    "'Start collecting performance data cmd received, trigger mode = 0' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_17_StopPerfData(self):
@@ -481,17 +305,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 60 and " +
-        #    "'Perf Stop Cmd Rcvd' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_18_SetPerfFilterMask(self):
@@ -506,17 +319,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 63 and " +
-        #    "'Set Performance Filter Mask Cmd rcvd, num 1, val 0x0000000A' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_19_SetPerfTriggerMask(self):
@@ -531,16 +333,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 65 and " +
-        #    "'Set Performance Trigger Mask Cmd rcvd,num 1, val 0x0000000A' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_20_ResetPRCount(self):
@@ -555,16 +347,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 72 and " +
-        #    "'Set Processor Reset Count to Zero' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_21_SetMaxPRCount(self):
@@ -579,16 +361,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 73 and " +
-        #    "'Maximum Processor Reset Count set to: 1' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     # FIXME: Add this back when we start implementing non-nominal test cases.
@@ -609,13 +381,6 @@ class cfs_test_group_cfe_es(Group):
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     #
-    #     # Wait for event
-    #     event_expression = (
-    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-    #         "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 78 and " +
-    #         "'Successfully removed \'cdsfile\' from CDS' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-    #         )
-    #     wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_22_DeleteCDS(self):
@@ -640,17 +405,6 @@ class cfs_test_group_cfe_es(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 78 and " +
-        #    "'Successfully removed \'CS.CS_CDS\' from CDS' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
-        
         # Re-start the CS app, to restore the system state to as it was before this step
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'CS', APP_ENTRY_POINT 'CS_AppMain', APP_FILE_NAME 'cs', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 65")
     
@@ -670,16 +424,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 81 and " +
-        #    f"'Successfully telemetered memory pool stats for {sb_mempool_handle}' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_24_DumpCDSRegistry(self):
@@ -694,17 +438,6 @@ class cfs_test_group_cfe_es(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 83 and " +
-        #    "'Successfully dumped CDS Registry to \'/ram/dumpfile.txt\'' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def test_25_ResetCounters(self):
@@ -770,16 +503,6 @@ class cfs_test_group_cfe_es(Group):
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
         wait(5) # wait for the application to stop
-        
-        #    DS: There is an issue with the cFS-integration-sandbox telemetry being dropped.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 7 and " +
-        #    "'Stop Application SAMPLE_APP Initiated' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def StartApp_test(self):
@@ -797,18 +520,6 @@ class cfs_test_group_cfe_es(Group):
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         wait(5) # wait for the application to start
-        
-        # FIXME: Command succeeds with correct message, but check fails.
-        #    DS: This is because right after ES sends the started event, the sample app sends it's 
-        #        init event, so the event you are checking against is the sample app message.
-        #        See my comment about event messages in the test_01_NoOp function
-        # Wait for event
-        #event_expression = (
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == 'CFE_ES' and " +
-        #    "tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == 6 and " +
-        #    "'Started SAMPLE_APP from /cf/sample_app.so' in tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG MESSAGE')"
-        #    )
-        #wait_check_expression(event_expression, 10, 0.5, globals())
     
     
     def setup(self):
