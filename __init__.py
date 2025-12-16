@@ -21,13 +21,14 @@ from .cosmos_test_utils.system_config import (
 )
 
 from .cosmos_test_utils.event_utils import (
-    open_event_log_for_search,
+    set_event_search_point,
     open_event_log_for_script_logging,
     find_events,
     print_events_to_log,
     start_background_event_logging,
     stop_background_event_logging,
-    is_background_event_logging_running
+    is_background_event_logging_running,
+    open_event_log_for_search
 )
 
 from .cosmos_test_utils.print_utils import (

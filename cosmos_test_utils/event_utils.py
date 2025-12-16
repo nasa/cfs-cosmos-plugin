@@ -41,17 +41,17 @@ _event_search_id = None   # For find_events
 _event_logging_id = None  # For print_events_to_log
 
 
-def open_event_log_for_search(
+def set_event_search_point(
     target_name: str = EVENT_TARGET_NAME, 
     packet_name: str = EVENT_PACKET_NAME
 ) -> int:
-    """Subscribe to event packets for event searching.
+    """Set the point that a find_events call will search back to.
     
     This function subscribes to event packets and stores the subscription ID
     at the module level, so it can be used by find_events without requiring
     the ID to be passed in each time.
     
-    Note: This function can be called multiple times. Each time it's called,
+    Note: This function should be called multiple times. Each time it's called,
     it resets the point at which future find_events calls will begin searching.
     This is useful to narrow searches to specific sections of a test.
     
@@ -84,7 +84,7 @@ def open_event_log_for_script_logging(
     requiring the ID to be passed in each time.
     
     Note: This function should only be called once at the beginning of a test,
-    unlike open_event_log_for_search which may be called multiple times.
+    unlike set_event_search_point which may be called multiple times.
     
     Args:
         target_name: COSMOS target name for events (default: from system_config)
@@ -115,7 +115,7 @@ def find_events(
     """Find specific events in the event message stream.
     
     Before using this function with the default subscription_id=None,
-    you must call open_event_log_for_search() to set up the event subscription.
+    you must call set_event_search_point() to set up the event subscription.
     
     Args:
         app_name: Application name to filter by
@@ -138,7 +138,7 @@ def find_events(
               - int: Updated subscription ID to use in future calls
     
     Raises:
-        RuntimeError: If subscription_id=None and open_event_log_for_search() has not been called
+        RuntimeError: If subscription_id=None and set_event_search_point() has not been called
     """
     global _event_search_id
     
@@ -148,11 +148,11 @@ def find_events(
         if _event_search_id is None:
             raise RuntimeError(
                 "Event search subscription not initialized in cosmos_test_utils.event_utils. "
-                "You must call open_event_log_for_search() before using find_events() "
+                "You must call set_event_search_point() before using find_events() "
                 "to set up event packet subscriptions. "
                 "Add this to your script:\n\n"
-                "    from cosmos_test_utils import open_event_log_for_search\n"
-                "    open_event_log_for_search()  # Call this to start event searching\n\n"
+                "    from cosmos_test_utils import set_event_search_point\n"
+                "    set_event_search_point()  # Call this to start event searching\n\n"
                 "Alternatively, you can provide a specific subscription_id parameter to this function from a separate COSMOS subscribe_packets() call."
             )
         search_id = _event_search_id
@@ -533,5 +533,17 @@ def is_background_event_logging_running() -> bool:
         return script_id is not None
     except:
         return False
+
+
+def open_event_log_for_search(
+    target_name: str = EVENT_TARGET_NAME, 
+    packet_name: str = EVENT_PACKET_NAME
+) -> int:
+    """Set the point that a find_events call will search back to.
+    
+    This is depricated and included for backward compatability.
+    Use set_event_search_point() for more understandable code.
+    """
+    return set_event_search_point(target_name, packet_name)
 
 
