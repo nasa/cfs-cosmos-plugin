@@ -446,7 +446,7 @@ cosmos_test_utils/
 ├── __init__.py                   # Package exports
 ├── pyproject.toml                # Package installation configuration
 ├── README.md                     # This file
-├── stubs/                        # Type stubs for IDE support when developing\
+├── stubs/                        # Type stubs for IDE support when developing
                                        # this outside of a COSMOS environment
 ├── examples/                     # Example usage scripts
 │   ├── command_examples.py       # CommandSender examples
