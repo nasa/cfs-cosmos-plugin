@@ -45,7 +45,7 @@ def main():
     
     print("\n1. Basic event searching")
     # Normally you would just call this directly
-    open_event_log_for_search()
+    set_event_search_point()
     
     # Now search for events (this is using mock data)
     print("Searching for INFO event with ID 2...")
@@ -54,7 +54,7 @@ def main():
     
     print("\n2. Multiple searches in sequence")
     # Reset the search point to look for different events
-    open_event_log_for_search()
+    set_event_search_point()
     
     print("Searching for ERROR event with ID 5...")
     success, count = find_events("CFE_APP", 5, "ERROR", "Command failed") # type: ignore
@@ -122,7 +122,7 @@ def setup_mock_functions():
     from unittest.mock import MagicMock
     
     # Capture the real functions before mocking
-    real_open_search = open_event_log_for_search
+    real_open_search = set_event_search_point
     real_open_logging = open_event_log_for_script_logging
     real_find_events = find_events
     real_print_events = print_events_to_log
@@ -164,7 +164,7 @@ def setup_mock_functions():
     
     # Apply the patches
     import cosmos_test_utils.event_utils as eu
-    eu.open_event_log_for_search = patched_open_search
+    eu.set_event_search_point = patched_open_search
     eu.open_event_log_for_script_logging = patched_open_logging
     eu.find_events = patched_find_events
     eu.print_events_to_log = patched_print_events
