@@ -51,14 +51,14 @@ unnecessary code in test scripts.
    EVENT_PACKET_NAME = "YOUR_CFS_LONG_EVENT_PACKET"
    ```
 
-3. **If you are on COSMOS 6.9.0 or later, you are done.**
+3. <strong id="create-wheel-file">If you are on COSMOS 6.9.0 or later, you are done.</strong>
 
 <br>
 
 <details>
 <summary><strong>If you are on an earlier version of COSMOS, follow these instructions:</strong></summary>
 
-4. <strong id="create-wheel-file">(CONDITIONAL) Create the wheel file for loading into COSMOS</strong>
+4. **(CONDITIONAL) Create the wheel file for loading into COSMOS**
 
    > **NOTE:** This step is only needed if running an older version of COSMOS.\
    > Skip this step if you are running on the latest version of COSMOS.\
@@ -84,6 +84,7 @@ unnecessary code in test scripts.
 
 </details>
 
+<br>
 
 ## Suggested Use
    
@@ -445,7 +446,7 @@ cosmos_test_utils/
 ├── __init__.py                   # Package exports
 ├── pyproject.toml                # Package installation configuration
 ├── README.md                     # This file
-├── stubs/                        # Type stubs for IDE support when developing\
+├── stubs/                        # Type stubs for IDE support when developing
                                        # this outside of a COSMOS environment
 ├── examples/                     # Example usage scripts
 │   ├── command_examples.py       # CommandSender examples
