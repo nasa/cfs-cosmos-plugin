@@ -171,14 +171,14 @@ Key features include:
 Basic usage example:
 
 ```python
-from cosmos_test_utils import open_event_log_for_search, find_events, start_background_event_logging, stop_background_event_logging
+from cosmos_test_utils import set_event_search_point, find_events, start_background_event_logging, stop_background_event_logging
 from openc3.script import cmd 
 
 #start logging all events to a separate file
 start_background_event_logging()
 
 # Start event capture
-open_event_log_for_search()
+set_event_search_point()
 
 # Send commands
 cmd("TARGET COMMAND")

@@ -26,7 +26,7 @@ Note: This example uses mock functions since it can't connect to a real COSMOS s
 """
 
 from cosmos_test_utils import (
-    open_event_log_for_search, 
+    set_event_search_point, 
     open_event_log_for_script_logging,
     find_events,
     print_events_to_log,
