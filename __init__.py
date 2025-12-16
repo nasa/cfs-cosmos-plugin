@@ -4,7 +4,7 @@ COSMOS Test Utilities Package
 A collection of utility functions for testing with the OpenC3 COSMOS ground system.
 """
 
-from .system_config import (
+from .cosmos_test_utils.system_config import (
     EVENT_TARGET_NAME,
     EVENT_PACKET_NAME,
     EVENT_TYPE_TO_TXT,
@@ -20,7 +20,7 @@ from .system_config import (
     COMMON_PACKET_SEQUENCE_DESC
 )
 
-from .event_utils import (
+from .cosmos_test_utils.event_utils import (
     open_event_log_for_search,
     open_event_log_for_script_logging,
     find_events,
@@ -30,20 +30,20 @@ from .event_utils import (
     is_background_event_logging_running
 )
 
-from .print_utils import (
+from .cosmos_test_utils.print_utils import (
     test_print,
     print_command_history
 )
 
-from .telemetry_utils import (
+from .cosmos_test_utils.telemetry_utils import (
     report_telemetry,
     report_all_telemetry,
     report_all_targets_telemetry
 )
 
-from .requirement_utils import RequirementTracker
+from .cosmos_test_utils.requirement_utils import RequirementTracker
 
-from .wait_utils import (
+from .cosmos_test_utils.wait_utils import (
     wait_for_telemetry_value,
     wait_for_telemetry_expression,
     wait_for_telemetry_change,
@@ -54,12 +54,12 @@ from .wait_utils import (
     wait_multiple_telemetry
 )
 
-from .timing_utils import (
+from .cosmos_test_utils.timing_utils import (
     TimingTracker,
     measure_command_response_time
 )
 
-from .command_utils import CommandSender
+from .cosmos_test_utils.command_utils import CommandSender
 
 # Define the version
 __version__ = '1.0.2'
