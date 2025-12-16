@@ -21,24 +21,28 @@ unnecessary code in test scripts.
 
 1. **Put this package into the directory structure you desire**
    
-   The placement of this package does not matter in the large scheme of things. \
-   But, I do suggest placing it in your Plugin/lib directory and having your \
-   IDE recognize that directory as a place to resolve the functions and enable \
-   autocompletion for easier development.  
+   The placement of this package should be in your PLUGIN/lib directory. \
+   This will allow the package to be accessible to scripts when the gem is \
+   built.
+
+   Your IDE can be setup to recognize that directory as a place to resolve \
+   the functions and enable autocompletion for easier development. Use your \
+   favorite search to find out how to do that. 
    
-   Other options for placement could be in a specific TARGET so that if that \
+   Other options for placement may be in a specific TARGET/lib so that if that\
    target is not included the package will not be built into the gem file \
-   uploaded to COSMOS. This would be the way to go if you have a sepcific \
-   testing target that is not deployed to users.
+   loaded into COSMOS. This would be the way to go if you have a sepcific \
+   testing target that are not deployed to users.
    
-   All that will be used from this package is the Wheel file, which will be \
-   uploaded to COSMOS.
+   Older versions of COSMOS (before 6.9.0) will need to create a Wheel file of\
+   this package and load that in COSMOS. There was a bug in COSMOS that \
+   prevented the script runner from seeing Python packages.
 
 2. **Configure for your mission:**
 
    Edit cosmos_test_utils\cosmos_test_utils\system_config.py to match your \
    COSMOS setup. This file contains all of the variable names and structures \
-   that require project specific mnemonics to be set in order to work properly \
+   that require project specific mnemonics to be set in order to work properly\
    with your system.
 
    Things like:
@@ -47,15 +51,27 @@ unnecessary code in test scripts.
    EVENT_PACKET_NAME = "YOUR_CFS_LONG_EVENT_PACKET"
    ```
 
-3. **Create the wheel file for loading into COSMOS:**
-   
+3. **If you are on COSMOS 6.9.0 or later, you are done.**
+
+<br>
+
+<details>
+<summary><strong>If you are on an earlier version of COSMOS, follow these instructions:</strong></summary>
+
+4. <strong id="create-wheel-file">(CONDITIONAL) Create the wheel file for loading into COSMOS</strong>
+
+   > **NOTE:** This step is only needed if running an older version of COSMOS.\
+   > Skip this step if you are running on the latest version of COSMOS.\
+   > If the Script runner does not recognize the modules, then you will\
+   > have to build and load the Wheel.
+
    I built and tested with 3.12, but you can build with Python 3.6 or higher.
+
    ```bash
-   Python3.12 -m build --wheel
+   python3.12 -m build --wheel
    ```
 
-4. **Load the package into COSMOS:**
-   
+5. **Load the package into COSMOS:**
    1. With COSMOS running, browse to "ADMIN CONSOLE"
    2. On the top of that page, select "Packages"
    3. Click where it says "Click to select file(s) to add to COSMOS"
@@ -63,8 +79,10 @@ unnecessary code in test scripts.
    (nominally: PLUGIN\lib\cosmos_test_utils\dist)
    5. Press the button on the right labeled "Upload"
 
-   After COSMOS gets finished processing the Wheel file, you should see the \
+   After COSMOS finishes processing the Wheel file, you should see the\
    package appear in the list under "Python Packages" at the bottom of the page.
+
+</details>
 
 
 ## Suggested Use
@@ -409,7 +427,7 @@ The example file demonstrates various ways to use the timing utilities, includin
 
 ## Examples
 
-To brign together all of the Key Features section take-aways:
+To bring together all of the Key Features section take-aways:
 The `examples/` directory contains detailed examples of each utility:
 
 - `command_examples.py`: Command sending and verification
@@ -424,9 +442,11 @@ The `examples/` directory contains detailed examples of each utility:
 
 ```
 cosmos_test_utils/
+├── __init__.py                   # Package exports
 ├── pyproject.toml                # Package installation configuration
 ├── README.md                     # This file
-├── stubs/                        # Type stubs for IDE support when developing this outside of a COSMOS environment
+├── stubs/                        # Type stubs for IDE support when developing\
+                                       # this outside of a COSMOS environment
 ├── examples/                     # Example usage scripts
 │   ├── command_examples.py       # CommandSender examples
 │   ├── event_examples.py         # Event utilities examples
@@ -435,7 +455,6 @@ cosmos_test_utils/
 │   ├── timing_examples.py        # TimingTracker examples
 │   └── wait_examples.py          # Wait utilities examples
 └── cosmos_test_utils/            # Main package code
-    ├── __init__.py               # Package exports
     ├── command_utils.py          # Command sending and verification
     ├── event_utils.py            # Event message utilities
     ├── print_utils.py            # Enhanced printing with events
@@ -455,6 +474,11 @@ cosmos_test_utils/
 - Check target names match your COSMOS targets
 - Verify packet names match your telemetry definitions
 - Ensure field names match your packet structures
+
+**Module Not found when running in COSMOS Script Runner**:
+- You are likely on an older version of COSMOS
+- Either update your COSMOS or build the package into a wheel file 
+- See [creating a wheel file](#create-wheel-file)
 
 ## Support
 
