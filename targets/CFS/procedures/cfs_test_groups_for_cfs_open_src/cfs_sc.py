@@ -14,24 +14,133 @@ class cfs_test_group_cfs_sc(Group):
         - Reset the command counter
             then verify the command was received (by checking the command counter was cleared)
         """
-        app_name = "SC"
 
-        Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
+        Group.print(f"Testing SC aliveness on <%= target_name %>")
 
         # Verify that we have a recent packet (by waiting for a new one to arrive)
-        wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
+        wait_check_packet(f"<%= target_name %>", f"SC_HK", 1, 100)
 
         # Assuming no one else is sending commands, grab the latest command count
-        cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
 
         # Check accepted NOOP command proving application is up and running
-        cmd(f"<%= target_name %> {app_name}_CMD_NOOP")
-        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        cmd(f"<%= target_name %> SC_CMD_NOOP")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Check accepted Reset Counters command
-        cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
-        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
+        cmd(f"<%= target_name %> SC_CMD_RESET_COUNTERS")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == 0", 100)
 
+    def test_continue_ats_on_failure(self):
+        """
+        Continue ATS on Failure Test
+        - Send a continue ats on failure command
+            then verify the command was received (by checking the command counter incremented)
+            and set back to default value (True)
+        """
+        
+        Group.print(f"Testing SC Continue ATS on Failure on <%= target_name %>")
+
+        # Verify we have a recent packet
+        wait_check_packet(f"<%= target_name %>", f"SC_HK", 1, 100)
+
+        # Assuming no one else is sending commands, grab the latest command count
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+
+        # Check accepted Continue ATS on Failure command
+        cmd(f"<%= target_name %> SC_CMD_CONTINUE_ATS_ON_FAILURE with CONTINUE_STATE FALSE")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> SC_HK CONT_ATS_ON_FAIL == 'FALSE'", 100)
+
+        # Set Continue ATS on Failure to Default Value (True)
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_CONTINUE_ATS_ON_FAILURE with CONTINUE_STATE TRUE")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> SC_HK CONT_ATS_ON_FAIL == 'TRUE'", 100)
+
+    def test_rts_operations(self):
+        """
+        RTS Operations Test
+        - Send an enable rts command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a start rts command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a stop rts command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a disable rts command
+            then verify the command was received (by checking the command counter incremented)
+        """
+
+        Group.print(f"Testing SC rts operations on <%= target_name %>")
+
+        # Verify that we have a recent packet (by waiting for a new one to arrive)
+        wait_check_packet(f"<%= target_name %>", f"SC_HK", 1, 100)
+
+        # Assuming no one else is sending commands, grab the latest command count
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        
+        # Check accepted Enable RTS command
+        cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS with RTS_ID 1")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Start RTS command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_START_RTS with RTS_ID 1")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        wait(3)
+
+        # Check accepted Stop RTS command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_STOP_RTS with RTS_ID 1")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Disable RTS command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS with RTS_ID 1")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+    def test_rts_group_operations(self):
+        """
+        RTS Group Operations Test
+        - Send an enable rts group command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a start rts group command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a stop rts group command
+            then verify the command was received (by checking the command counter incremented)
+        - Send a disable rts group command
+            then verify the command was received (by checking the command counter incremented)
+        """
+
+        Group.print(f"Testing SC rts group operations on <%= target_name %>")
+
+        # Verify that we have a recent packet (by waiting for a new one to arrive)
+        wait_check_packet(f"<%= target_name %>", f"SC_HK", 1, 100)
+
+        # Assuming no one else is sending commands, grab the latest command count
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+
+        # Check accepted Enable RTS Group command
+        cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Start RTS Group command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_START_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        wait(3)
+
+        # Check accepted Stop RTS Group command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_STOP_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Disable RTS Group command
+        cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
     def setup(self):
         """
@@ -43,7 +152,7 @@ class cfs_test_group_cfs_sc(Group):
 
     def teardown(self):
         """
-        Test Group Setup
+        Test Group Teardown
         - Runs when Group Teardown button is pressed
         - Runs after all scripts when Group Start is pressed
         """
