@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'SC_HK', 1, "SC Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SC_HK', "SC Hk Tlm") %>
   APPEND_ITEM ATS_NUMBER          8 UINT "Current ATS number 1 = ATS A, 2 = ATS B"
   APPEND_ITEM ATP_STATE           8 UINT "Current ATP state"
     STATE EMPTY        0

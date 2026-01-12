@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_TBL_HK', 1, "CFE_TBL Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TBL_HK', "CFE_TBL Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command error counter"
    APPEND_ITEM NUM_TABLES 16 UINT "Number of Tables Registered"
@@ -28,7 +28,7 @@
    APPEND_ITEM LAST_FILE_DUMPED 512 STRING "Path and Name of last file dumped to"
    APPEND_ITEM LAST_TABLE_LOADED 320 STRING "Name of the last table loaded"
 
-<%= cfs_tlm_hdr(target_name, 'CFE_TBL_REG', 1, "CFE_TBL Reg Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TBL_REG', "CFE_TBL Reg Tlm") %>
 <% if $cfs_globals_mem_size == 64 %>
    APPEND_ITEM SIZE 64 UINT "Size, in bytes, of Table"
 <% else %>

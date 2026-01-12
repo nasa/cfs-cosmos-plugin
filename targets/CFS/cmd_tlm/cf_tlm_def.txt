@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CF_HK', 1, "CF Hk Tlm Packet") %>
+<%= cfs_tlm_hdr(target_name, 'CF_HK', "CF Hk Tlm Packet") %>
     APPEND_ITEM COMMAND_COUNTER 16 UINT "Command success counter"
     APPEND_ITEM COMMAND_ERROR_COUNTER 16 UINT "Command error counter"
     APPEND_ITEM SPARE_0 32 UINT "Spare For Alignment"
@@ -41,7 +41,7 @@
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_3 32 UINT "Spare"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CF_EOT', 1, "CF EOT Tlm Packet") %>
+<%= cfs_tlm_hdr(target_name, 'CF_EOT', "CF EOT Tlm Packet") %>
     APPEND_ITEM SEQ_NUM 32 UINT "Transaction identifier"
     APPEND_ITEM CHANNEL 32 UINT "Channel number"
     APPEND_ITEM DIRECTION 32 UINT "Direction of this transaction"

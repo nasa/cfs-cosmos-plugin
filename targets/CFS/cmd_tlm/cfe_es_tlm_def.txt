@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_HK', 1, "CFE_ES Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_HK', "CFE_ES Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "The ES Application Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "The ES Application Command Error Counter"
    APPEND_ITEM CFE_CORE_CHECKSUM 16 UINT "Checksum of cFE Core Code"
@@ -78,7 +78,7 @@
    APPEND_ITEM HEAP_MAX_BLOCK_SIZE 32 UINT "Number of bytes in the largest free block"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', 1, "CFE_ES App Info Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', "CFE_ES App Info Tlm") %>
    APPEND_ITEM APP_INFO_RESOURCE_ID 32 UINT "Application or Libary ID for this resource"
       FORMAT_STRING "0x%08X"
    APPEND_ITEM APP_INFO_TYPE 32 UINT "App Type"
@@ -132,7 +132,7 @@
    APPEND_ITEM APP_INFO_MAIN_TASK_NAME 160 STRING "The Application's Main Task Name"
    APPEND_ITEM APP_INFO_NUM_OF_CHILD_TASKS 32 UINT "Number of Child tasks for an App"
 
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', 1, "CFE_ES Mem Stats Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', "CFE_ES Mem Stats Tlm") %>
    APPEND_ITEM POOL_HANDLE 32 UINT "Handle of memory pool whose stats are being telemetered"
       FORMAT_STRING "0x%08X"
 <% if $cfs_globals_mem_size == 64 %>
