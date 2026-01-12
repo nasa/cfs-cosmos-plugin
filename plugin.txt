@@ -8,8 +8,8 @@
 # <% cfs_globals_set_eds_enabled(cfs_eds_enabled) %>
 
 # To set the memory size, uncomment the lines below
-# VARIABLE cfs_mem_size 32
-# <% cfs_globals_set_mem_size(cfs_mem_size) %>
+VARIABLE cfs_mem_size 64
+<% cfs_globals_set_mem_size(cfs_mem_size) %>
 
 # To expose the endianness config to the plugin install, uncomment the lines below
 VARIABLE cfs_endianness LITTLE_ENDIAN

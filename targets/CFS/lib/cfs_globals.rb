@@ -42,7 +42,7 @@ end
 # FSW Target Memory Size
 # Must be `32` or `64`
 # -------------------------------------------------------------------------------------------------
-$cfs_globals_mem_size = 32
+$cfs_globals_mem_size = 64
 
 # Set the related global variable, based on the input (called from plugin.txt)
 # The user should have entered either "32" or "64"
