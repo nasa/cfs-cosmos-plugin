@@ -3,7 +3,7 @@ require 'cfs_cmd_tlm_list.rb'
 require 'unix_time_conversion_epoch_offset.rb'
 
 # Output a CCSDS Command Packet with the GSFC Secondary Header (Command Code and Checksum fields)
-def cfs_cmd_hdr(target_name, cmd_name, cpu_num, func_code, pkt_desc)
+def cfs_cmd_hdr(target_name, cmd_name, func_code, pkt_desc)
     current_cfs_cpu_num = cfs_cpu_num_from_target_name(target_name)
     current_cfs_pkt_msg_id = get_cfs_pkt_msg_id(cmd_name, current_cfs_cpu_num)
     cmdPacket = String.new
@@ -19,7 +19,7 @@ def cfs_cmd_hdr(target_name, cmd_name, cpu_num, func_code, pkt_desc)
 end
 
 # Output a CCSDS Telemetry Packet with the GSFC Secondary Header (timestamp)
-def cfs_tlm_hdr(target_name, tlm_name, cpu_num, pkt_desc)
+def cfs_tlm_hdr(target_name, tlm_name, pkt_desc)
     current_cfs_cpu_num = cfs_cpu_num_from_target_name(target_name)
     current_cfs_pkt_msg_id = get_cfs_pkt_msg_id(tlm_name, current_cfs_cpu_num)
     tlmPacket = String.new

@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'MD_HK', 1, "MD Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'MD_HK', "MD Hk Tlm") %>
     APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
     APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Valid Counter"
     APPEND_ITEM DWELL_ENABLED_MASK 16 UINT "Mask of enabled dwell tables"
@@ -22,7 +22,7 @@
 <% end %>
 
 # The dwell telemetry packets all have the same structure, just different message IDs
-<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_1', 1, 'MD Dwell Tlm') %>
+<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_1', 'MD Dwell Tlm') %>
     APPEND_ITEM TABLE_ID    8 UINT "Table ID"
     APPEND_ITEM ADDR_COUNT  8 UINT "Number of addresses being sent"
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
@@ -31,7 +31,7 @@
     APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
 
 # The dwell telemetry packets all have the same structure, just different message IDs
-<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_2', 1, 'MD Dwell Tlm') %>
+<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_2', 'MD Dwell Tlm') %>
     APPEND_ITEM TABLE_ID    8 UINT "Table ID"
     APPEND_ITEM ADDR_COUNT  8 UINT "Number of addresses being sent"
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
@@ -40,7 +40,7 @@
     APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
 
 # The dwell telemetry packets all have the same structure, just different message IDs
-<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_3', 1, 'MD Dwell Tlm') %>
+<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_3', 'MD Dwell Tlm') %>
     APPEND_ITEM TABLE_ID    8 UINT "Table ID"
     APPEND_ITEM ADDR_COUNT  8 UINT "Number of addresses being sent"
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
@@ -49,7 +49,7 @@
     APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
 
 # The dwell telemetry packets all have the same structure, just different message IDs
-<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_4', 1, 'MD Dwell Tlm') %>
+<%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_4', 'MD Dwell Tlm') %>
     APPEND_ITEM TABLE_ID    8 UINT "Table ID"
     APPEND_ITEM ADDR_COUNT  8 UINT "Number of addresses being sent"
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"

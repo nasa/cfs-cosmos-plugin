@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_TIME_HK', 1, "CFE_TIME Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TIME_HK', "CFE_TIME Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Execution Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
    APPEND_ITEM CLOCK_STATE_FLAGS 16 UINT "State Flags"
@@ -21,7 +21,7 @@
    APPEND_ITEM SUBSECONDS_DELAY 32 UINT "Current 1Hz STCF delay (subsecs)"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CFE_TIME_DIAG', 1, "CFE_TIME Diagnostics Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TIME_DIAG', "CFE_TIME Diagnostics Tlm") %>
    APPEND_ITEM AT_TONE_MET_SECONDS 32 UINT "MET at time of tone (secs)"
    APPEND_ITEM AT_TONE_MET_SUBSECONDS 32 UINT "MET at time of tone (subsecs)"
    APPEND_ITEM AT_TONE_STCF_SECONDS 32 UINT "STCF at time of tone (secs)"

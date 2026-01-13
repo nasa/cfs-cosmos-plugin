@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_EVS_HK', 1, "CFE_EVS Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_EVS_HK', "CFE_EVS Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "EVS Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "EVS Command Error Counter"
    APPEND_ITEM MESSAGE_FORMAT_MODE 8 UINT "Event message format mode"
@@ -32,7 +32,7 @@
    APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_MESSAGE_SQUELCHED_COUNTER 8 UINT "Application event squelch count"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CFE_EVS_LONG_EVENT_MSG', 1, "Long Event Message") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_EVS_LONG_EVENT_MSG', "Long Event Message") %>
    APPEND_ITEM PACKET_ID_APP_NAME 160 STRING "Application name"
    APPEND_ITEM PACKET_ID_EVENT_ID 16 UINT "Numerical event identifier"
    APPEND_ITEM PACKET_ID_EVENT_TYPE 16 UINT "Numerical event type identifier"
@@ -48,7 +48,7 @@
    APPEND_ITEM SPARE_TO_ALIGN_2 8 UINT "Spare padding for alignment"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CFE_EVS_SHORT_EVENT_MSG', 1, "Short Event Message") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_EVS_SHORT_EVENT_MSG', "Short Event Message") %>
    APPEND_ITEM PACKET_ID_APP_NAME 160 STRING "Application name"
    APPEND_ITEM PACKET_ID_EVENT_ID 16 UINT "Numerical event identifier"
    APPEND_ITEM PACKET_ID_EVENT_TYPE 16 UINT "Numerical event type identifier"

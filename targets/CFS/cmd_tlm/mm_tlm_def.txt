@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'MM_HK', 1, "MM Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'MM_HK', "MM Hk Tlm") %>
      APPEND_ITEM COMMAND_COUNTER         8 UINT  "MM Application Command Counter"
      APPEND_ITEM COMMAND_ERROR_COUNTER   8 UINT  "MM Application Command Error Counter"
      APPEND_ITEM       Lastaction        8 UINT  "Last command action executed"
