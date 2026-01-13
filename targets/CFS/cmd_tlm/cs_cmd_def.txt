@@ -1,3 +1,4 @@
+<%= cfs_cmd_hdr(target_name, 'CS_SEND_HK_CMD',         0, "CS Housekeeping Request Cmd") %>
 
 <%= cfs_cmd_hdr(target_name, 'CS_CMD_NOOP', 0, "Noop") %>
 

@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
     openc3-cosmos-cfs plugin for deployment to OpenC3
   EOF
   s.license = 'MIT'
-  s.authors = ['Anonymous']
-  s.email = ['name@domain.com']
-  s.homepage = 'https://github.com/OpenC3/cosmos'
+  s.authors = ['NASA']
+  s.email = ['cfs-program@lists.nasa.gov']
+  s.homepage = 'https://github.com/nasa/cfs'
   s.platform = Gem::Platform::RUBY
 
   if ENV['VERSION']

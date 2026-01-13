@@ -5,12 +5,13 @@ VERTICAL
   TITLE "<%= target_name %> cFE Overview Screen" Courier 20 Normal true
     SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
 
-MATRIXBYCOLUMNS 6 2
+MATRIXBYCOLUMNS 7 2
 
   LABEL "App Name"
   LABEL "Seq Count"
   LABEL "Cmd Count"
   LABEL "Err Count"
+  LABEL "Send Hk"
   LABEL "No-Op Cmd"
   LABEL "Reset Cmd"
 
@@ -18,6 +19,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> CF_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> CF_HK COMMAND_COUNTER
   VALUE <%= target_name %> CF_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> CF_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> CF_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> CF_CMD_RESET_COUNTERS")'
 
@@ -25,6 +27,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> CI_LAB_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> CI_LAB_HK COMMAND_COUNTER
   VALUE <%= target_name %> CI_LAB_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> CI_LAB_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> CI_LAB_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> CI_LAB_CMD_RESET_COUNTERS")'
 
@@ -32,6 +35,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> CS_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> CS_HK COMMAND_COUNTER
   VALUE <%= target_name %> CS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> CS_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> CS_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> CS_CMD_RESET_COUNTERS")'
 
@@ -39,6 +43,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> DS_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> DS_HK COMMAND_COUNTER
   VALUE <%= target_name %> DS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> DS_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> DS_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> DS_CMD_RESET_COUNTERS")'
 
@@ -46,6 +51,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> FM_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> FM_HK COMMAND_COUNTER
   VALUE <%= target_name %> FM_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> FM_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> FM_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> FM_CMD_RESET_COUNTERS")'
 
@@ -53,6 +59,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> HK_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> HK_HK COMMAND_COUNTER
   VALUE <%= target_name %> HK_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> HK_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> HK_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> HK_CMD_RESET_COUNTERS")'
 
@@ -60,6 +67,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> HS_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> HS_HK COMMAND_COUNTER
   VALUE <%= target_name %> HS_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> HS_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> HS_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> HS_CMD_RESET_COUNTERS")'
 
@@ -67,6 +75,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> LC_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> LC_HK COMMAND_COUNTER
   VALUE <%= target_name %> LC_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> LC_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> LC_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> LC_CMD_RESET_COUNTERS")'
 
@@ -74,6 +83,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> MD_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> MD_HK COMMAND_COUNTER
   VALUE <%= target_name %> MD_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> MD_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> MD_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> MD_CMD_RESET_COUNTERS")'
 
@@ -81,6 +91,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> MM_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> MM_HK COMMAND_COUNTER
   VALUE <%= target_name %> MM_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> MM_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> MM_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> MM_CMD_RESET_COUNTERS")'
 
@@ -88,6 +99,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> SAMPLE_APP_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER
   VALUE <%= target_name %> SAMPLE_APP_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> SAMPLE_APP_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> SAMPLE_APP_CMD_RESET_COUNTERS")'
 
@@ -95,6 +107,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> SC_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> SC_HK COMMAND_COUNTER
   VALUE <%= target_name %> SC_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> SC_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> SC_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> SC_CMD_RESET_COUNTERS")'
 
@@ -102,6 +115,7 @@ MATRIXBYCOLUMNS 6 2
   VALUE <%= target_name %> TO_LAB_HK CCSDS_SEQUENCE
   VALUE <%= target_name %> TO_LAB_HK COMMAND_COUNTER
   VALUE <%= target_name %> TO_LAB_HK COMMAND_ERROR_COUNTER
+  BUTTON 'Send Hk' 'api.cmd("<%= target_name %> TO_LAB_SEND_HK_CMD")'
   BUTTON 'No-Op' 'api.cmd("<%= target_name %> TO_LAB_CMD_NOOP")'
   BUTTON 'Reset' 'api.cmd("<%= target_name %> TO_LAB_CMD_RESET_COUNTERS")'
 
