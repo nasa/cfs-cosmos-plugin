@@ -23,6 +23,9 @@
       STATE RESTART_APP 1  
    APPEND_PARAMETER SPARE 8 UINT 0 0 0 "Spare for alignment"
    APPEND_PARAMETER PRIORITY 16 UINT 0 MAX_UINT16 0 "The new Applications runtime priority."
+<% if $cfs_globals_mem_size == 64 %>
+   APPEND_PARAMETER SPARE_32 32 UINT 0 0 0 "Spare for 64-bit alignment"
+<% end %>
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_STOP_APP',  5, "Telecommand Message") %>
    APPEND_PARAMETER APPLICATION 160 STRING "" "ASCII text string containing Application Name"
