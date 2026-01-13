@@ -3,6 +3,7 @@
 # 
 # Assumptions:
 #   - Telemetry output has already been enabled by the user
+#   - ES housekeeping telemetry is being requested automatically
 #
 
 perf_data_file = "/cf/cfe_es_perf.dat"

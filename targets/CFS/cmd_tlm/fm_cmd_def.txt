@@ -1,3 +1,5 @@
+<%= cfs_cmd_hdr(target_name, 'FM_SEND_HK_CMD',         0, "FM Housekeeping Request Cmd") %>
+
 <%= cfs_cmd_hdr(target_name, 'FM_CMD_NOOP', 0, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'FM_CMD_RESET_COUNTERS', 1, "Telecommand Message") %>
