@@ -6,7 +6,7 @@ class cfs_test_group_cfe_evs(Group):
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
 
-    def test_aliveness(self):
+    def test_00_aliveness(self):
         """
         FSW Aliveness Test
         - Send a no-op command
@@ -32,7 +32,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
 
-    def test_event_type(self):
+    def test_01_event_type(self):
         """
         Test Enable/Disable Event Type
         - Send enable event type
@@ -59,7 +59,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_DISABLE_EVENT_TYPE with BIT_MASK DEBUG")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_set_event_format_mode(self):
+    def test_02_set_event_format_mode(self):
         """
         Test Set Event Format Mode
         - Send set event format mode
@@ -82,7 +82,7 @@ class cfs_test_group_cfe_evs(Group):
         # Restore default event format
         cmd(f"<%= target_name %> {app_name}_CMD_SET_EVENT_FORMAT_MODE with MSG_FORMAT LONG")
 
-    def test_app_event_type(self):
+    def test_03_app_event_type(self):
         """
         Test Enable/Disable App Event Type
         - Send enable app event type
@@ -109,7 +109,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_DISABLE_APP_EVENT_TYPE with APP_NAME SAMPLE_APP, BIT_MASK DEBUG")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_app_events(self):
+    def test_04_app_events(self):
         """
         Test Disable/Enable App Events
         - Send disable app events
@@ -136,7 +136,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_ENABLE_APP_EVENTS with APP_NAME SAMPLE_APP")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_reset_app_counter(self):
+    def test_05_reset_app_counter(self):
         """
         Test Reset App Counter Commands
         - Send reset app counter
@@ -156,7 +156,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_RESET_APP_COUNTER with APP_NAME SAMPLE_APP")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_filter_commands(self):
+    def test_06_filter_commands(self):
         """
         Test Filter Commands
         - Send add event filter
@@ -206,7 +206,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_RESET_ALL_FILTERS with APP_NAME SAMPLE_APP")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_ports(self):
+    def test_07_ports(self):
         """
         Test Enable/Disable Ports
         - Send Enable Ports
@@ -233,7 +233,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_DISABLE_PORTS with BIT_MASK 2")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_write_app_data_file(self):
+    def test_08_write_app_data_file(self):
         """
         Test Write App Data Files
         - Send Write App Data File
@@ -253,7 +253,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_WRITE_APP_DATA_FILE with APP_DATA_FILENAME 'evs_app.dat'")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_write_log_data_file(self):
+    def test_09_write_log_data_file(self):
         """
         Test Log Commands
         - Send Write Log Data File
@@ -273,7 +273,7 @@ class cfs_test_group_cfe_evs(Group):
         cmd(f"<%= target_name %> {app_name}_CMD_WRITE_LOG_DATA_FILE with LOG_FILENAME 'evs_log.dat'")
         wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_set_log_mode(self):
+    def test_10_set_log_mode(self):
         """
         Test Set Log Mode
         - Send Set Log Mode
@@ -296,7 +296,7 @@ class cfs_test_group_cfe_evs(Group):
         # Restore default log mode
         cmd(f"<%= target_name %> {app_name}_CMD_SET_LOG_MODE with LOG_MODE DISCARD")
 
-    def test_clear_log(self):
+    def test_11_clear_log(self):
         """
         Test Clear Log
         - Send Clear Log

@@ -6,7 +6,7 @@ class cfs_test_group_cfs_sc(Group):
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
 
-    def test_aliveness(self):
+    def test_00_aliveness(self):
         """
         FSW Aliveness Test
         - Send a no-op command
@@ -31,7 +31,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> SC_CMD_RESET_COUNTERS")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == 0", 100)
 
-    def test_continue_ats_on_failure(self):
+    def test_01_continue_ats_on_failure(self):
         """
         Continue ATS on Failure Test
         - Send a continue ats on failure command
@@ -58,7 +58,7 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> SC_HK CONT_ATS_ON_FAIL == 'TRUE'", 100)
 
-    def test_rts_operations(self):
+    def test_02_rts_operations(self):
         """
         RTS Operations Test
         - Send an enable rts command
@@ -76,17 +76,19 @@ class cfs_test_group_cfs_sc(Group):
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"SC_HK", 1, 100)
 
-        # Assuming no one else is sending commands, grab the latest command count
+        # Enable RTS 1
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
-        
-        # Check accepted Enable RTS command
         cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS with RTS_ID 1")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-        # Check accepted Start RTS command
+        # Test Start RTS command
+        # Expect the SC cmd count to increase by 1 for this SC_CMD_START_RTS command,
+        # plus 3 for the commands in the RTS1 (SC No-Op, SC Enable RTS 2, SC Start RTS 2)
+        # plus 3 for the commands in the RTS2 (three SC No-Ops)
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
+        expected_num_sc_cmd_count = cmd_count + 1 + 6
         cmd(f"<%= target_name %> SC_CMD_START_RTS with RTS_ID 1")
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {expected_num_sc_cmd_count}", 100)
 
         wait(3)
 
@@ -100,7 +102,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS with RTS_ID 1")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-    def test_rts_group_operations(self):
+    def test_03_rts_group_operations(self):
         """
         RTS Group Operations Test
         - Send an enable rts group command
@@ -122,24 +124,27 @@ class cfs_test_group_cfs_sc(Group):
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
 
         # Check accepted Enable RTS Group command
-        cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS_GROUP with FIRST_RTS_ID 2, LAST_RTS_ID 4")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Check accepted Start RTS Group command
+        # Expect the cmd count to increase by 1 for this SC_CMD_START_RTS_GROUP command,
+        # plus 9 for the commands in the RTSs (three SC no-ops per RTS)
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
-        cmd(f"<%= target_name %> SC_CMD_START_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        expected_num_sc_cmd_count = cmd_count + 1 + (3 * 3)
+        cmd(f"<%= target_name %> SC_CMD_START_RTS_GROUP with FIRST_RTS_ID 2, LAST_RTS_ID 4")
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {expected_num_sc_cmd_count}", 100)
 
         wait(3)
 
         # Check accepted Stop RTS Group command
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
-        cmd(f"<%= target_name %> SC_CMD_STOP_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        cmd(f"<%= target_name %> SC_CMD_STOP_RTS_GROUP with FIRST_RTS_ID 2, LAST_RTS_ID 4")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Check accepted Disable RTS Group command
         cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
-        cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS_GROUP with FIRST_RTS_ID 1, LAST_RTS_ID 3")
+        cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS_GROUP with FIRST_RTS_ID 2, LAST_RTS_ID 4")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
     def setup(self):
