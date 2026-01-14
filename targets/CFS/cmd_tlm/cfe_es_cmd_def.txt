@@ -13,7 +13,7 @@
    APPEND_PARAMETER APPLICATION 160 STRING "" "Name of Application to be started"
    APPEND_PARAMETER APP_ENTRY_POINT 160 STRING "" "Symbolic name of Application's entry point"
    APPEND_PARAMETER APP_FILE_NAME 512 STRING "" "Full path and filename of Application's executable image"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_PARAMETER STACK_SIZE 64 UINT MIN_UINT64 MAX_UINT64 0 "Desired stack size for the new application"
 <% else %>
    APPEND_PARAMETER STACK_SIZE 32 UINT MIN_UINT32 MAX_UINT32 0 "Desired stack size for the new application"
@@ -23,7 +23,7 @@
       STATE RESTART_APP 1  
    APPEND_PARAMETER SPARE 8 UINT 0 0 0 "Spare for alignment"
    APPEND_PARAMETER PRIORITY 16 UINT 0 MAX_UINT16 0 "The new Applications runtime priority."
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_PARAMETER SPARE_32 32 UINT 0 0 0 "Spare for 64-bit alignment"
 <% end %>
 

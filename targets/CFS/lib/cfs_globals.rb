@@ -42,15 +42,16 @@ end
 # FSW Target Memory Size
 # Must be `32` or `64`
 # -------------------------------------------------------------------------------------------------
-$cfs_globals_mem_size = 64
+$cfs_globals_mem_addr_size = 64
 
 # Set the related global variable, based on the input (called from plugin.txt)
 # The user should have entered either "32" or "64"
-def cfs_globals_set_mem_size(mem_size_input_string)
-  if mem_size_input_string == "64"
-    $cfs_globals_mem_size = 64
+# This relates to FSW memory pointer sizes, as defined by: `CFE_ES_MemOffset_t`
+def cfs_globals_set_mem_addr_size(cfs_mem_addr_size_input_string)
+  if cfs_mem_addr_size_input_string == "64"
+    $cfs_globals_mem_addr_size = 64
   else
-    $cfs_globals_mem_size = 32
+    $cfs_globals_mem_addr_size = 32
   end
 end
 
