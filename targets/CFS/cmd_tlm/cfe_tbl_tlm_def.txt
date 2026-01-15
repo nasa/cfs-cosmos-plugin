@@ -29,14 +29,14 @@
    APPEND_ITEM LAST_TABLE_LOADED 320 STRING "Name of the last table loaded"
 
 <%= cfs_tlm_hdr(target_name, 'CFE_TBL_REG', "CFE_TBL Reg Tlm") %>
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM SIZE 64 UINT "Size, in bytes, of Table"
 <% else %>
    APPEND_ITEM SIZE 32 UINT "Size, in bytes, of Table"
 <% end %>
    APPEND_ITEM CRC 32 UINT "Most recently calculated CRC of Table"
       FORMAT_STRING "0x%08X"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM ACTIVE_BUFFER_ADDR 64 UINT "Address of Active Buffer"
       FORMAT_STRING "0x%016X"
    APPEND_ITEM INACTIVE_BUFFER_ADDR 64 UINT "Address of Inactive Buffer"
