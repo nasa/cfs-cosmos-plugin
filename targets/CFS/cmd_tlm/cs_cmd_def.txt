@@ -5,7 +5,7 @@
 <%= cfs_cmd_hdr(target_name, 'CS_CMD_RESET_COUNTERS', 1, "Reset CS counters") %>
 
 <%= cfs_cmd_hdr(target_name, 'CS_CMD_ONE_SHOT', 2, "Telecommand Message") %>
-<% if $cpu_addr_var_len == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
     APPEND_PARAMETER ADDRESS                64 UINT  MIN MAX 0 "Address to start checksum"
 <% else %>
     APPEND_PARAMETER ADDRESS                32 UINT  MIN MAX 0 "Address to start checksum"
@@ -52,7 +52,7 @@
      APPEND_PARAMETER EntryID 32 UINT  MIN MAX 0 "EntryID  to perform a command on"
 
 <%= cfs_cmd_hdr(target_name, 'CS_CMD_GET_ENTRY_ID_EEPROM', 20, "Telecommand Message") %>
-<% if $cpu_addr_var_len == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
     APPEND_PARAMETER Address                64 UINT  MIN MAX 0 "Address to get the ID for"
 <% else %>
     APPEND_PARAMETER Address                32 UINT  MIN MAX 0 "Address to get the ID for"
@@ -75,7 +75,7 @@
      APPEND_PARAMETER EntryID 32 UINT  MIN MAX 0 "EntryID  to perform a command on"
 
 <%= cfs_cmd_hdr(target_name, 'CS_CMD_GET_ENTRY_ID_MEMORY', 27, "Telecommand Message") %>
-<% if $cpu_addr_var_len == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
     APPEND_PARAMETER Address                64 UINT  MIN MAX 0 "Address to get the ID for"
 <% else %>
     APPEND_PARAMETER Address                32 UINT  MIN MAX 0 "Address to get the ID for"

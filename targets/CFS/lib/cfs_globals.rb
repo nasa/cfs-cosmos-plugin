@@ -115,11 +115,6 @@ $sc_num_rts_status_fields = (($sc_num_rts + $sc_num_rts_in_uint16 - 1) / $sc_num
 $md_num_dwell_tables = 4
 
 # -------------------------------------------------------------------------------------------------
-# Length of the cpuaddr type (this is 64-bit on Linux but 32-bit on some other systems)
-# -------------------------------------------------------------------------------------------------
-$cpu_addr_var_len = 64
-
-# -------------------------------------------------------------------------------------------------
 # Whether to move files to the downlink directory after closing
 #   Note: This value should correspond with DS_MOVE_FILES
 # -------------------------------------------------------------------------------------------------

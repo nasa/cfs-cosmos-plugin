@@ -24,8 +24,7 @@
           STATE MEM8   3
           STATE MEM16  4
           STATE MEM32  5
-<% if $cpu_addr_var_len == 64 %>
-     APPEND_ITEM       Padding           64 UINT  "Padding"
+<% if $cfs_globals_mem_addr_size == 64 %>
      APPEND_ITEM       Address           64 UINT  "Fully resolved address used for last command"
 <% else %>
      APPEND_ITEM       Address           32 UINT  "Fully resolved address used for last command"
