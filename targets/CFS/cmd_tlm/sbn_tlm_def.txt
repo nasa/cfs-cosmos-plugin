@@ -1,16 +1,16 @@
-<%= cfs_tlm_hdr(target_name, 'SBN_HK', 1, "SBN HK Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SBN_HK', "SBN HK Tlm") %>
    APPEND_ITEM COMMAND_CODE 8 UINT "Command Code"
    APPEND_ITEM COMMAND_COUNTER 16 UINT "Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 16 UINT "Command Error Counter"
    APPEND_ITEM SUB_COUNTER 16 UINT "Sub Counter"
    APPEND_ITEM NETWORK_COUNTER 16 UINT "Network Counter"
 
-<%= cfs_tlm_hdr(target_name, 'SBN_HKNET', 1, "SBN HK Net Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SBN_HKNET', "SBN HK Net Tlm") %>
    APPEND_ITEM COMMAND_CODE 8 UINT "Command Code"
    APPEND_ITEM PROTOCOL_IDX 8 UINT "Protocol Idx"
    APPEND_ITEM PEER_COUNTER 16 UINT "Peer Counter"
 
-<%= cfs_tlm_hdr(target_name, 'SBN_HKPEER', 1, "SBN HK Peer Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SBN_HKPEER', "SBN HK Peer Tlm") %>
    APPEND_ITEM COMMAND_CODE 8 UINT "Command Code"
    APPEND_ITEM PROCESSOR_ID 32 UINT "Processor ID of the peer"
    APPEND_ITEM TIME_SEND_SECONDS 32 UINT "Time of last send to peer (1)"
@@ -23,7 +23,7 @@
    APPEND_ITEM PEER_RECV_ERROR_COUNTER 16 UINT "Number of errors generated receiving from peer"
    APPEND_ITEM PEER_SUBS_COUNTER 16 UINT "Number of subscriptions to this peer"
 
-<%= cfs_tlm_hdr(target_name, 'SBN_HKMYSUBS', 1, "SBN HK MySubs Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SBN_HKMYSUBS', "SBN HK MySubs Tlm") %>
    APPEND_ITEM COMMAND_CODE 8 UINT "Command Code"
    APPEND_ITEM MYSUBS_SUB_COUNTER 16 UINT "Number of subscriptions"
    APPEND_ITEM MYSUBS_SUB_0_MID 32 UINT "MID of subscription 0"
@@ -539,7 +539,7 @@
    APPEND_ITEM MYSUBS_SUB_255_MID 32 UINT "MID of subscription 255"
      FORMAT_STRING "0x%04X"
 
-<%= cfs_tlm_hdr(target_name, 'SBN_HKPEERSUBS', 1, "SBN HK Peer Subs Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'SBN_HKPEERSUBS', "SBN HK Peer Subs Tlm") %>
    APPEND_ITEM COMMAND_CODE 8 UINT "Command Code"
    APPEND_ITEM PEER_SUBS_NET_IDX 16 UINT "Network"
    APPEND_ITEM PEER_SUBS_PEER_IDX 16 UINT "Index of the peer in the request"
