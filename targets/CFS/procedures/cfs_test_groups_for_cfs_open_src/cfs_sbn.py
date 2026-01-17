@@ -27,7 +27,7 @@ class cfs_test_group_cfs_sbn(Group):
         wait_check(f"<%= target_name %> SBN_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Check accepted Reset Counters command
-        cmd(f"<%= target_name %> SBN_CMD_RESET_COUNTERS")
+        cmd(f"<%= target_name %> SBN_CMD_HK_RESET")
         wait_check(f"<%= target_name %> SBN_HK COMMAND_COUNTER == 0", 100)
 
 
