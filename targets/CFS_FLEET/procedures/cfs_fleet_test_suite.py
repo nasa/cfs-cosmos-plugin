@@ -5,6 +5,7 @@ load_utility('<%= target_name %>/lib/cfs_fleet.py')
 
 # Load the cFE Fleet Test Groups
 load_utility("<%= target_name %>/procedures/cfs_fleet_test_group_aliveness.py")
+load_utility("<%= target_name %>/procedures/cfs_fleet_test_group_sbn.py")
 
 class cfs_fleet_test_suite(Suite):
     def __init__(self):
@@ -16,6 +17,7 @@ class cfs_fleet_test_suite(Suite):
         # these are added in alphabetical order
         # ------------------------------------------------------------------------
         self.add_group(cfs_fleet_test_group_aliveness)
+        self.add_group(cfs_fleet_test_group_sbn)
 
     def setup(self):
         # Run when Suite Setup button is pressed
