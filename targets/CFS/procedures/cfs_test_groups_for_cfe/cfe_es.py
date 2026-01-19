@@ -529,7 +529,10 @@ class cfs_test_group_cfe_es(Group):
         - Runs before all scripts when Group Start is pressed
         """
         global sample_app_needs_shutdown_at_end # lets python know we plan to change this global in this function
-        
+
+        # Wait for a new housekeeping packet, to ensure we're using its latest status info
+        wait_check_packet(f"<%= target_name %>", f"CFE_ES_HK", 1, 100)
+
         # If the Sample_App is not running, start it, setting a var to stop it at the end of the test
         # this call here ensures that the system is in the state needed 
         if(not self.is_Sample_App_Running()):

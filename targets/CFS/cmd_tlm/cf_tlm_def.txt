@@ -23,10 +23,9 @@
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_NAK_LIMIT 16 UINT "NAK limit exceeded fault counter"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_ACK_LIMIT 16 UINT "ACK limit exceeded fault counter"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_INACTIVITY_TIMER 16 UINT "Inactivity timer exceeded counter"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_0 16 UINT "Spare"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_SPARE_0 16 UINT "Spare"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_PEND 16 UINT "Queue Size PEND"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TXA 16 UINT "Queue Size TXA"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TXW 16 UINT "Queue Size TXW"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TX 16 UINT "Queue Size TX"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_RX 16 UINT "Queue Size RX"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_HIST 16 UINT "Queue Size HIST"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_HIST_FREE 16 UINT "Queue Size HIST FREE"
@@ -36,9 +35,8 @@
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FROZEN 8 UINT "Frozen state"
         STATE THAWED 0
         STATE FROZEN 1
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_1 8 UINT "Spare"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_2 16 UINT "Spare"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_3 32 UINT "Spare"
+    APPEND_ARRAY_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_0 8 UINT 56 "Explicit Spare array"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_1 16 UINT "Implicit Spare for 64-bit align"
 <% end %>
 
 <%= cfs_tlm_hdr(target_name, 'CF_EOT', "CF EOT Tlm Packet") %>

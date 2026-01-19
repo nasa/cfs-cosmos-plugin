@@ -43,7 +43,7 @@
    APPEND_ITEM MODE 32 UINT "Mode of the file (permissions)"
    APPEND_ITEM FILENAME 512 STRING "File name"
 
-<%= cfs_tlm_hdr(target_name, 'FM_FREE_SPACE', "FM Freespace/Monitor Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'FM_MONITOR_TLM', "FM Freespace/Monitor Tlm") %>
 <% 8.times do |free_space_entry| %>
    APPEND_ITEM FILE_SYS_<%= free_space_entry %>_REPORT_TYPE 8 UINT "Report Type"
       STATE NOT_USED       0

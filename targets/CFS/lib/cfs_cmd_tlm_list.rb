@@ -616,10 +616,10 @@ $CFS_CMD_TLM_LIST = {
             "FM_OPEN_FILES",
         ]
     ),
-    "FM_FREE_SPACE" => FswMsgInfo.new(
+    "FM_MONITOR_TLM" => FswMsgInfo.new(
         base_stream_id: 0x088E,
         packet_names: [
-            "FM_FREE_SPACE",
+            "FM_MONITOR_TLM",
         ]
     ),
 	"MM_HK" => FswMsgInfo.new(
