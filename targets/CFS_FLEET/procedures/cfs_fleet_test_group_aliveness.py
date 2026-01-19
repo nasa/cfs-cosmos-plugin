@@ -18,11 +18,6 @@ class cfs_fleet_test_group_aliveness(Group):
             then verify the command was received (by checking telemetry)
         """
         # Create a list of fsw targets
-        # num_cfs_targets = <%= $cfs_fleet_globals_num_cfs_targets %>
-        # fsw_targets_to_test = []
-        # for cpu_index in range(num_cfs_targets):
-        #     cfs_target_name = f"CFS-{cpu_index + 1}"
-        #     fsw_targets_to_test.append(cfs_target_name)
         fleet = CFS_Fleet()
         fsw_targets_to_test = fleet.get_cfs_fleet_target_name_list()
 
