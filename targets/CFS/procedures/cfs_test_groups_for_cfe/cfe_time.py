@@ -49,14 +49,18 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SendDiagnosticTlm command.
         """
-
+        # get the latest command count
+        wait_check_packet(f"<%= target_name %>", "CFE_TIME_HK", 1, 100)
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
 
-        # Send command under test
-        cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
+        # Get current number of CFE_TIME_DIAG packets received by GSW
+        prev_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+        if prev_time_diag_pkt_rcvd_count is None:
+          prev_time_diag_pkt_rcvd_count = 0
 
-        # Wait for a new housekeeping packet, to ensure we're using its latest status info
-        wait_check_packet(f"<%= target_name %>", "CFE_TIME_DIAG", 1, 100)
+        # Send command to request a new packet, then wait for the packet
+        cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
+        wait_check(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT > {prev_time_diag_pkt_rcvd_count}", 100)
 
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
