@@ -21,8 +21,8 @@ class cfs_fleet_test_group_sbn(Group):
         cpu1_sample_app_cmd_count = tlm("CFS-1 SAMPLE_APP_HK COMMAND_COUNTER")
         cpu2_sample_app_cmd_count = tlm("CFS-2 SAMPLE_APP_HK COMMAND_COUNTER")
 
-        # Send a Sample App No-Op command to CPU-1
-        # cmd(f"CFS-1 SAMPLE_APP_CMD_NOOP with CCSDS_STREAMID 0x1982")
+        # Send a SAMPLE_APP No-Op command to the interface of CPU-1
+        # Override the Command MID to use the MID from SAMPLE_APP of CPU-2
         cmd(f"CFS-1 SAMPLE_APP_CMD_NOOP with CCSDS_STREAMID <%= get_cfs_pkt_msg_id('SAMPLE_APP_CMD_NOOP', 2) %>")
 
         # Verify cpu2 received the command
@@ -42,8 +42,8 @@ class cfs_fleet_test_group_sbn(Group):
         cpu1_sample_app_cmd_count = tlm("CFS-1 SAMPLE_APP_HK COMMAND_COUNTER")
         cpu2_sample_app_cmd_count = tlm("CFS-2 SAMPLE_APP_HK COMMAND_COUNTER")
 
-        # Send a Sample App No-Op command to CPU-1
-        # cmd(f"CFS-2 SAMPLE_APP_CMD_NOOP with CCSDS_STREAMID 0x1882")
+        # Send a SAMPLE_APP No-Op command to the interface of CPU-2
+        # Override the Command MID to use the MID from SAMPLE_APP of CPU-1
         cmd(f"CFS-2 SAMPLE_APP_CMD_NOOP with CCSDS_STREAMID <%= get_cfs_pkt_msg_id('SAMPLE_APP_CMD_NOOP', 1) %>")
 
         # Verify cpu2 received the command
