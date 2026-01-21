@@ -226,6 +226,19 @@ $CFS_CMD_TLM_LIST = {
             "SAMPLE_APP_SEND_HK_CMD",
         ]
     ),
+    "SBN_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18FA,
+        packet_names: [
+            "SBN_CMD_NOOP",
+            "SBN_CMD_HK",
+            "SBN_CMD_HK_NET",
+            "SBN_CMD_HK_PEER",
+            "SBN_CMD_HK_PEERSUBS",
+            "SBN_CMD_HK_MYSUBS",
+            "SBN_CMD_HK_RESET",
+            "SBN_CMD_HK_RESET_PEER",
+        ]
+    ),
     "CI_LAB_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1884,
         packet_names: [
@@ -584,6 +597,36 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x0883,
         packet_names: [
             "SAMPLE_APP_HK",
+        ]
+    ),
+    "SBN_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08FB,
+        packet_names: [
+            "SBN_HK",
+        ]
+    ),
+    "SBN_HKNET" => FswMsgInfo.new(
+        base_stream_id: 0x08FC,
+        packet_names: [
+            "SBN_HKNET",
+        ]
+    ),
+    "SBN_HKPEER" => FswMsgInfo.new(
+        base_stream_id: 0x08FD,
+        packet_names: [
+            "SBN_HKPEER",
+        ]
+    ),
+    "SBN_HKMYSUBS" => FswMsgInfo.new(
+        base_stream_id: 0x08FE,
+        packet_names: [
+            "SBN_HKMYSUBS",
+        ]
+    ),
+    "SBN_HKPEERSUBS" => FswMsgInfo.new(
+        base_stream_id: 0x08FF,
+        packet_names: [
+            "SBN_HKPEERSUBS",
         ]
     ),
     "CI_LAB_HK" => FswMsgInfo.new(
