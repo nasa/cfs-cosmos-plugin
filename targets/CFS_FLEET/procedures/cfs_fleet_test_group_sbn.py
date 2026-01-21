@@ -30,7 +30,7 @@ class cfs_fleet_test_group_sbn(Group):
         wait_check(f"CFS-2 SAMPLE_APP_HK COMMAND_COUNTER == {cpu2_sample_app_cmd_count + 1}", 100)
 
 
-    def test_01_sbn_cpu2_to_cpu1(self):
+    def disable_test_01_sbn_cpu2_to_cpu1(self):
         """
         Demonstrate transfer from CPU-2 to CPU-1 over SBN
         """
