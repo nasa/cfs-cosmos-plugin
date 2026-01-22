@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'MM_HK', 1, "MM Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'MM_HK', "MM Hk Tlm") %>
      APPEND_ITEM COMMAND_COUNTER         8 UINT  "MM Application Command Counter"
      APPEND_ITEM COMMAND_ERROR_COUNTER   8 UINT  "MM Application Command Error Counter"
      APPEND_ITEM       Lastaction        8 UINT  "Last command action executed"
@@ -24,8 +24,7 @@
           STATE MEM8   3
           STATE MEM16  4
           STATE MEM32  5
-<% if $cpu_addr_var_len == 64 %>
-     APPEND_ITEM       Padding           64 UINT  "Padding"
+<% if $cfs_globals_mem_addr_size == 64 %>
      APPEND_ITEM       Address           64 UINT  "Fully resolved address used for last command"
 <% else %>
      APPEND_ITEM       Address           32 UINT  "Fully resolved address used for last command"

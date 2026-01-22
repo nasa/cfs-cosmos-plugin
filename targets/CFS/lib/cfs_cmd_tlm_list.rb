@@ -1,3 +1,5 @@
+require 'cfs_globals.rb'
+
 #------------------------------------------------------------------------------
 # Class to maintain FSW Message Info
 #------------------------------------------------------------------------------
@@ -44,6 +46,12 @@ $CFS_CMD_TLM_LIST = {
             "CFE_EVS_CMD_CLEAR_LOG",
         ]
     ),
+    "CFE_EVS_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1809, # DEFAULT_CFE_MISSION_EVS_SEND_HK_TOPICID
+        packet_names: [
+            "CFE_EVS_SEND_HK_CMD",
+        ]
+    ),
     "CFE_SB_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1803,
         packet_names: [
@@ -57,19 +65,31 @@ $CFS_CMD_TLM_LIST = {
             "CFE_SB_CMD_WRITE_MAP_INFO",
         ]
     ),
+    "CFE_SB_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x180B, # DEFAULT_CFE_MISSION_SB_SEND_HK_TOPICID
+        packet_names: [
+            "CFE_SB_SEND_HK_CMD",
+        ]
+    ),
     "CFE_TBL_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1804,
         packet_names: [
-                "CFE_TBL_CMD_NOOP",
-                "CFE_TBL_CMD_RESET_COUNTERS",
-                "CFE_TBL_CMD_LOAD",
-                "CFE_TBL_CMD_DUMP",
-                "CFE_TBL_CMD_VALIDATE",
-                "CFE_TBL_CMD_ACTIVATE",
-                "CFE_TBL_CMD_DUMP_REGISTRY",
-                "CFE_TBL_CMD_SEND_REGISTRY",
-                "CFE_TBL_CMD_DELETE_CDS",
-                "CFE_TBL_CMD_ABORT_LOAD",
+            "CFE_TBL_CMD_NOOP",
+            "CFE_TBL_CMD_RESET_COUNTERS",
+            "CFE_TBL_CMD_LOAD",
+            "CFE_TBL_CMD_DUMP",
+            "CFE_TBL_CMD_VALIDATE",
+            "CFE_TBL_CMD_ACTIVATE",
+            "CFE_TBL_CMD_DUMP_REGISTRY",
+            "CFE_TBL_CMD_SEND_REGISTRY",
+            "CFE_TBL_CMD_DELETE_CDS",
+            "CFE_TBL_CMD_ABORT_LOAD",
+        ]
+    ),
+    "CFE_TBL_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x180C, # DEFAULT_CFE_MISSION_TBL_SEND_HK_TOPICID
+        packet_names: [
+            "CFE_TBL_SEND_HK_CMD",
         ]
     ),
     "CFE_TIME_CMD" => FswMsgInfo.new(
@@ -93,35 +113,47 @@ $CFS_CMD_TLM_LIST = {
             "CFE_TIME_CMD_SET_SIGNAL",
         ]
     ),
+    "CFE_TIME_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x180D, # DEFAULT_CFE_MISSION_TIME_SEND_HK_TOPICID
+        packet_names: [
+            "CFE_TIME_SEND_HK_CMD",
+        ]
+    ),
     "CFE_ES_CMD" => FswMsgInfo.new(
-            base_stream_id: 0x1806,
-            packet_names: [
-                "CFE_ES_CMD_NOOP",
-                "CFE_ES_CMD_RESET_COUNTERS",
-                "CFE_ES_CMD_RESTART",
-                "CFE_ES_CMD_START_APP",
-                "CFE_ES_CMD_STOP_APP",
-                "CFE_ES_CMD_RESTART_APP",
-                "CFE_ES_CMD_RELOAD_APP",
-                "CFE_ES_CMD_QUERY_ONE",
-                "CFE_ES_CMD_QUERY_ALL",
-                "CFE_ES_CMD_CLEAR_SYS_LOG",
-                "CFE_ES_CMD_WRITE_SYS_LOG",
-                "CFE_ES_CMD_CLEAR_ER_LOG",
-                "CFE_ES_CMD_WRITE_ER_LOG",
-                "CFE_ES_CMD_START_PERF_DATA",
-                "CFE_ES_CMD_STOP_PERF_DATA",
-                "CFE_ES_CMD_SET_PERF_FILTER_MASK",
-                "CFE_ES_CMD_SET_PERF_TRIGGER_MASK",
-                "CFE_ES_CMD_OVER_WRITE_SYS_LOG",
-                "CFE_ES_CMD_RESET_PR_COUNT",
-                "CFE_ES_CMD_SET_MAX_PR_COUNT",
-                "CFE_ES_CMD_DELETE_CDS",
-                "CFE_ES_CMD_SEND_MEM_POOL_STATS",
-                "CFE_ES_CMD_DUMP_CDS_REGISTRY",
-                "CFE_ES_CMD_QUERY_ALL_TASKS",
-            ]
-        ),
+        base_stream_id: 0x1806,
+        packet_names: [
+            "CFE_ES_CMD_NOOP",
+            "CFE_ES_CMD_RESET_COUNTERS",
+            "CFE_ES_CMD_RESTART",
+            "CFE_ES_CMD_START_APP",
+            "CFE_ES_CMD_STOP_APP",
+            "CFE_ES_CMD_RESTART_APP",
+            "CFE_ES_CMD_RELOAD_APP",
+            "CFE_ES_CMD_QUERY_ONE",
+            "CFE_ES_CMD_QUERY_ALL",
+            "CFE_ES_CMD_CLEAR_SYS_LOG",
+            "CFE_ES_CMD_WRITE_SYS_LOG",
+            "CFE_ES_CMD_CLEAR_ER_LOG",
+            "CFE_ES_CMD_WRITE_ER_LOG",
+            "CFE_ES_CMD_START_PERF_DATA",
+            "CFE_ES_CMD_STOP_PERF_DATA",
+            "CFE_ES_CMD_SET_PERF_FILTER_MASK",
+            "CFE_ES_CMD_SET_PERF_TRIGGER_MASK",
+            "CFE_ES_CMD_OVER_WRITE_SYS_LOG",
+            "CFE_ES_CMD_RESET_PR_COUNT",
+            "CFE_ES_CMD_SET_MAX_PR_COUNT",
+            "CFE_ES_CMD_DELETE_CDS",
+            "CFE_ES_CMD_SEND_MEM_POOL_STATS",
+            "CFE_ES_CMD_DUMP_CDS_REGISTRY",
+            "CFE_ES_CMD_QUERY_ALL_TASKS",
+        ]
+    ),
+    "CFE_ES_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1808, # DEFAULT_CFE_MISSION_ES_SEND_HK_TOPICID
+        packet_names: [
+            "CFE_ES_SEND_HK_CMD",
+        ]
+    ),
     "CFE_SB_SUB_RPT_CTRL" => FswMsgInfo.new(
         base_stream_id: 0x180E,
         packet_names: [
@@ -140,6 +172,12 @@ $CFS_CMD_TLM_LIST = {
             "TO_LAB_CMD_REMOVE_PACKET",
             "TO_LAB_CMD_REMOVE_ALL",
             "TO_LAB_CMD_ENABLE_OUTPUT",
+        ]
+    ),
+    "TO_LAB_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1881, # DEFAULT_TO_LAB_MISSION_SEND_HK_TOPICID
+        packet_names: [
+            "TO_LAB_SEND_HK_CMD",
         ]
     ),
     "CF_CMD" => FswMsgInfo.new(
@@ -167,12 +205,38 @@ $CFS_CMD_TLM_LIST = {
             "CF_CMD_DISABLE_ENGINE",
         ]
     ),
+    "CF_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18B4, # DEFAULT_CFE_MISSION_CF_SEND_HK_TOPICID
+        packet_names: [
+            "CF_SEND_HK_CMD",
+        ]
+    ),
     "SAMPLE_APP_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1882,
         packet_names: [
             "SAMPLE_APP_CMD_NOOP",
             "SAMPLE_APP_CMD_RESET_COUNTERS",
             "SAMPLE_APP_CMD_PROCESS",
+            "SAMPLE_APP_CMD_DISPLAY_PARAM",
+        ]
+    ),
+    "SAMPLE_APP_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1883, # DEFAULT_SAMPLE_APP_MISSION_SEND_HK_TOPICID
+        packet_names: [
+            "SAMPLE_APP_SEND_HK_CMD",
+        ]
+    ),
+    "SBN_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18FA,
+        packet_names: [
+            "SBN_CMD_NOOP",
+            "SBN_CMD_HK",
+            "SBN_CMD_HK_NET",
+            "SBN_CMD_HK_PEER",
+            "SBN_CMD_HK_PEERSUBS",
+            "SBN_CMD_HK_MYSUBS",
+            "SBN_CMD_HK_RESET",
+            "SBN_CMD_HK_RESET_PEER",
         ]
     ),
     "CI_LAB_CMD" => FswMsgInfo.new(
@@ -180,6 +244,12 @@ $CFS_CMD_TLM_LIST = {
         packet_names: [
             "CI_LAB_CMD_NOOP",
             "CI_LAB_CMD_RESET_COUNTERS",
+        ]
+    ),
+    "CI_LAB_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1885, # DEFAULT_CI_LAB_MISSION_SEND_HK_TOPICID
+        packet_names: [
+            "CI_LAB_SEND_HK_CMD",
         ]
     ),
     "FM_CMD" => FswMsgInfo.new(
@@ -205,6 +275,12 @@ $CFS_CMD_TLM_LIST = {
             "FM_CMD_SET_PERMISSIONS",
         ]
     ),
+    "FM_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x188D, # FM_SEND_HK_TOPICID
+        packet_names: [
+            "FM_SEND_HK_CMD",
+        ]
+    ),
 	"MM_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1888,
         packet_names: [
@@ -223,6 +299,12 @@ $CFS_CMD_TLM_LIST = {
             "MM_CMD_DISABLE_EEPROM_WRITE",
         ]
     ),
+    "MM_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1889, # MM_SEND_HK_TOPICID
+        packet_names: [
+            "MM_SEND_HK_CMD",
+        ]
+    ),
     "MD_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1890,
         packet_names: [
@@ -232,6 +314,12 @@ $CFS_CMD_TLM_LIST = {
             "MD_CMD_STOP_DWELL",
             "MD_CMD_JAM_DWELL",
             "MD_CMD_SET_SIGNATURE",
+        ]
+    ),
+    "MD_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1891, # DEFAULT_CFE_MISSION_MD_SEND_HK_TOPICID
+        packet_names: [
+            "MD_SEND_HK_CMD",
         ]
     ),
     "CS_CMD" => FswMsgInfo.new(
@@ -278,12 +366,24 @@ $CFS_CMD_TLM_LIST = {
             "CS_CMD_ENABLE_NAME_APP",
             "CS_CMD_DISABLE_NAME_APP",
         ]
-    ),    
+    ),
+    "CS_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18A0, # CS_SEND_HK_TOPICID
+        packet_names: [
+            "CS_SEND_HK_CMD",
+        ]
+    ),
     "HK_CMD" => FswMsgInfo.new(
         base_stream_id: 0x189A,
         packet_names: [
             "HK_CMD_NOOP",
             "HK_CMD_RESET_COUNTERS",
+        ]
+    ),
+    "HK_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x189B, # HK_SEND_HK_TOPICID
+        packet_names: [
+            "HK_SEND_HK_CMD",
         ]
     ),
     "LC_CMD" => FswMsgInfo.new(
@@ -297,7 +397,13 @@ $CFS_CMD_TLM_LIST = {
             "LC_CMD_RESET_AP_STATS",
             "LC_CMD_RESET_WP_STATS",
         ]
-    ),    
+    ),
+    "LC_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18A5, # LC_SEND_HK_TOPICID
+        packet_names: [
+            "LC_SEND_HK_CMD",
+        ]
+    ),
     "HS_CMD" => FswMsgInfo.new(
         base_stream_id: 0x18AE,
         packet_names: [
@@ -316,6 +422,12 @@ $CFS_CMD_TLM_LIST = {
             "HS_CMD_REPORT_DIAG",
 			"HS_CMD_SET_UTIL_PARAMS",
 			"HS_CMD_SET_UTIL_DIAG",
+        ]
+    ),
+    "HS_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18AF, # DEFAULT_CFE_MISSION_HS_SEND_HK_TOPICID
+        packet_names: [
+            "HS_SEND_HK_CMD",
         ]
     ),
     "SC_CMD" => FswMsgInfo.new(
@@ -338,7 +450,13 @@ $CFS_CMD_TLM_LIST = {
             "SC_CMD_DISABLE_RTS_GROUP",
             "SC_CMD_ENABLE_RTS_GROUP",
         ]
-    ),    
+    ),
+    "SC_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18AA, # SC_SEND_HK_TOPICID
+        packet_names: [
+            "SC_SEND_HK_CMD",
+        ]
+    ),
     "DS_CMD" => FswMsgInfo.new(
         base_stream_id: 0x18BB,
         packet_names: [
@@ -363,6 +481,13 @@ $CFS_CMD_TLM_LIST = {
             "DS_CMD_REMOVE_MID",
         ]
     ),
+    "DS_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x18BC, # DS_SEND_HK_TOPICID
+        packet_names: [
+            "DS_SEND_HK_CMD",
+        ]
+    ),
+
     # -------------------------------------------------------------------------
     # Telemetry
     # -------------------------------------------------------------------------
@@ -474,6 +599,36 @@ $CFS_CMD_TLM_LIST = {
             "SAMPLE_APP_HK",
         ]
     ),
+    "SBN_HK" => FswMsgInfo.new(
+        base_stream_id: 0x08FB,
+        packet_names: [
+            "SBN_HK",
+        ]
+    ),
+    "SBN_HKNET" => FswMsgInfo.new(
+        base_stream_id: 0x08FC,
+        packet_names: [
+            "SBN_HKNET",
+        ]
+    ),
+    "SBN_HKPEER" => FswMsgInfo.new(
+        base_stream_id: 0x08FD,
+        packet_names: [
+            "SBN_HKPEER",
+        ]
+    ),
+    "SBN_HKMYSUBS" => FswMsgInfo.new(
+        base_stream_id: 0x08FE,
+        packet_names: [
+            "SBN_HKMYSUBS",
+        ]
+    ),
+    "SBN_HKPEERSUBS" => FswMsgInfo.new(
+        base_stream_id: 0x08FF,
+        packet_names: [
+            "SBN_HKPEERSUBS",
+        ]
+    ),
     "CI_LAB_HK" => FswMsgInfo.new(
         base_stream_id: 0x0884,
         packet_names: [
@@ -504,10 +659,10 @@ $CFS_CMD_TLM_LIST = {
             "FM_OPEN_FILES",
         ]
     ),
-    "FM_FREE_SPACE" => FswMsgInfo.new(
+    "FM_MONITOR_TLM" => FswMsgInfo.new(
         base_stream_id: 0x088E,
         packet_names: [
-            "FM_FREE_SPACE",
+            "FM_MONITOR_TLM",
         ]
     ),
 	"MM_HK" => FswMsgInfo.new(
@@ -646,6 +801,7 @@ end
 
 #------------------------------------------------------------------------------
 # Given the 2-byte stream id, fill in the cpu number and return the result
+# If EDS is not enabled, the base MIDs are used for all MIDs
 #
 # 1. stream_id_base
 #    - base stream id (without 3-bit cpu number set)
@@ -695,9 +851,6 @@ def get_cfs_pkt_msg_id(pkt_name, cpu_num_input)
     elsif ((cpu_num < 1) && (cpu_num > 2))
         msg_id << "cpu_num_input error: should be 1 or 2. instead got: #{cpu_num}."
     else
-        # Set all cpu numbers to be 1 to get default msgids
-        cpu_num = 1
-
         msg_id_with_cpu_num = get_cfs_msg_id_from_base(
             $CFS_CMD_TLM_LIST[pkt_list_key].fsw_msg_base_stream_id,
             cpu_num-1)

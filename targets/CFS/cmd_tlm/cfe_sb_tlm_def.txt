@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_SB_HK', 1, "CFE_SB Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_HK', "CFE_SB Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "Count of valid commands received"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Count of invalid commands received"
    APPEND_ITEM NO_SUBSCRIBERS_COUNTER 8 UINT "Count pkts sent with no subscribers"
@@ -20,7 +20,7 @@
    APPEND_ITEM MEM_IN_USE 32 UINT "Memory in use"
    APPEND_ITEM UNMARKED_MEM 32 UINT "Unmarked memory"
 
-<%= cfs_tlm_hdr(target_name, 'CFE_SB_STATS', 1, "CFE_SB Stats Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_SB_STATS', "CFE_SB Stats Tlm") %>
    APPEND_ITEM MSG_IDS_IN_USE 32 UINT "Current number of MsgIds with a destination"
    APPEND_ITEM PEAK_MSG_IDS_IN_USE 32 UINT "Peak number of MsgIds with a destination"
    APPEND_ITEM MAX_MSG_IDS_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_MSG_IDS"
@@ -36,7 +36,7 @@
    APPEND_ITEM SB_BUFFERS_IN_USE 32 UINT "Number of SB message buffers currently in use"
    APPEND_ITEM PEAK_SB_BUFFERS_IN_USE 32 UINT "Max number of SB message buffers in use"
    APPEND_ITEM MAX_PIPE_DEPTH_ALLOWED 32 UINT "cFE Cfg Param #CFE_PLATFORM_SB_MAX_PIPE_DEPTH"
-<% 64.times do |pipe_index| %>
+<% 32.times do |pipe_index| %>
    APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_PIPE_ID 32 UINT "Pipe ID"
       FORMAT_STRING "0x%08X"
    APPEND_ITEM PIPE_DEPTH_STATS_<%= pipe_index %>_MAX_QUEUE_DEPTH 16 UINT "Number of messages the pipe can hold"

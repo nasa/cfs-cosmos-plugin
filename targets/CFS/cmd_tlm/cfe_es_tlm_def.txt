@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_HK', 1, "CFE_ES Hk Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_HK', "CFE_ES Hk Tlm") %>
    APPEND_ITEM COMMAND_COUNTER 8 UINT "The ES Application Command Counter"
    APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "The ES Application Command Error Counter"
    APPEND_ITEM CFE_CORE_CHECKSUM 16 UINT "Checksum of cFE Core Code"
@@ -15,7 +15,7 @@
    APPEND_ITEM PSP_MINOR_VERSION 8 UINT "Platform Support Package Minor Version Number"
    APPEND_ITEM PSP_REVISION 8 UINT "Platform Support Package Revision Number"
    APPEND_ITEM PSP_MISSION_REVISION 8 UINT "Platform Support Package MissionRevision Number"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM SYS_LOG_BYTES_USED 64 UINT "Total number of bytes used in system log"
    APPEND_ITEM SYS_LOG_SIZE 64 UINT "Total size of the system log"
 <% else %>
@@ -68,7 +68,7 @@
    APPEND_ITEM PERF_DATA_END 32 UINT "Identifies Last Stored Entry in Performance Analyzer Log"
    APPEND_ITEM PERF_DATA_COUNT 32 UINT "Number of Entries Put Into the Performance Analyzer Log"
    APPEND_ITEM PERF_DATA_TO_WRITE 32 UINT "Number of Performance Analyzer Log Entries Left to be Written to Log Dump File"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM HEAP_BYTES_FREE 64 UINT "Number of free bytes remaining in the OS heap"
    APPEND_ITEM HEAP_BLOCKS_FREE 64 UINT "Number of free blocks remaining in the OS heap"
    APPEND_ITEM HEAP_MAX_BLOCK_SIZE 64 UINT "Number of bytes in the largest free block"
@@ -78,7 +78,7 @@
    APPEND_ITEM HEAP_MAX_BLOCK_SIZE 32 UINT "Number of bytes in the largest free block"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', 1, "CFE_ES App Info Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', "CFE_ES App Info Tlm") %>
    APPEND_ITEM APP_INFO_RESOURCE_ID 32 UINT "Application or Libary ID for this resource"
       FORMAT_STRING "0x%08X"
    APPEND_ITEM APP_INFO_TYPE 32 UINT "App Type"
@@ -88,7 +88,7 @@
    APPEND_ITEM APP_INFO_NAME 160 STRING "The Registered Name of the Application"
    APPEND_ITEM APP_INFO_ENTRY_POINT 160 STRING "The Entry Point label for the Application"
    APPEND_ITEM APP_INFO_FILE_NAME 512 STRING "The Filename of the file containing the Application"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM APP_INFO_STACK_SIZE 64 UINT "The Stack Size of the Application"
 <% else %>
    APPEND_ITEM APP_INFO_STACK_SIZE 32 UINT "The Stack Size of the Application"
@@ -96,7 +96,7 @@
    APPEND_ITEM APP_INFO_ADDRESSES_ARE_VALID 32 UINT "Indicates that the Code, Data, and BSS addresses/sizes are valid"
       STATE FALSE 0
       STATE TRUE  1
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM APP_INFO_CODE_ADDRESS 64 UINT "The Address of the Application Code Segment"
       FORMAT_STRING "0x%016X"
    APPEND_ITEM APP_INFO_CODE_SIZE 64 UINT "The Code Size of the Application"
@@ -132,24 +132,24 @@
    APPEND_ITEM APP_INFO_MAIN_TASK_NAME 160 STRING "The Application's Main Task Name"
    APPEND_ITEM APP_INFO_NUM_OF_CHILD_TASKS 32 UINT "Number of Child tasks for an App"
 
-<%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', 1, "CFE_ES Mem Stats Tlm") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', "CFE_ES Mem Stats Tlm") %>
    APPEND_ITEM POOL_HANDLE 32 UINT "Handle of memory pool whose stats are being telemetered"
       FORMAT_STRING "0x%08X"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM POOL_SIZE 64 UINT "Size of Memory Pool (in bytes)"
 <% else %>
    APPEND_ITEM POOL_SIZE 32 UINT "Size of Memory Pool (in bytes)"
 <% end %>
    APPEND_ITEM NUM_BLOCKS_REQUESTED 32 UINT "Number of times a memory block has been allocated"
    APPEND_ITEM CHECK_ERR_CTR 32 UINT "Number of errors detected when freeing a memory block"
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM NUM_FREE_BYTES 64 UINT "Number of bytes never allocated to a block"
 <% else %>
    APPEND_ITEM NUM_FREE_BYTES 32 UINT "Number of bytes never allocated to a block"
 <% end %>
 
 <% 17.times do |blk_stat_idx| %>
-<% if $cfs_globals_mem_size == 64 %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM BLOCK_STATS_<%= blk_stat_idx %>_BLOCK_SIZE 64 UINT "Number of bytes in each of these blocks"
 <% else %>
    APPEND_ITEM BLOCK_STATS_<%= blk_stat_idx %>_BLOCK_SIZE 32 UINT "Number of bytes in each of these blocks"

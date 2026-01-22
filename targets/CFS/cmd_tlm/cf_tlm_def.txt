@@ -1,4 +1,4 @@
-<%= cfs_tlm_hdr(target_name, 'CF_HK', 1, "CF Hk Tlm Packet") %>
+<%= cfs_tlm_hdr(target_name, 'CF_HK', "CF Hk Tlm Packet") %>
     APPEND_ITEM COMMAND_COUNTER 16 UINT "Command success counter"
     APPEND_ITEM COMMAND_ERROR_COUNTER 16 UINT "Command error counter"
     APPEND_ITEM SPARE_0 32 UINT "Spare For Alignment"
@@ -23,10 +23,9 @@
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_NAK_LIMIT 16 UINT "NAK limit exceeded fault counter"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_ACK_LIMIT 16 UINT "ACK limit exceeded fault counter"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_INACTIVITY_TIMER 16 UINT "Inactivity timer exceeded counter"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_0 16 UINT "Spare"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FAULT_SPARE_0 16 UINT "Spare"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_PEND 16 UINT "Queue Size PEND"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TXA 16 UINT "Queue Size TXA"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TXW 16 UINT "Queue Size TXW"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_TX 16 UINT "Queue Size TX"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_RX 16 UINT "Queue Size RX"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_HIST 16 UINT "Queue Size HIST"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_Q_SIZE_HIST_FREE 16 UINT "Queue Size HIST FREE"
@@ -36,12 +35,11 @@
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_FROZEN 8 UINT "Frozen state"
         STATE THAWED 0
         STATE FROZEN 1
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_1 8 UINT "Spare"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_2 16 UINT "Spare"
-    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_3 32 UINT "Spare"
+    APPEND_ARRAY_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_0 8 UINT 56 "Explicit Spare array"
+    APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SPARE_1 16 UINT "Implicit Spare for 64-bit align"
 <% end %>
 
-<%= cfs_tlm_hdr(target_name, 'CF_EOT', 1, "CF EOT Tlm Packet") %>
+<%= cfs_tlm_hdr(target_name, 'CF_EOT', "CF EOT Tlm Packet") %>
     APPEND_ITEM SEQ_NUM 32 UINT "Transaction identifier"
     APPEND_ITEM CHANNEL 32 UINT "Channel number"
     APPEND_ITEM DIRECTION 32 UINT "Direction of this transaction"
@@ -62,6 +60,4 @@
       FORMAT_STRING "0x%08X"
     APPEND_ITEM FNAMES_SRC_FILENAME 512 STRING "Source filename"
     APPEND_ITEM FNAMES_DST_FILENAME 512 STRING "Destination filename"
-    APPEND_ITEM PADDING_0 32 UINT "Padding for alignment"
-    APPEND_ITEM PADDING_1 64 UINT "Padding for alignment"
     

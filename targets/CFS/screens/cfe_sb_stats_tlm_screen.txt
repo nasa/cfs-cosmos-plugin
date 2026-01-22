@@ -22,16 +22,14 @@ VERTICAL
   LABELVALUEDESC <%= target_name %> CFE_SB_STATS PEAK_SB_BUFFERS_IN_USE "Peak SB Buffers in Use:"
   LABELVALUEDESC <%= target_name %> CFE_SB_STATS MAX_PIPE_DEPTH_ALLOWED "Maximum Pipe Depth Allowed:"
 
-  # COSMOS has trouble with tabbooks with more than 17 items so the entries are split
-  # here into multiple tabbooks
   <% 4.times do |tab_num| %>
   TABBOOK
-  <% 16.times do |pipe_index| %>
-      TABITEM "Pipe Stats <%= pipe_index + (16 * tab_num) %>" 
-          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (16 * tab_num) %>_PIPE_ID "Pipe ID:"
-          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (16 * tab_num) %>_MAX_QUEUE_DEPTH "Maximum Queue Depth:"
-          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (16 * tab_num) %>_CURRENT_QUEUE_DEPTH "Current Queue Depth:" 
-          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (16 * tab_num) %>_PEAK_QUEUE_DEPTH "Peak Queue Depth:"
+  <% 8.times do |pipe_index| %>
+      TABITEM "Pipe Stats <%= pipe_index + (8 * tab_num) %>" 
+          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_PIPE_ID "Pipe ID:"
+          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_MAX_QUEUE_DEPTH "Maximum Queue Depth:"
+          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_CURRENT_QUEUE_DEPTH "Current Queue Depth:" 
+          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_PEAK_QUEUE_DEPTH "Peak Queue Depth:"
       END
     <% end %>
   END
