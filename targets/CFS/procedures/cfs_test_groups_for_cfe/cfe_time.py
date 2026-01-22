@@ -59,11 +59,20 @@ class cfs_test_group_cfe_time(Group):
           prev_time_diag_pkt_rcvd_count = 0
 
         # Send command to request a new packet, then wait for the packet
-        cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
-        wait_check(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT > {prev_time_diag_pkt_rcvd_count}", 100)
+        # due to some telemetry drops, we may have to send this multiple times
+        packet_not_received = True
+        number_of_requests_sent = 0
+        while packet_not_received:
+            number_of_requests_sent += 1
+            cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
+            wait(8)
+            current_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+            if current_time_diag_pkt_rcvd_count > prev_time_diag_pkt_rcvd_count:
+                packet_not_received = False
 
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        # Verify command count incremented by the number of requests sent
+        # Note: while we may expect telemetry drops, we don't expect command drops
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + number_of_requests_sent}", 100)
 
 
     def test_03_SetStateCmd_Invalid(self):
@@ -355,10 +364,22 @@ class cfs_test_group_cfe_time(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-        # Verify correct values are set
+        # Get current number of CFE_TIME_DIAG packets received by GSW
+        prev_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+        if prev_time_diag_pkt_rcvd_count is None:
+          prev_time_diag_pkt_rcvd_count = 0
+
         # Request a new diags packet to check this telemetry
-        cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
-        wait_check_packet(f"<%= target_name %>", "CFE_TIME_DIAG", 1, 100)
+        # due to some telemetry drops, we may have to send this multiple times
+        packet_not_received = True
+        while packet_not_received:
+            cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
+            wait(8)
+            current_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+            if current_time_diag_pkt_rcvd_count > prev_time_diag_pkt_rcvd_count:
+                packet_not_received = False
+
+        # Verify correct values are set
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_DIRECTION == 'ADD'", 100)
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_ADJUST_SECONDS == 1", 100)
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_ADJUST_SUBSECONDS == 2", 100)
@@ -377,10 +398,22 @@ class cfs_test_group_cfe_time(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-        # Verify correct values are set
+        # Get current number of CFE_TIME_DIAG packets received by GSW
+        prev_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+        if prev_time_diag_pkt_rcvd_count is None:
+          prev_time_diag_pkt_rcvd_count = 0
+
         # Request a new diags packet to check this telemetry
-        cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
-        wait_check_packet(f"<%= target_name %>", "CFE_TIME_DIAG", 1, 100)
+        # due to some telemetry drops, we may have to send this multiple times
+        packet_not_received = True
+        while packet_not_received:
+            cmd(f"<%= target_name %> CFE_TIME_CMD_SEND_DIAGNOSTIC")
+            wait(8)
+            current_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
+            if current_time_diag_pkt_rcvd_count > prev_time_diag_pkt_rcvd_count:
+                packet_not_received = False
+
+        # Verify correct values are set
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_DIRECTION == 'SUBTRACT'", 100)
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_ADJUST_SECONDS == 3", 100)
         wait_check(f"<%= target_name %> CFE_TIME_DIAG ONE_HZ_ADJUST_SUBSECONDS == 4", 100)
