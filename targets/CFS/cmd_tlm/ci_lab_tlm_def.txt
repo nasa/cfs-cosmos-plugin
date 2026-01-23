@@ -1,0 +1,15 @@
+<%= cfs_tlm_hdr(target_name, 'CI_LAB_HK', "CI_LAB Hk Tlm") %>
+   APPEND_ITEM COMMAND_COUNTER 8 UINT "Command Counter"
+   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Command Error Counter"
+   APPEND_ITEM ENABLE_CHECKSUMS 8 UINT "Checksums enabled"
+   APPEND_ITEM SOCKET_CONNECTED 8 UINT "Socket connected"
+      STATE FALSE 0
+      STATE TRUE  1
+<% if $cfs_globals_eds_enabled == false %>
+   APPEND_ITEM SPARE_TO_ALIGN_1 64 UINT "Spare padding for alignment"
+<% end %>
+   APPEND_ITEM INGEST_PACKETS 32 UINT "Packets ingested"
+   APPEND_ITEM INGEST_ERRORS 32 UINT "Ingest Errors"
+<% if $cfs_globals_eds_enabled == false %>
+   APPEND_ITEM SPARE_TO_ALIGN_2 32 UINT "Spare padding for alignment"
+<% end %>

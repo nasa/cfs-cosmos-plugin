@@ -1,0 +1,60 @@
+<%= cfs_cmd_hdr(target_name, 'SC_SEND_HK_CMD',         0, "SC Housekeeping Request Cmd") %>
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_NOOP', 0, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_RESET_COUNTERS', 1, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_START_ATS', 2, "Telecommand Message") %>
+  APPEND_PARAMETER ATS_ID  16 UINT 1 <%= $sc_num_ats %> 1 "The ID of the ATS to start, 1 = ATS_A, 2 = ATS_B."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_STOP_ATS', 3, "Telecommand Message") %>
+  
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_START_RTS', 4, "Telecommand Message") %>
+  APPEND_PARAMETER RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "The ID of the RTS to start, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_STOP_RTS', 5, "Telecommand Message") %>
+  APPEND_PARAMETER RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "The ID of the RTS to stop, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+  
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_DISABLE_RTS', 6, "Telecommand Message") %>
+  APPEND_PARAMETER RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "The ID of the RTS to disable, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_ENABLE_RTS', 7, "Telecommand Message") %>
+  APPEND_PARAMETER RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "The ID of the RTS to enable, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_SWITCH_ATS', 8, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_JUMP_ATS', 9, "Telecommand Message") %>
+  APPEND_PARAMETER NEW_TIME 32 UINT MIN_UINT32 MAX_UINT32 0 "the time to 'jump' to"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_CONTINUE_ATS_ON_FAILURE', 10, "Telecommand Message") %>
+  APPEND_PARAMETER CONTINUE_STATE 16 UINT 0 1 0 "TRUE or FALSE, to continue ATS after a failure."
+        STATE FALSE 0
+        STATE TRUE  1
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_APPEND_ATS', 11, "Telecommand Message") %>
+  APPEND_PARAMETER ATS_ID  16 UINT 1 <%= $sc_num_ats %> 1 "The ID of the ATS to append to, 1 = ATS_A, 2 = ATS_B."
+  APPEND_PARAMETER PADDING 16 UINT 0 0 0 "Structure padding"
+
+# FC 12 is for an internal command
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_START_RTS_GROUP', 13, "Telecommand Message") %>
+  APPEND_PARAMETER FIRST_RTS_ID 16 UINT 1 <%= $sc_num_rts %> 1 "ID of the first RTS to act on, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER LAST_RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "ID of the last RTS to act on, 1 through SC_NUMBER_OF_RTS."
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_STOP_RTS_GROUP', 14, "Telecommand Message") %>
+  APPEND_PARAMETER FIRST_RTS_ID 16 UINT 1 <%= $sc_num_rts %> 1 "ID of the first RTS to act on, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER LAST_RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "ID of the last RTS to act on, 1 through SC_NUMBER_OF_RTS."
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_DISABLE_RTS_GROUP', 15, "Telecommand Message") %>
+  APPEND_PARAMETER FIRST_RTS_ID 16 UINT 1 <%= $sc_num_rts %> 1 "ID of the first RTS to act on, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER LAST_RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "ID of the last RTS to act on, 1 through SC_NUMBER_OF_RTS."
+
+<%= cfs_cmd_hdr(target_name, 'SC_CMD_ENABLE_RTS_GROUP', 16, "Telecommand Message") %>
+  APPEND_PARAMETER FIRST_RTS_ID 16 UINT 1 <%= $sc_num_rts %> 1 "ID of the first RTS to act on, 1 through SC_NUMBER_OF_RTS."
+  APPEND_PARAMETER LAST_RTS_ID  16 UINT 1 <%= $sc_num_rts %> 1 "ID of the last RTS to act on, 1 through SC_NUMBER_OF_RTS."

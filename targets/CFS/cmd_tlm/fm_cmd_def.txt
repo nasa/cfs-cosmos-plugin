@@ -1,0 +1,86 @@
+<%= cfs_cmd_hdr(target_name, 'FM_SEND_HK_CMD',         0, "FM Housekeeping Request Cmd") %>
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_NOOP', 0, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_RESET_COUNTERS', 1, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_COPY_FILE', 2, "Telecommand Message") %>
+   APPEND_PARAMETER OVERWRITE 16 UINT 0 1 0 "Allow Overwrite"
+      STATE PROTECTED 0
+      STATE OVERWRITE 1
+   APPEND_PARAMETER SOURCE    512 STRING "" "Source filename"
+   APPEND_PARAMETER TARGET    512 STRING "" "Target filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_MOVE_FILE', 3, "Telecommand Message") %>
+   APPEND_PARAMETER OVERWRITE 16 UINT 0 1 0 "Allow Overwrite"
+      STATE PROTECTED 0
+      STATE OVERWRITE 1
+   APPEND_PARAMETER SOURCE    512 STRING "" "Source filename"
+   APPEND_PARAMETER TARGET    512 STRING "" "Target filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_RENAME_FILE', 4, "Telecommand Message") %>
+   APPEND_PARAMETER SOURCE    512 STRING "" "Source filename"
+   APPEND_PARAMETER TARGET    512 STRING "" "Target filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_DELETE_FILE', 5, "Telecommand Message") %>
+   APPEND_PARAMETER FILENAME  512 STRING "" "Delete filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_DELETE_ALL_FILES', 7, "Telecommand Message") %>
+   APPEND_PARAMETER DIRECTORY 512 STRING "" "Directory name"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_DECOMPRESS_FILE', 8, "Telecommand Message") %>
+   APPEND_PARAMETER SOURCE    512 STRING "" "Source filename"
+   APPEND_PARAMETER TARGET    512 STRING "" "Target filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_CONCAT_FILES', 9, "Telecommand Message") %>
+   APPEND_PARAMETER SOURCE1   512 STRING "" "Source 1 filename"
+   APPEND_PARAMETER SOURCE2   512 STRING "" "Source 2 filename"
+   APPEND_PARAMETER TARGET    512 STRING "" "Target filename"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_GET_FILE_INFO', 10, "Telecommand Message") %>
+   APPEND_PARAMETER FILENAME  512 STRING "" "Delete filename"
+   APPEND_PARAMETER FILE_CRC  32 UINT 0 3 0 "CRC Type for file info"
+      STATE CRC_NONE 0
+      STATE CRC_8    1
+      STATE CRC_16   2
+      STATE CRC_32   3
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_GET_OPEN_FILES', 11, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_CREATE_DIRECTORY', 12, "Telecommand Message") %>
+   APPEND_PARAMETER DIRECTORY 512 STRING "" "Directory name"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_DELETE_DIRECTORY', 13, "Telecommand Message") %>
+   APPEND_PARAMETER DIRECTORY 512 STRING "" "Directory name"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_GET_DIR_LIST_FILE', 14, "Telecommand Message") %>
+   APPEND_PARAMETER DIRECTORY 512 STRING "" "Directory name"
+   APPEND_PARAMETER FILENAME  512 STRING "" "Filename"
+   APPEND_PARAMETER GET_SIZE_TIME_MODE  8 UINT 0 1 0 "Option to query size, time, and mode of files"
+      STATE FALSE 0
+      STATE TRUE  1
+   APPEND_PARAMETER SPARE1     8 UINT 0 0 0 "Spare byte for alignment"
+   APPEND_PARAMETER SPARE2     8 UINT 0 0 0 "Spare byte for alignment"
+   APPEND_PARAMETER SPARE3     8 UINT 0 0 0 "Spare byte for alignment"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_GET_DIR_LIST_PKT', 15, "Telecommand Message") %>
+   APPEND_PARAMETER DIRECTORY 512 STRING "" "Directory name"
+   APPEND_PARAMETER DIR_LIST_OFFSET 32 UINT 0 MAX_UINT32 0 "Index of first entry to put in packet"
+   APPEND_PARAMETER GET_SIZE_TIME_MODE 8 UINT 0 1 0 "Option to query size, time, and mode of files"
+      STATE FALSE 0
+      STATE TRUE  1
+   APPEND_PARAMETER SPARE1     8 UINT 0 0 0 "Spare byte for alignment"
+   APPEND_PARAMETER SPARE2     8 UINT 0 0 0 "Spare byte for alignment"
+   APPEND_PARAMETER SPARE3     8 UINT 0 0 0 "Spare byte for alignment"
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_MONITOR_FILESYSTEM_SPACE', 16, "Telecommand Message") %>
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_SET_TABLE_STATE', 17, "Telecommand Message") %>
+   APPEND_PARAMETER TABLE_ENTRY_INDEX 32 UINT 0 MAX_UINT32 0 "Table entry index"
+   APPEND_PARAMETER TABLE_ENTRY_STATE 32 UINT 0 1 0 "Table entry state"
+      STATE DISABLED 0
+      STATE ENABLED  1
+
+<%= cfs_cmd_hdr(target_name, 'FM_CMD_SET_PERMISSIONS', 19, "Telecommand Message") %>
+   APPEND_PARAMETER FILENAME  512 STRING "" "Delete filename"
+   APPEND_PARAMETER MODE      32 UINT 0 MAX_UINT32 0 "Permissions to pass to OS_chmod"

@@ -1,93 +1,198 @@
-# cFS COSMOS Plugin
+# NASA OpenC3 COSMOS cFS Plugin
+
+This NASA OpenC3 COSMOS plugin is used to control and test the core Flight System (cFS) Flight Software (FSW).
+See the [NASA/cFS](https://github.com/nasa/cfs) documentation for all things cFS.
+See the [OpenC3](https://openc3.com) documentation for all things OpenC3.
+
+## Introduction and Assumptions
+
+With this plugin, you can:
+
+- Build and send commands to cFS
+- Receive and view telemtry from cFS
+- Run test suites for functional demonstration of the cFS
+
+This plugin assumes two instances of the cFS are running (target names: `CFS-1` and `CFS-2`),
+and that COSMOS is connected to these instances via UDP.
+
+- `CFS-1` command / telemetry interface
+   - receives commands from COSMOS on UDP port: `1234`
+   - delivers telemetry to COSMOS on UDP port: `2234`
+- `CFS-2` command / telemetry interface
+   - receives commands from COSMOS on UDP port: `1235`
+   - delivers telemetry to COSMOS on UDP port: `2235`
+
+The diagram below illustrates this expected network configuration.
+
+![Data-Flow Diagram](./docs/media/cFS-COSMOS-data-flow.drawio.png)
+
+Within each instance of the `CFS` target (`CFS-1` and `CFS-2`) are:
+
+- command and telemetry packet defintions
+- telemetry screens for overviews of live telemetry
+- a functional test suite (named `cfs_test_suite`)
+   - this is used to dempnstrate functionality of a single instance of the cFS (`CFS-1` or `CFS-2`)
 
 
+Additionally, there is a `CFS_FLEET` target that includes:
 
-## Getting started
+- command and telemetry overview screens
+- a functional test suite (named `cfs_fleet_test_suite`)
+   - this is used to demonstrate functionality of two instances of cFS (`CFS-1` and `CFS-2` together)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Setup
 
-## Add your files
+This section outlines the basic setup steps for getting OpenC3 COSMOS running.
+In general, the OpenC3 COSMOS flow looks like this:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+1. Setup and Start OpenC3 COSMOS
+2. Build the NASA OpenC3 COSMOS Plugin
+3. Install the Plugin into OpenC3 COSMOS
 
-```
-cd existing_repo
-git remote add origin https://aetd-git.gsfc.nasa.gov/gsfc-cfs/training/cfs-cosmos-plugin.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+### Setup and Start OpenC3 COSMOS
 
-- [ ] [Set up project integrations](https://aetd-git.gsfc.nasa.gov/gsfc-cfs/training/cfs-cosmos-plugin/-/settings/integrations)
+This is necessary before you can build the NASA OpenC3 cFS COSMOS plugin.
 
-## Collaborate with your team
+- Install the [OpenC3 COSMOS Project](https://github.com/OpenC3/cosmos-project) using their instructions.
+- Update COSMOS Default Configs
+   - Configure UDP ports for COSMOS to receive telemetry from cFS
+      - To do this, add the `ports` field (shown below) to the `openc3-operator` service in `cosmos-project/compose.yaml`.
+         ```
+         openc3-operator:
+            ports:
+               - "127.0.0.1:2234:2234/udp"
+               - "127.0.0.1:2235:2235/udp"
+         ```
+      - Note that, if OpenC3 COSMOS was already running, it must be restarted for these changes to take affect.
+- Start OpenC3 COSMOS (see OpenC3's documentation)
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-## Test and Deploy
+### Build the NASA OpenC3 COSMOS Plugin
 
-Use the built-in continuous integration in GitLab.
+With OpenC3 COSMOS running, and `openc3.sh` in your PATH, the plugin can be build using the following command:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+`openc3.sh cli rake build VERSION=X.Y.Z`
 
-***
+Notes:
 
-# Editing this README
+- Use `openc3.bat` for Windows
+- VERSION is required (example: `VERSION=1.2.3`)
+- gem file will be built locally
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-## Suggestions for a good README
+### Install the Plugin into OpenC3 COSMOS
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Navigate to `http://localhost:2900` in a web browser to access the OpenC3 COSMOS UI.
 
-## Name
-Choose a self-explaining name for your project.
+1. Go to the OpenC3 Admin Tool, Plugins Tab
+1. Click the paperclip icon and choose your plugin.gem file
+1. Fill out the plugin parameters:
+   * `cfs_mem_addr_size`
+      - Default: `64`
+      - If running a 32-bit system, use `32`
+   * `cfs_endianness`
+      - Default: `LITTLE_ENDIAN`
+      - If running on a big endian system, use `BIG_ENDIAN`
+   * `cfs_1_intf_ip` and `cfs_2_intf_ip`:
+      - Default: `172.17.0.1`
+            - This should match the IP address listed for the default docker network bridge (`docker0`)
+            - You can use the following to find this info:
+               `ifconfig docker0 | grep "inet " | awk '{print $2}'`
+      - This field should match the IP address COSMOS should connect to
+            when reading/writing to the FSW command/telemetry streams
+   * `global_tlm_output_ip`:
+      - Default: `127.0.0.1`
+      - This should match the IP address that cFS should send telemetry to
+      - This is often used in the Telemetry Output Enable command
+1. Click "Install"
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Using the Plugin
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+This section describes common ways users interact with the cFS with this plugin. 
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+### Enable cFS Telemetry
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Using the browser / OpenC3 COSMOS UI, enable telemetry.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+1. Open the Command Sender
+1. From the "Select Target" dropdown, select the CFS target (`CFS-1` or `CFS-2`).
+1. From the "Select Packet" dropdown, select the TO Enable Output command (`TO_LAB_CMD_ENABLE_OUTPUT`).
+
+From this "Command Sender" page, many other cFS commands can be built and sent.
+
+Once this `TO_LAB_CMD_ENABLE_OUTPUT` command is sent,
+the cFS bundle should start transmitting requested telemetry data from the cFS apps to COSMOS.
+See the next section, "View cFS Telemetry", to confirm the command succeeded.
+
+
+### View cFS Telemetry
+
+Using the browser / COSMOS UI, open the relevant telemetry screens.
+
+1. Open the Telemetry Viewer
+1. From the "Select Target" drop-down, select the `CFS_FLEET` target
+1. From the "Select Screen" drop-down, select the `CFS_FLEET_OVERVIEW` telmetry screen
+
+This `CFS_FLEET_OVERVIEW` screen (screenshot shown below) displays
+an overview of the housekeeping telemetry flowing from each cFS instance.
+
+There are also buttons to send simple commands to each cFS application:
+
+- `Send Hk` - requests a new housekeeping packet from the cFS app
+- `No-Op` - sends a "no-operation" command, which should increment the cFS app's Command Count
+- `Reset` - sends a "reset counters" command, which should clear the counters for the cFS app
+
+![CFS_FLEET_OVERVIEW Screenshot](./docs/media/CFS_FLEET_OVERVIEW_Screenshot.png)
+
+Additionally, each cFS target (`CFS-1` and `CFS-2`) includes housekeeping telemetry screens.
+
+
+### cFS Test Suite (One Instance of cFS)
+
+This `cfs_test_suite`, found within the `procedures` directory of the `CFS-1` and `CFS-2` targets,
+includes functional tests to exercise features of a single cFS instance.
+
+To run this test:
+
+1. Open the Script Runner
+1. Open the file:
+    - `CFS-1` or `CFS-2` > `procedures` > `cfs_test_suite.py`
+1. Click the "Start" button, to the right of the "Suite" drop-down
+
+
+### cFS Fleet Test Suite (Two Instances of cFS)
+
+This `cfs_fleet_test_suite`, found within the `procedures` directory of the `CFS_FLEET` target,
+includes functional tests to exercise features that require multiple cFS instances.
+
+To run this test:
+
+1. Open the Script Runner
+1. Open the file:
+    - `CFS_FLEET` > `procedures` > `cfs_fleet_test_suite.py`
+1. Click the "Start" button, to the right of the "Suite" drop-down
+
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+We encourage you to contribute to both cFS and OpenC3!
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Contributing is easy.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+1. Fork the project
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+Before any contributions can be incorporated we do require all contributors to agree to a Contributor License Agreement.
+This protects both you and us and you retain full rights to any code you write.
+
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This NASA OpenC3 COSMOS cFS plugin is released under the Apache 2.0 License.
+See [LICENSE.txt](LICENSE.txt)
