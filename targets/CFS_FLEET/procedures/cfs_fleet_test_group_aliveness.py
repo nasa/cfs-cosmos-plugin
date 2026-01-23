@@ -41,6 +41,7 @@ class cfs_fleet_test_group_aliveness(Group):
         fsw_apps_to_test.append(["CI_LAB_CMD_NOOP",     "CI_LAB_CMD_RESET_COUNTERS",     "CI_LAB_HK",      "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["TO_LAB_CMD_NOOP",     "TO_LAB_CMD_RESET_COUNTERS",     "TO_LAB_HK",      "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["SAMPLE_APP_CMD_NOOP", "SAMPLE_APP_CMD_RESET_COUNTERS", "SAMPLE_APP_HK",  "COMMAND_COUNTER" ])
+        fsw_apps_to_test.append(["SBN_CMD_NOOP",        "SBN_CMD_HK_RESET",              "SBN_HK",         "COMMAND_COUNTER" ])
 
         for fsw_target in fsw_targets_to_test:
             # For each app in the list, verify its alive by sending a noop, then reset the hk counters

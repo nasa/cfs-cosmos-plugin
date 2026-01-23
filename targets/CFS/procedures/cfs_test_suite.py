@@ -22,6 +22,7 @@ load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_md.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_mm.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_sample_app.py")
+load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_sbn.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_sc.py")
 
 
@@ -54,6 +55,7 @@ class cfs_test_suite(Suite):
       self.add_group(cfs_test_group_cfs_md)
       self.add_group(cfs_test_group_cfs_mm)
       self.add_group(cfs_test_group_cfs_sample_app)
+      self.add_group(cfs_test_group_cfs_sbn)
       self.add_group(cfs_test_group_cfs_sc)
 
   def setup(self):
