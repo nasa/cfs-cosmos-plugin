@@ -13,7 +13,7 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  FM_HK CHILD_CMD_WARN_COUNTER "Child Command Warning Counter:"
   LABELVALUEDESC <%= target_name %>  FM_HK CHILD_QUEUE_COUNT "Pending Commands in Queue:"
   LABELVALUEDESC <%= target_name %>  FM_HK CHILD_CURRENT_CC "Command Code Currently Executing:"
-  LABELVALUEDESC <%= target_name %>  FM_HK CHILD_REVIOUS_CC "Command Code Previously Executed:"
+  LABELVALUEDESC <%= target_name %>  FM_HK CHILD_PREVIOUS_CC "Command Code Previously Executed:"
 END
 
 HORIZONTAL
