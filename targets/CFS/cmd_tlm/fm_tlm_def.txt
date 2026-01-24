@@ -8,7 +8,7 @@
    APPEND_ITEM CHILD_CMD_WARN_COUNTER 8 UINT "Child task command warning counter"
    APPEND_ITEM CHILD_QUEUE_COUNT 8 UINT "Number of pending commands in queue"
    APPEND_ITEM CHILD_CURRENT_CC 8 UINT "Command code currently executing"
-   APPEND_ITEM CHILD_REVIOUS_CC 8 UINT "Command code previously executed"
+   APPEND_ITEM CHILD_PREVIOUS_CC 8 UINT "Command code previously executed"
 
 <%= cfs_tlm_hdr(target_name, 'FM_DIR_LIST', "FM Get Directory List Tlm") %>
    APPEND_ITEM DIR_NAME 512 STRING "Directory name"
