@@ -269,23 +269,18 @@ def print_events_to_log(
     
     
 def start_background_event_logging(filename: Optional[str] = None):
-    """Start background event logging script.
+    """Start background event logging script if not already running.
     
     This function starts the write_event_log.py script as a background process
-    that will continuously log all event messages. The script runs in parallel
-    with your main test and doesn't interfere with other event utilities.
+    that will continuously log all event messages, if no such process is already running.
+    The script runs in parallel with your main test and doesn't interfere with other event utilities.
     
-    Only one background event logging script can run at a time. If one is already
-    running, this function will stop it first before starting a new one.
-    It is suggested that one use the function is_background_event_logging_running()
-    if it is suspected that another event logging background script has already 
-    been started and proceed from there. This will protect if there is a higher 
-    level test suite runner executing multiple test suites and they want a single 
-    pure event log.
-    
+    If a background event logging script is already running, this function will not start a new one.
+    Instead, it will print a message indicating that logging is already active and provide
+    information about where the events are being logged (file or COSMOS log).
     Args:
         filename: Optional path to file where events should be logged.
-                 If None, events are printed to the COSMOS log only.
+                 If None and no logging is active, events are printed to the COSMOS log only.
         
     Example:
         # Start background event logging to COSMOS log
@@ -307,15 +302,19 @@ def start_background_event_logging(filename: Optional[str] = None):
     from openc3.script import script_create, script_run, stash_set, stash_get
     import time
     
-    # Check if there's already a background logger running and stop it
+    # Check if there's already a background logger running
     try:
         existing_script_id = stash_get('background_event_log_id')
         if existing_script_id:
-            print("Stopping existing background event logging...")
-            stop_background_event_logging()
+            existing_filename = stash_get('eventlog')
+            if existing_filename:
+                print(f"Background event logging is already running and writing to file: {existing_filename}")
+            else:
+                print("Background event logging is already running and writing to COSMOS log file")
+            return
     except:
         pass  # No existing script, continue
-    
+
     # Store the filename for the script to use (if provided)
     if filename:
         stash_set('eventlog', filename)
@@ -327,18 +326,18 @@ def start_background_event_logging(filename: Optional[str] = None):
         except:
             pass
         print("Starting background event logging to COSMOS log file")
-    
+
     try:
         # Set up the synchronization flag - initialize to "starting"
         stash_set('event_logger_ready', 'starting')
-        
+
         # Store system_config values in stash for the script to access
         from cosmos_test_utils.system_config import (
             EVENT_TARGET_NAME, EVENT_PACKET_NAME, EVENT_TYPE_TO_TXT,
             EVENT_APP_FIELD, EVENT_ID_FIELD, EVENT_TYPE_FIELD,
             EVENT_MESSAGE_FIELD, EVENT_SCID_FIELD, EVENT_PROCID_FIELD, EVENT_TIME_FIELD
         )
-        
+
         # Store basic configuration
         stash_set('evt_target_name', EVENT_TARGET_NAME)
         stash_set('evt_packet_name', EVENT_PACKET_NAME)
@@ -349,7 +348,7 @@ def start_background_event_logging(filename: Optional[str] = None):
         stash_set('evt_scid_field', EVENT_SCID_FIELD)
         stash_set('evt_procid_field', EVENT_PROCID_FIELD)
         stash_set('evt_time_field', EVENT_TIME_FIELD)
-        
+
         # Store the event type mapping
         stash_set('evt_type_count', len(EVENT_TYPE_TO_TXT))
         i = 0
@@ -357,7 +356,7 @@ def start_background_event_logging(filename: Optional[str] = None):
             stash_set(f'evt_type_key_{i}', k)
             stash_set(f'evt_type_val_{i}', v)
             i += 1
-        
+
         # Create the script content with synchronization
         script_content = '''# Event logging script created by cosmos_test_utils
         # Get configuration from stash
@@ -422,7 +421,7 @@ def start_background_event_logging(filename: Optional[str] = None):
                     emsg = packet[EVENT_MESSAGE_FIELD].to_s
 
                     # Log event message received
-                    event = sprintf("%-23s scid:%-3s procid:%-2s %-5s %-13s %3s: %s", 
+                    event = sprintf("%-23s scid:%-3s procid:%-2s %-5s %-13s %3s: %s",
                                    ptime, scid, procid, EVENT_TYPE_TO_TXT[etype], app, eid, emsg)
                     event_line = "Event: " + event
 
@@ -439,14 +438,14 @@ def start_background_event_logging(filename: Optional[str] = None):
             end
         end
         '''
-        
+
         # Use script_create to create the script
         script_name = "event_logger_report"
         script_create(script_name, script_content)
-        
+
         # Start the script
         script_id = script_run(script_name)
-        
+
         # Store the script ID and path for later cleanup
         stash_set('background_event_log_id', script_id)
 
@@ -462,13 +461,13 @@ def start_background_event_logging(filename: Optional[str] = None):
                     break
             except:
                 pass
-                
+
             # Use Python sleep instead of COSMOS wait (no output)
             time.sleep(0.1)
         else:
             # We timed out waiting for the script to be ready
             print("Warning: Timeout waiting for event logger to initialize fully")
-        
+
         print(f"Background event logging started (script ID: {script_id})")
         
     except Exception as e:
