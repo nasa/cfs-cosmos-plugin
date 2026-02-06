@@ -305,7 +305,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_id: str,
+        requirement_ids: str,
         tlm_timeout: float = DEFAULT_WAIT_TIMEOUT,
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
         **kwargs
@@ -325,7 +325,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_id: Requirement ID to update
+            requirement_ids: Comma-separated string of requirement IDs to update
             tlm_timeout: Maximum time to wait for telemetry response in seconds (default from system_config)
             tlm_poll_interval: Time between telemetry checks in seconds (default from system_config)
             **kwargs: Additional arguments passed directly to the COSMOS cmd() function
@@ -341,20 +341,20 @@ class CommandSender:
                 "REQ-123"
             )
             
-            # With custom timeouts
+            # With custom timeouts and multiple requirements
             success = sender.send_cmd_with_requirement(
                 "TARGET CONFIGURE",
                 "TARGET", "STATUS_TLM", "CONFIG_STATE", "==", "CONFIGURED",
-                "REQ-456",
+                "REQ-456, REQ-457, REQ-458",
                 tlm_timeout=15.0
             )
             
-            # With f-string formatting and custom polling interval
+            # With f-string formatting, custom polling interval, and multiple requirements
             threshold = 75
             success = sender.send_cmd_with_requirement(
                 f"TARGET SET_THRESHOLD with VALUE {threshold}",
                 "TARGET", "HK_TLM", "THRESHOLD", "==", threshold,
-                "REQ-789",
+                "REQ-789, REQ-790",
                 tlm_poll_interval=0.05
             )
         """
@@ -389,9 +389,9 @@ class CommandSender:
         # Update the requirement if tracker is available
         if self.req_tracker is not None:
             if success:
-                self.req_tracker.set_requirement(requirement_id, "P", req_message)
+                self.req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
             else:
-                self.req_tracker.set_requirement(requirement_id, "F", req_message)
+                self.req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Add prefix to message indicating no requirement tracker
             req_message = f"<!> No requirement tracker set - requirement not logged: {req_message}"
@@ -400,7 +400,7 @@ class CommandSender:
         
         # Add requirement info to command record
         cmd_record["requirement"] = {
-            "id": requirement_id,
+            "ids": requirement_ids,
             "success": success,
             "message": req_message
         }
@@ -416,7 +416,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_id: str,
+        requirement_ids: str,
         min_time: Optional[float] = None,
         max_time: Optional[float] = None,
         tlm_timeout: float = DEFAULT_WAIT_TIMEOUT,
@@ -438,7 +438,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_id: Requirement ID to update
+            requirement_ids: Comma-separated string of requirement IDs to update
             min_time: Minimum acceptable response time (None for no minimum)
             max_time: Maximum acceptable response time (None for no maximum)
             tlm_timeout: Maximum time to wait for telemetry response in seconds (default from system_config)
@@ -458,21 +458,21 @@ class CommandSender:
                 max_time=5.0
             )
             
-            # Only maximum response time with custom timeouts
+            # Only maximum response time with custom timeouts and multiple requirements
             success = sender.send_cmd_with_timing_requirement(
                 "TARGET QUICK_RESPONSE",
                 "TARGET", "STATUS_TLM", "READY", "==", True,
-                "REQ-TIMING-002",
+                "REQ-TIMING-002, REQ-TIMING-003",
                 max_time=2.0,
                 tlm_timeout=10.0
             )
             
-            # With f-string formatting
+            # With f-string formatting and multiple requirements
             threshold = 100
             success = sender.send_cmd_with_timing_requirement(
                 f"TARGET SET_THRESHOLD with VALUE {threshold}",
                 "TARGET", "CONFIG_TLM", "THRESHOLD", "==", threshold,
-                "REQ-TIMING-003",
+                "REQ-TIMING-004, REQ-TIMING-005, REQ-TIMING-006",
                 min_time=0.5,
                 max_time=3.0
             )
@@ -566,9 +566,9 @@ class CommandSender:
         # Update the requirement if tracker is available
         if self.req_tracker is not None:
             if req_success:
-                self.req_tracker.set_requirement(requirement_id, "P", req_message)
+                self.req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
             else:
-                self.req_tracker.set_requirement(requirement_id, "F", req_message)
+                self.req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Add prefix to message indicating no requirement tracker
             req_message = f"<!> No requirement tracker set - requirement not logged: {req_message}"
@@ -577,7 +577,7 @@ class CommandSender:
         
         # Add requirement info to command record
         cmd_record["requirement"] = {
-            "id": requirement_id,
+            "ids": requirement_ids,
             "success": req_success,
             "message": req_message
         }
@@ -595,7 +595,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_id: str,
+        requirement_ids: str,
         cmd_delay: float = 0.0,
         tlm_timeout_ea_cmd: float = DEFAULT_WAIT_TIMEOUT,
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
@@ -619,7 +619,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_id: Requirement ID to update for each command
+            requirement_ids: Comma-separated string of requirement IDs to update for each command
             cmd_delay: Delay in seconds between commands
             tlm_timeout_ea_cmd: Maximum time to wait for each tlm response condition to be met
             tlm_poll_interval: Time between telemetry checks in seconds
@@ -637,32 +637,32 @@ class CommandSender:
                 "REQ-DATA-001"
             )
             
-            # With delay between (5) commands and custom timeouts
+            # With delay between (5) commands, custom timeouts, and multiple requirements
             all_success = sender.send_cmd_multiple_times_with_requirement(
                 "TARGET PERIODIC_TASK", 5,
                 "TARGET", "STATUS_TLM", "TASK_COMPLETE", "==", True,
-                "REQ-PERIODIC-001",
+                "REQ-PERIODIC-001, REQ-PERIODIC-002",
                 cmd_delay=2.0,
                 tlm_timeout_ea_cmd=8.0
             )
             
-            # With f-string formatting and fail on first requirement failure
+            # With f-string formatting, fail on first requirement failure, and multiple requirements
             value = 100
             all_success = sender.send_cmd_multiple_times_with_requirement(
                 f"TARGET SET_VALUE with VALUE {value}", 4,
                 "TARGET", "CONFIG_TLM", "CURRENT_VALUE", "==", value,
-                "REQ-SET-VALUE-001",
+                "REQ-SET-VALUE-001, REQ-SET-VALUE-002, REQ-SET-VALUE-003",
                 fail_on_first_error=True
             )
         """
         all_successful = True
         
         for i in range(count):
-            # Send command and check requirement (using the same requirement_id for all)
+            # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_requirement(
                 command_string,
                 target, packet, item, comparison, comparison_value,
-                requirement_id, 
+                requirement_ids,
                 tlm_timeout=tlm_timeout_ea_cmd, 
                 tlm_poll_interval=tlm_poll_interval,
                 **kwargs
@@ -692,7 +692,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_id: str,
+        requirement_ids: str,
         min_time: Optional[float] = None,
         max_time: Optional[float] = None,
         cmd_delay: float = 0.0,
@@ -718,7 +718,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_id: Requirement ID to update for each command
+            requirement_ids: Comma-separated string of requirement IDs to update for each command
             min_time: Minimum acceptable response time (None for no minimum)
             max_time: Maximum acceptable response time (None for no maximum)
             cmd_delay: Delay in seconds between commands
@@ -731,20 +731,20 @@ class CommandSender:
             bool: True if all calls to send_cmd_with_timing_requirement() completed successfully
         
         Examples:
-            # Basic multiple (3) command timing with requirement verification
+            # Basic multiple (3) command timing with multiple requirement verification
             all_success = sender.send_cmd_multiple_times_with_timing_requirement(
                 "TARGET TIMED_OPERATION", 3,
                 "TARGET", "HK_TLM", "OPERATION_COMPLETE", "==", True,
-                "REQ-TIMING-001",
+                "REQ-TIMING-001, REQ-TIMING-002",
                 min_time=1.0,
                 max_time=5.0
             )
             
-            # With delay between (5) commands and custom timeouts
+            # With delay between (5) commands, custom timeouts, and multiple requirement verification
             all_success = sender.send_cmd_multiple_times_with_timing_requirement(
                 "TARGET FAST_RESPONSE", 5,
                 "TARGET", "STATUS_TLM", "RESPONSE_FLAG", "==", 1,
-                "REQ-FAST-TIMING-001",
+                "REQ-FAST-TIMING-001, REQ-FAST-TIMING-002, REQ-FAST-TIMING-003",
                 max_time=2.0,
                 cmd_delay=1.5,
                 tlm_timeout_ea_cmd=10.0
@@ -764,11 +764,11 @@ class CommandSender:
         all_successful = True
         
         for i in range(count):
-            # Send command and check requirement (using the same requirement_id for all)
+            # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_timing_requirement(
                 command_string,
                 target, packet, item, comparison, comparison_value,
-                requirement_id, 
+                requirement_ids,
                 min_time=min_time,
                 max_time=max_time,
                 tlm_timeout=tlm_timeout_ea_cmd, 
@@ -938,11 +938,11 @@ class CommandSender:
                 
                 # Detail level 1+: Show requirement message
                 if detail_level >= 1:
-                    print_func(f"Requirement {req['id']}: {req.get('message', 'No message')}")
+                    print_func(f"Requirements {req['ids']}: {req.get('message', 'No message')}")
                 
                 # All detail levels: Show Pass/Fail status
                 result_text = "Pass" if req.get('success', False) else "Fail"
-                print_func(f"Requirement {req['id']}: {result_text}")
+                print_func(f"Requirements {req['ids']}: {result_text}")
             
             print_func("\n" + "-" * 40)
         
