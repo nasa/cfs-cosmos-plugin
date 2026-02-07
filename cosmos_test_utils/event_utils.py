@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system”
+# ground system"
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -18,7 +18,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Utilities for working with event messages in COSMOS tests."""
+"""Utilities for working with event messages in COSMOS tests.
+
+This module provides functions for managing event logging in a way that
+prevents multiple logging sessions from being started and interfering with each other.
+
+The background logging system ensures that:
+
+1. Only one background logging session can be active at a time.
+2. Attempting to starting a new logging session when one is already active will not create a new session.
+3. Stopping a logging session will only occur if the provided name matches the active session.
+"""
 
 from typing import Optional, Tuple, Union
 from .system_config import (
@@ -268,64 +278,51 @@ def print_events_to_log(
         return current_log_id
     
     
-def start_background_event_logging(filename: Optional[str] = None):
-    """Start background event logging script if not already running.
+def start_background_event_logging(name: str = "default", filename: Optional[str] = None):
+    """Start or restart a background event logging script.
     
-    This function starts the write_event_log.py script as a background process
-    that will continuously log all event messages, if no such process is already running.
-    The script runs in parallel with your main test and doesn't interfere with other event utilities.
+    This function manages a background process that continuously logs event messages.
+    It's designed to support multi-level logging (suite, group, and test level) without conflicts.
+
+    Behavior:
+    1. If no logging is active, starts a new logging session.
+    2. If logging with the same name is active, stops and restarts it (useful for error recovery).
+    3. If logging with a different name is active, does not start a new session (preserves suite-level logging).
+
+    The background script runs parallel to the main test without interference.
     
-    If a background event logging script is already running, this function will not start a new one.
-    Instead, it will print a message indicating that logging is already active and provide
-    information about where the events are being logged (file or COSMOS log).
     Args:
-        filename: Optional path to file where events should be logged.
-                 If None and no logging is active, events are printed to the COSMOS log only.
+        name: Unique identifier for this logging session (default: "default")
+        filename: Optional path for log file. If None, logs to COSMOS log only.
         
     Example:
-        # Start background event logging to COSMOS log
-        start_background_event_logging()
-        
-        OR
-        
-        # Start background event logging to file and COSMOS log
-        start_background_event_logging("test_events.log")
-        
-        THEN
-        
-        # Run your tests...
-        cmd("TARGET COMMAND")
-        
-        # Stop background event logging when done
-        stop_background_event_logging()
+        start_background_event_logging("my_test_logging")
+        # ... run tests ...
+        stop_background_event_logging("my_test_logging")
     """
     from openc3.script import script_create, script_run, stash_set, stash_get
     import time
     
     # Check if there's already a background logger running
-    try:
-        existing_script_id = stash_get('background_event_log_id')
-        if existing_script_id:
-            existing_filename = stash_get('eventlog')
-            if existing_filename:
-                print(f"Background event logging is already running and writing to file: {existing_filename}")
-            else:
-                print("Background event logging is already running and writing to COSMOS log file")
-            return
-    except:
-        pass  # No existing script, continue
-
+    if is_background_event_logging_running(name):
+        print(f"Background event logging '{name}' is already running. Stopping and restarting...")
+        stop_background_event_logging(name)
+    elif is_background_event_logging_running():
+        existing_name = stash_get('background_event_log_name')
+        print(f"Background event logging '{existing_name}' is already running.")
+        return
+    
     # Store the filename for the script to use (if provided)
     if filename:
         stash_set('eventlog', filename)
-        print(f"Starting background event logging to file: {filename} and COSMOS log file")
+        print(f"Starting background event logging '{name}' to file: {filename} and COSMOS log file")
     else:
         # Clear any existing filename
         try:
             stash_set('eventlog', None)
         except:
             pass
-        print("Starting background event logging to COSMOS log file")
+        print(f"Starting background event logging '{name}' to COSMOS log file")
 
     try:
         # Set up the synchronization flag - initialize to "starting"
@@ -446,8 +443,9 @@ def start_background_event_logging(filename: Optional[str] = None):
         # Start the script
         script_id = script_run(script_name)
 
-        # Store the script ID and path for later cleanup
+        # Store the script ID and name for use in other functions
         stash_set('background_event_log_id', script_id)
+        stash_set('background_event_log_name', name)
 
         # Wait for the script to signal that it's ready to capture events
         print("Waiting for event logger to initialize...")
@@ -462,13 +460,12 @@ def start_background_event_logging(filename: Optional[str] = None):
             except:
                 pass
 
-            # Use Python sleep instead of COSMOS wait (no output)
             time.sleep(0.1)
         else:
             # We timed out waiting for the script to be ready
             print("Warning: Timeout waiting for event logger to initialize fully")
 
-        print(f"Background event logging started (script ID: {script_id})")
+        print(f"Background event logging '{name}' started (script ID: {script_id})")
         
     except Exception as e:
         print(f"Error starting background event logging: {str(e)}")
@@ -477,28 +474,31 @@ def start_background_event_logging(filename: Optional[str] = None):
         raise
 
 
-def stop_background_event_logging():
+def stop_background_event_logging(name: str = "default"):
     """Stop background event logging script.
     
-    This stops any currently running background event logging script.
-    If no script is running, this function does nothing.
+    This stops the background event logging script with the specified name.
+    If no script with the given name is running, this function does nothing.
+    
+    Args:
+        name: The unique identifier of the logging session to stop (default: "default")
         
     Example:
-        start_background_event_logging()
+        start_background_event_logging("my_test_logging")
         # ... run tests ...
-        stop_background_event_logging()
+        stop_background_event_logging("my_test_logging")
     """
     from openc3.script import running_script_stop, stash_get, stash_set
     
     try:
-        # Get the stored script ID
-        script_id = stash_get('background_event_log_id')
-        if script_id:
-            print(f"Stopping background event logging (script ID: {script_id})")
+        if is_background_event_logging_running(name):
+            script_id = stash_get('background_event_log_id')
+            print(f"Stopping background event logging '{name}' (script ID: {script_id})")
             running_script_stop(script_id)
             
-            # Clear the stored script ID
+            # Clear the stored script ID and name
             stash_set('background_event_log_id', None)
+            stash_set('background_event_log_name', None)
             
             # Clear the log filename
             try:
@@ -506,30 +506,39 @@ def stop_background_event_logging():
             except:
                 pass
                 
-            print("Background event logging stopped")
+            print(f"Background event logging '{name}' stopped")
         else:
-            print("No background event logging script is currently running")
+            current_name = stash_get('background_event_log_name')
+            if current_name:
+                print(f"Background event logging '{current_name}' is running, but not stopping it as it doesn't match the requested name '{name}'")
+            else:
+                print("No background event logging script is currently running")
     except Exception as e:
         print(f"Error stopping background event logging: {str(e)}")
 
 
-def is_background_event_logging_running() -> bool:
+def is_background_event_logging_running(name: str = "default") -> bool:
     """Check if background event logging is currently running.
     
+    Args:
+        name: Name to check for a specific logging session (default: "default")
+    
     Returns:
-        bool: True if background event logging is running, False otherwise
+        bool: True if background event logging is running (and matches the name if provided), False otherwise
         
     Example:
         if is_background_event_logging_running():
-            print("Background logging is active")
-        else:
-            print("No background logging")
+            print("Default logging session is active")
+        
+        if is_background_event_logging_running("my_test_logging"):
+            print("Specific logging session is active")
     """
     from openc3.script import stash_get
     
     try:
         script_id = stash_get('background_event_log_id')
-        return script_id is not None
+        current_name = stash_get('background_event_log_name')
+        return script_id is not None and current_name == name
     except:
         return False
 
@@ -540,9 +549,7 @@ def open_event_log_for_search(
 ) -> int:
     """Set the point that a find_events call will search back to.
     
-    This is depricated and included for backward compatability.
+    This is deprecated and included for backward compatibility.
     Use set_event_search_point() for more understandable code.
     """
     return set_event_search_point(target_name, packet_name)
-
-
