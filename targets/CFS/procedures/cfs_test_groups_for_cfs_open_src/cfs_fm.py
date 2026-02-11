@@ -50,9 +50,13 @@ class cfs_test_group_cfs_fm(Group):
         Test the CopyFile command.
         """
         
+        # First, upload the file to be copied
+        # FIXME: How?
+
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
-        cmd("<%= target_name %> FM_CMD_COPY_FILE with OVERWRITE OVERWRITE, SOURCE 'source.txt', TARGET 'target.txt'")
+        # FIXME: Needs to refer to SC filepaths, like "/ram/source.txt".  How do we upload files to there?
+        #cmd("<%= target_name %> FM_CMD_COPY_FILE with OVERWRITE OVERWRITE, SOURCE '<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/etc/source.txt', TARGET '<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/etc/target.txt'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -263,31 +267,20 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER > 0", 100)
         wait_check(f"<%= target_name %> CFE_TIME_HK CHILD_CMD_COUNTER > 0", 100)
         
-
-
-        # FIXME: Update this: Cause COMMAND_ERROR_COUNTER and CHILD_CMD_ERR_COUNTER to be non-zero (one bad cmd causes both)
-        #
-        #        Send FM_ChildDeleteDirectoryCmd() with a non-existant directory.     <-------
-        #
-        # Send an X command, which should increment COMMAND_ERROR_COUNTER because
-        # [[[the CFE_PLATFORM_TIME_CFG_CLIENT config is set FALSE (currently)]]]
-        cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_DELAY with SECONDS 1, MICROSECONDS 2")
+        # Cause COMMAND_ERROR_COUNTER and CHILD_CMD_ERR_COUNTER to increment,
+        # by sending a DeleteDirectory command with a non-existant directory. 
+        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with DIRECTORY '/ram/non-existant'")
 
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_ERROR_COUNTER > 0", 100)
         wait_check(f"<%= target_name %> CFE_TIME_HK CHILD_CMD_ERR_COUNTER > 0", 100)
 
-
-
-
-        # FIXME: Cause CHILD_CMD_WARN_COUNTER to be non-zero (requires a specific cmd failure)
-        #
-        #        Send FM_ChildDirListPktCmd() with extremely-long directory/file path.     <-------
+        # Cause CHILD_CMD_WARN_COUNTER to increment,
+        # by sending a DirListPkt command with an extremely-long directory/file path.
+        # FIXME: Does this need SPARE1/2/3?
+        cmd("<%= target_name %> FM_CMD_GET_DIR_LIST_PKT with DIRECTORY '/ram/path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long', DIR_LIST_OFFSET 0, GET_SIZE_TIME_MODE FALSE")
 
         wait_check(f"<%= target_name %> CFE_TIME_HK CHILD_CMD_WARN_COUNTER > 0", 100)
 
-        
-
-        
         # Send ResetCounters command
         cmd(f"<%= target_name %> CFE_TIME_CMD_RESET_COUNTERS")
         
