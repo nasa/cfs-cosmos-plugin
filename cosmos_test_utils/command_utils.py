@@ -593,9 +593,9 @@ class CommandSender:
         target: str,
         packet: str,
         item: str,
-        comparison: str,
-        comparison_value: Any,
+        base_tlm_value: int,
         requirement_ids: str,
+        expected_increment_per_cmd: int = 1,
         cmd_delay: float = 0.0,
         tlm_timeout_ea_cmd: float = DEFAULT_WAIT_TIMEOUT,
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
@@ -604,23 +604,28 @@ class CommandSender:
     ) -> bool:
         """Send a command multiple times and set requirements based on each response.
         
+        This function is designed for use with integer telemetry that has a predictable
+        increment after each command is received. It assumes that the telemetry value
+        will increase by a fixed amount (default 1) for each command sent.
+        
         Features:
         - Command history tracking for each command
         - Response time measurement for each command
         - Requirement tracking for each command execution
         - Configurable delay between commands
         - Optional early termination on failure
+        - Automatic increment of expected telemetry value for each command
         
         Args:
             command_string: The command string to send
-            count: Number of times to send the command
+            count: Number of times to send the command (must be greater than 0)
             target: The COSMOS target name for telemetry monitoring
             packet: The COSMOS telemetry packet name for telemetry monitoring
             item: The specific COSMOS telemetry item name to monitor for the comparison
-            comparison: Comparison operator comparing item to comparison_value
-            comparison_value: The value to compare against the telemetry 'item' using 'comparison'
+            base_tlm_value: The base telemetry value to start comparisons from (integer)
             requirement_ids: Comma-separated string of requirement IDs to update for each command
-            cmd_delay: Delay in seconds between commands
+            expected_increment_per_cmd: Expected increment of telemetry value per command (integer, default: 1)
+            cmd_delay: Delay in seconds between commands (non-negative)
             tlm_timeout_ea_cmd: Maximum time to wait for each tlm response condition to be met
             tlm_poll_interval: Time between telemetry checks in seconds
             fail_on_first_error: If True, stop sending commands after first failure
@@ -629,19 +634,26 @@ class CommandSender:
         Returns:
             bool: True if all calls to send_cmd_with_requirement() completed successfully
         
+        Raises:
+            ValueError: If count is not greater than 0 or cmd_delay is negative
+ 
         Examples:
             # Basic multiple (3) commands with requirement verification
+            # Expects the tlm will increment by 1 (default) each command sent
             all_success = sender.send_cmd_multiple_times_with_requirement(
-                "TARGET SEND_DATA", 3,
-                "TARGET", "HK_TLM", "DATA_COUNT", "==", 1,
-                "REQ-DATA-001"
+                "TARGET NOOP_CMD", 3,
+                "TARGET", "HK_PKT", "cmdCnt",
+                savedHKCnt,
+                "REQ-NOOP-001"
             )
             
             # With delay between (5) commands, custom timeouts, and multiple requirements
             all_success = sender.send_cmd_multiple_times_with_requirement(
                 "TARGET PERIODIC_TASK", 5,
-                "TARGET", "STATUS_TLM", "TASK_COMPLETE", "==", True,
-                "REQ-PERIODIC-001, REQ-PERIODIC-002",
+                "TARGET", "STATUS_TLM", "TASK_COUNT",
+                base_tlm_value=initial_task_count,
+                requirement_ids="REQ-PERIODIC-001, REQ-PERIODIC-002",
+                expected_increment_per_cmd=2,
                 cmd_delay=2.0,
                 tlm_timeout_ea_cmd=8.0
             )
@@ -650,18 +662,28 @@ class CommandSender:
             value = 100
             all_success = sender.send_cmd_multiple_times_with_requirement(
                 f"TARGET SET_VALUE with VALUE {value}", 4,
-                "TARGET", "CONFIG_TLM", "CURRENT_VALUE", "==", value,
-                "REQ-SET-VALUE-001, REQ-SET-VALUE-002, REQ-SET-VALUE-003",
+                "TARGET", "CONFIG_TLM", "VALUE_COUNTER",
+                initial_value_count,
+                requirement_ids="REQ-SET-VALUE-001, REQ-SET-VALUE-002, REQ-SET-VALUE-003",
+                expected_increment_per_cmd=5,
                 fail_on_first_error=True
             )
         """
+        if count <= 0:
+            raise ValueError("count must be a greater than 0 integer")
+        if cmd_delay < 0:
+            raise ValueError("cmd_delay must be non-negative")
+        
         all_successful = True
         
         for i in range(count):
+            # Calculate the expected telemetry value for this command
+            expected_value = base_tlm_value + (expected_increment_per_cmd * i)
+
             # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_requirement(
                 command_string,
-                target, packet, item, comparison, comparison_value,
+                target, packet, item, "==", expected_value,
                 requirement_ids,
                 tlm_timeout=tlm_timeout_ea_cmd, 
                 tlm_poll_interval=tlm_poll_interval,
@@ -690,9 +712,9 @@ class CommandSender:
         target: str,
         packet: str,
         item: str,
-        comparison: str,
-        comparison_value: Any,
+        base_tlm_value: int,
         requirement_ids: str,
+        expected_increment_per_cmd: int = 1,
         min_time: Optional[float] = None,
         max_time: Optional[float] = None,
         cmd_delay: float = 0.0,
@@ -703,25 +725,30 @@ class CommandSender:
     ) -> bool:
         """Send a command multiple times and set requirements based on response timing.
         
+        This function is designed for use with integer telemetry that has a predictable
+        increment after each command is received. It assumes that the telemetry value
+        will increase by a fixed amount (default 1) for each command sent.
+
         Features:
         - Command history tracking for each command
         - Response time measurement against timing thresholds
         - Requirement tracking for each command execution
         - Configurable delay between commands
         - Optional early termination on failure
+        - Automatic increment of expected telemetry value for each command
         
         Args:
             command_string: The command string to send
-            count: Number of times to send the command
+            count: Number of times to send the command (must be greater than 0)
             target: The COSMOS target name for telemetry monitoring
             packet: The COSMOS telemetry packet name for telemetry monitoring
             item: The specific COSMOS telemetry item name to monitor for the comparison
-            comparison: Comparison operator comparing item to comparison_value
-            comparison_value: The value to compare against the telemetry 'item' using 'comparison'
+            base_tlm_value: The base telemetry value to start comparisons from (integer)
             requirement_ids: Comma-separated string of requirement IDs to update for each command
+            expected_increment_per_cmd: Expected increment of telemetry value per command (integer, default: 1)
             min_time: Minimum acceptable response time (None for no minimum)
             max_time: Maximum acceptable response time (None for no maximum)
-            cmd_delay: Delay in seconds between commands
+            cmd_delay: Delay in seconds between commands (non-negative)
             tlm_timeout_ea_cmd: Maximum time to wait for each tlm response condition to be met
             tlm_poll_interval: Time between telemetry checks in seconds
             fail_on_first_error: If True, stop sending commands after first failure
@@ -730,44 +757,61 @@ class CommandSender:
         Returns:
             bool: True if all calls to send_cmd_with_timing_requirement() completed successfully
         
+        Raises:
+            ValueError: If count is not greater than 0 or cmd_delay is negative
+
         Examples:
-            # Basic multiple (3) command timing with multiple requirement verification
+            # Basic multiple (3) command timing with requirement verification
             all_success = sender.send_cmd_multiple_times_with_timing_requirement(
-                "TARGET TIMED_OPERATION", 3,
-                "TARGET", "HK_TLM", "OPERATION_COMPLETE", "==", True,
-                "REQ-TIMING-001, REQ-TIMING-002",
-                min_time=1.0,
+                "TARGET NOOP_CMD", 3,
+                "TARGET", "HK_PKT", "cmdCnt",
+                savedHKCnt,
+                "REQ-NOOP-TIMING-001",
+                min_time=0.1,
                 max_time=5.0
             )
             
-            # With delay between (5) commands, custom timeouts, and multiple requirement verification
+            # With delay between (5) commands, custom timeouts, and multiple requirements
             all_success = sender.send_cmd_multiple_times_with_timing_requirement(
-                "TARGET FAST_RESPONSE", 5,
-                "TARGET", "STATUS_TLM", "RESPONSE_FLAG", "==", 1,
-                "REQ-FAST-TIMING-001, REQ-FAST-TIMING-002, REQ-FAST-TIMING-003",
-                max_time=2.0,
-                cmd_delay=1.5,
-                tlm_timeout_ea_cmd=10.0
+                "TARGET PERIODIC_TASK", 5,
+                "TARGET", "STATUS_TLM", "TASK_COUNT",
+                base_tlm_value=initial_task_count,
+                requirement_ids="REQ-PERIODIC-TIMING-001, REQ-PERIODIC-TIMING-002",
+                expected_increment_per_cmd=2,
+                min_time=1.5,
+                max_time=3.0,
+                cmd_delay=2.0,
+                tlm_timeout_ea_cmd=8.0
             )
             
-            # With f-string formatting and fail on first timing requirement error
-            delay_value = 3
+            # With f-string formatting, fail on first timing requirement error, and multiple requirements
+            value = 100
             all_success = sender.send_cmd_multiple_times_with_timing_requirement(
-                f"TARGET SET_DELAY with SECONDS {delay_value}", 4,
-                "TARGET", "CONFIG_TLM", "DELAY_SET", "==", delay_value,
-                "REQ-DELAY-TIMING-001",
-                min_time=2.5,
-                max_time=4.0,
+                f"TARGET SET_VALUE with VALUE {value}", 4,
+                "TARGET", "CONFIG_TLM", "VALUE_COUNTER",
+                initial_value_count,
+                requirement_ids="REQ-SET-VALUE-TIMING-001, REQ-SET-VALUE-TIMING-002, REQ-SET-VALUE-TIMING-003",
+                expected_increment_per_cmd=5,
+                min_time=0.5,
+                max_time=2.0,
                 fail_on_first_error=True
             )
         """
+        if count <= 0:
+            raise ValueError("count must be a greater than 0 integer")
+        if cmd_delay < 0:
+            raise ValueError("cmd_delay must be non-negative")
+
         all_successful = True
         
         for i in range(count):
+            # Calculate the expected telemetry value for this command
+            expected_value = base_tlm_value + (expected_increment_per_cmd * i)
+
             # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_timing_requirement(
                 command_string,
-                target, packet, item, comparison, comparison_value,
+                target, packet, item, "==", expected_value,
                 requirement_ids,
                 min_time=min_time,
                 max_time=max_time,
