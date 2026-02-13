@@ -49,12 +49,13 @@ from .system_config import (
 # Module-level variables to store event subscription IDs
 _event_search_id = None   # For find_events
 _event_logging_id = None  # For print_events_to_log
+_event_packets = []  # To store packets for multiple find_events calls
 
 
 def set_event_search_point(
     target_name: str = EVENT_TARGET_NAME, 
     packet_name: str = EVENT_PACKET_NAME
-) -> int:
+) -> str:
     """Set the point that a find_events call will search back to.
     
     This function subscribes to event packets and stores the subscription ID
@@ -72,10 +73,13 @@ def set_event_search_point(
     Returns:
         The subscription ID (also stored internally for use by find_events)
     """
-    global _event_search_id
+    global _event_search_id, _event_packets
     
     # Import and use the COSMOS subscribe_packets function
     from openc3.script import subscribe_packets
+    
+    # Reset the stored packets when setting a new search point
+    _event_packets = []
     
     # Subscribe to event packets
     _event_search_id = subscribe_packets([[target_name, packet_name]])
@@ -86,7 +90,7 @@ def set_event_search_point(
 def open_event_log_for_script_logging(
     target_name: str = EVENT_TARGET_NAME, 
     packet_name: str = EVENT_PACKET_NAME
-) -> int:
+) -> str:
     """Subscribe to event packets for script logging.
     
     This function subscribes to event packets and stores the subscription ID
@@ -120,8 +124,8 @@ def find_events(
     event_type: str,
     partial_message_text: str,
     expected_num_found: int = 1,
-    subscription_id: Optional[int] = None
-) -> Union[Tuple[bool, int], Tuple[bool, int, int]]:
+    subscription_id: Optional[str] = None
+) -> Union[Tuple[bool, int], Tuple[bool, int, str]]:
     """Find specific events in the event message stream.
     
     Before using this function with the default subscription_id=None,
@@ -150,7 +154,7 @@ def find_events(
     Raises:
         RuntimeError: If subscription_id=None and set_event_search_point() has not been called
     """
-    global _event_search_id
+    global _event_search_id, _event_packets
     
     # Determine which subscription ID to use
     if subscription_id is None:
@@ -178,13 +182,16 @@ def find_events(
     
     # Get all packets since the last time this method was called
     # Block time is configured in system_config.py
-    search_id, packets = get_packets(search_id, block=EVENT_BLOCK_TIMEOUT)
+    search_id, new_packets = get_packets(search_id, block=EVENT_BLOCK_TIMEOUT)
+    
+    # Append new packets to the stored packets
+    _event_packets.extend(new_packets)
     
     # If we're using the module-level ID, update it
     if subscription_id is None:
         _event_search_id = search_id
     
-    for packet in packets:
+    for packet in _event_packets:
         num_searched += 1
         if (packet[EVENT_APP_FIELD] == app_name and
             packet[EVENT_ID_FIELD] == event_id and
