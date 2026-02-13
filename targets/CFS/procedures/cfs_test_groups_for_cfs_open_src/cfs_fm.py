@@ -45,7 +45,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_01_CopyFile(self):
+    def test_02_CopyFile(self):
         """
         Test the CopyFile command.
         """
@@ -79,7 +79,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
     
-    def test_02_MoveFile(self):
+    def test_03_MoveFile(self):
         """
         Test the MoveFile command.
         """
@@ -110,7 +110,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_03_RenameFile(self):
+    def test_04_RenameFile(self):
         """
         Test the RenameFile command.
         """
@@ -140,7 +140,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_04_DeleteFile(self):
+    def test_05_DeleteFile(self):
         """
         Test the DeleteFile command.
         """
@@ -164,7 +164,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_05_DeleteAllFiles(self):
+    def test_06_DeleteAllFiles(self):
         """
         Test the DeleteAllFiles command.
         """
@@ -196,7 +196,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_06_DecompressFile(self):
+    def test_07_DecompressFile(self):
         """
         Test the DecompressFile command.
         """
@@ -212,7 +212,7 @@ class cfs_test_group_cfs_fm(Group):
         # wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_07_ConcatFiles(self):
+    def test_08_ConcatFiles(self):
         """
         Test the ConcatFiles command.
         """
@@ -257,7 +257,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_08_GetFileInfo(self):
+    def test_09_GetFileInfo(self):
         """
         Test the GetFileInfo command.
         """
@@ -288,7 +288,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_09_GetOpenFiles(self):
+    def test_10_GetOpenFiles(self):
         """
         Test the GetOpenFiles command.
         """
@@ -302,7 +302,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_10_CreateAndDeleteDirectory(self):
+    def test_11_CreateAndDeleteDirectory(self):
         """
         Test the CreateDirectory command.
         """
@@ -324,7 +324,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_11_GetDirListFile(self):
+    def test_12_GetDirListFile(self):
         """
         Test the GetDirListFile command.
         """
@@ -338,7 +338,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_12_GetDirListPkt(self):
+    def test_13_GetDirListPkt(self):
         """
         Test the GetDirListPkt command.
         """
@@ -352,7 +352,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_13_MonitorFilesystemSpace(self):
+    def test_14_MonitorFilesystemSpace(self):
         """
         Test the MonitorFilesystemSpace command.
         """
@@ -366,7 +366,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_14_SetTableState(self):
+    def test_15_SetTableState(self):
         """
         Test the SetTableState command.
         """
@@ -380,7 +380,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_15_SetPermissions(self):
+    def test_16_SetPermissions(self):
         """
         Test the SetPermissions command.
         """
@@ -411,7 +411,7 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_16_ResetCounters(self):
+    def test_17_ResetCounters(self):
         """
         Test the ResetCounters command.
         """
