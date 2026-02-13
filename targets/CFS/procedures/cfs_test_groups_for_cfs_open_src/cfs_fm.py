@@ -438,11 +438,7 @@ class cfs_test_group_cfs_fm(Group):
 
         # Cause CHILD_CMD_WARN_COUNTER to increment,
         # by sending a DirListPkt command with an extremely-long directory/file path.
-        #
-        # FIXME: This generates runtime error "value of 144 bytes does not fit into 64 bytes for data_type STRING",
-        #        which stops the script.  Meant for it to have error in FSW and for the script to continue.
-        #        What's the right way to do this?
-        cmd("<%= target_name %> FM_CMD_GET_DIR_LIST_PKT with DIRECTORY '/ram/path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long-path-too-long', DIR_LIST_OFFSET 0, GET_SIZE_TIME_MODE FALSE")
+        cmd("<%= target_name %> FM_CMD_GET_DIR_LIST_PKT with DIRECTORY '/ram/path-too-long-path-too-long-path-too-long-path-too-long', DIR_LIST_OFFSET 0, GET_SIZE_TIME_MODE FALSE")
 
         wait_check(f"<%= target_name %> FM_HK CHILD_CMD_WARN_COUNTER > 0", 100)
 
