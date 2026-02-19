@@ -53,7 +53,7 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_APP_STATE with ENABLE_STATE ENABLE'")
+        cmd("<%= target_name %> DS_CMD_SET_APP_STATE with ENABLE_STATE ENABLE")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -70,7 +70,7 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_FILTER_FILE with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, FILE_TABLE_IDX 0'")
+        cmd("<%= target_name %> DS_CMD_SET_FILTER_FILE with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, FILE_TABLE_IDX 0")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -84,7 +84,7 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_FILTER_TYPE with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, FILTER_TYPE BY_COUNT'")
+        cmd("<%= target_name %> DS_CMD_SET_FILTER_TYPE with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, FILTER_TYPE BY_COUNT")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -100,7 +100,7 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_FILTER_PARAMS with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, ALGORITHM_N 0, ALGORITHM_X 0, ALGORITHM_O 0'")
+        cmd("<%= target_name %> DS_CMD_SET_FILTER_PARAMS with MESSAGE_ID 0x1A00, FILTER_PARAMS_IDX 0, ALGORITHM_N 0, ALGORITHM_X 0, ALGORITHM_O 0")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -114,33 +114,178 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_DEST_TYPE with FILE_TABLE_IDX 0, FILE_NAME_TYPE 0'")
+        cmd("<%= target_name %> DS_CMD_SET_DEST_TYPE with FILE_TABLE_IDX 0, FILE_NAME_TYPE 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_07_SetDestState(self):
+        """
+        Test the SetDestState command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_STATE with FILE_TABLE_IDX 0, ENABLE_STATE DISABLED")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_08_SetDestPath(self):
+        """
+        Test the SetDestPath command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_PATH with FILE_TABLE_IDX 0, PATHNAME '/cf/'")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_09_SetDestBase(self):
+        """
+        Test the SetDestBase command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_BASE with FILE_TABLE_IDX 0, BASENAME 'base'")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_10_SetDestExt(self):
+        """
+        Test the SetDestExt command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_EXT with FILE_TABLE_IDX 0, EXTENSION '.txt'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
+    def test_11_SetDestSize(self):
+        """
+        Test the SetDestSize command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_SIZE with FILE_TABLE_IDX 0, MAX_FILE_SIZE 1024")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
+    def test_12_SetDestAge(self):
+        """
+        Test the SetDestAge command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_AGE with FILE_TABLE_IDX 0, MAX_FILE_AGE 60")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
+    def test_13_SetDestCount(self):
+        """
+        Test the SetDestCount command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_SET_DEST_COUNT with FILE_TABLE_IDX 0, SEQUENCE_COUNT 1")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-    # FIXME: Next: DS_CMD_SET_DEST_STATE
+
+    def test_14_CloseFile(self):
+        """
+        Test the CloseFile command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_CLOSE_FILE with FILE_TABLE_IDX 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+
+    def test_15_CloseAll(self):
+        """
+        Test the CloseAll command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_CLOSE_ALL")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+
+    def test_16_GetFileInfo(self):
+        """
+        Test the GetFileInfo command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_GET_FILE_INFO")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+
+    def test_17_AddMid(self):
+        """
+        Test the AddMid command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_ADD_MID with MESSAGE_ID 0x1A00")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-
-
-# DS_CMD_SET_DEST_PATH
-# DS_CMD_SET_DEST_BASE
-# DS_CMD_SET_DEST_EXT
-# DS_CMD_SET_DEST_SIZE
-# DS_CMD_SET_DEST_AGE
-# DS_CMD_SET_DEST_COUNT
-# DS_CMD_CLOSE_FILE
-# DS_CMD_GET_FILE_INFO
-# DS_CMD_ADD_MID
-# DS_CMD_CLOSE_ALL
-# DS_CMD_REMOVE_MID
+    def test_18_RemoveMid(self):
+        """
+        Test the RemoveMid command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_REMOVE_MID with MESSAGE_ID 0x1A00")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
     # FIXME: Update this function for DS
