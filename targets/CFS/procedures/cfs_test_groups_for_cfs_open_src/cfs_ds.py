@@ -53,7 +53,7 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_APP_STATE with ENABLE_STATE ENABLE")
+        cmd("<%= target_name %> DS_CMD_SET_APP_STATE with ENABLE_STATE ENABLED")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -288,38 +288,21 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    # FIXME: Update this function for DS
-    #
     def test_X_ResetCounters(self):
         """
         Test the ResetCounters command.
         """
 
-        # Increment COMMAND_COUNTER and CHILD_CMD_COUNTER by sending CreateDirectory command
-        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> DS_CMD_CREATE_DIRECTORY with DIRECTORY '/cf/new-directory'")
-        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        # NOTE: Current initial version is simplified to only increment COMMAND_COUNTER and COMMAND_ERROR_COUNTER before reset.
 
+        # Increment COMMAND_COUNTER by sending CreateDirectory command
+        cmd("<%= target_name %> DS_CMD_NOOP")
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER > 0", 100)
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_COUNTER > 0", 100)
-
-        # Delete the created directory, for cleanup
-        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> DS_CMD_DELETE_DIRECTORY with DIRECTORY '/cf/new-directory'")
-        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
-        # Cause COMMAND_ERROR_COUNTER and CHILD_CMD_ERR_COUNTER to increment,
-        # by sending a DeleteDirectory command with a non-existant directory. 
-        cmd("<%= target_name %> DS_CMD_DELETE_DIRECTORY with DIRECTORY '/ram/non-existant'")
-
+        # Cause COMMAND_ERROR_COUNTER to increment,
+        # by sending SetFilterFile cmd with invalid message ID
+        cmd("<%= target_name %> DS_CMD_SET_FILTER_FILE with MESSAGE_ID 0x9999, FILTER_PARAMS_IDX 0, FILE_TABLE_IDX 0")
         wait_check(f"<%= target_name %> DS_HK COMMAND_ERROR_COUNTER > 0", 100)
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_ERR_COUNTER > 0", 100)
-
-        # Cause CHILD_CMD_WARN_COUNTER to increment,
-        # by sending a DirListPkt command with an extremely-long directory/file path.
-        cmd("<%= target_name %> DS_CMD_GET_DIR_LIST_PKT with DIRECTORY '/ram/path-too-long-path-too-long-path-too-long-path-too-long', DIR_LIST_OFFSET 0, GET_SIZE_TIME_MODE FALSE")
-
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_WARN_COUNTER > 0", 100)
 
         # Send ResetCounters command
         cmd(f"<%= target_name %> DS_CMD_RESET_COUNTERS")
@@ -327,9 +310,18 @@ class cfs_test_group_cfs_ds(Group):
         # Verify counters are reset to zero
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK COMMAND_ERROR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_ERR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK CHILD_CMD_WARN_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK DISABLED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK IGNORED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILTERED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK PASSED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_UPDATE_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_UPDATE_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK DEST_TBL_LOAD_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK DEST_TBL_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILTER_TBL_LOAD_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILTER_TBL_ERR_COUNTER == 0", 100)
 
 
     def setup(self):
