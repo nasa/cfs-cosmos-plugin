@@ -37,6 +37,9 @@
    APPEND_ITEM CRC 32 UINT "Most recently calculated CRC of Table"
       FORMAT_STRING "0x%08X"
 <% if $cfs_globals_mem_addr_size == 64 %>
+   APPEND_ITEM PAD_AFTER_CRC_IN_64_BIT_SYSTEM 32 UINT "Spare padding after CRC field when packet is padded to 64-bit alignment"
+<% end %>
+<% if $cfs_globals_mem_addr_size == 64 %>
    APPEND_ITEM ACTIVE_BUFFER_ADDR 64 UINT "Address of Active Buffer"
       FORMAT_STRING "0x%016X"
    APPEND_ITEM INACTIVE_BUFFER_ADDR 64 UINT "Address of Inactive Buffer"
@@ -73,8 +76,8 @@
    APPEND_ITEM CRITICAL 8 UINT "Indicates whether table is Critical or not"
       STATE FALSE 0
       STATE TRUE  1
-   APPEND_ITEM BYTE_ALIGN_1 8 UINT "Spare byte to maintain byte alignment"
-   APPEND_ITEM BYTE_ALIGN_2 16 UINT "Spare bytes to maintain byte alignment"
+   APPEND_ITEM BYTE_ALIGN_4 8 UINT "Matches ByteAlign4 Entry in FSW"
+   APPEND_ARRAY_ITEM IMPlICIT_PACKET_ALIGN 8 UINT 48 "Spare padding to maintain packet byte alignment"
    ITEM TIME_OF_LAST_UPDATE 0 0 DERIVED "Ruby time based on cFE timestamp"
       READ_CONVERSION unix_time_conversion_epoch_offset.rb TIME_OF_LAST_UPDATE_SECONDS TIME_OF_LAST_UPDATE_SUBSECONDS
    ITEM FILE_CREATE_TIME 0 0 DERIVED "Ruby time based on cFE timestamp"
