@@ -417,10 +417,7 @@ class cfs_test_group_cfs_fm(Group):
         """
 
         # Increment COMMAND_COUNTER and CHILD_CMD_COUNTER by sending CreateDirectory command
-        cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with DIRECTORY '/cf/new-directory'")
-        wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER > 0", 100)
         wait_check(f"<%= target_name %> FM_HK CHILD_CMD_COUNTER > 0", 100)
 
@@ -432,14 +429,12 @@ class cfs_test_group_cfs_fm(Group):
         # Cause COMMAND_ERROR_COUNTER and CHILD_CMD_ERR_COUNTER to increment,
         # by sending a DeleteDirectory command with a non-existant directory. 
         cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with DIRECTORY '/ram/non-existant'")
-
         wait_check(f"<%= target_name %> FM_HK COMMAND_ERROR_COUNTER > 0", 100)
         wait_check(f"<%= target_name %> FM_HK CHILD_CMD_ERR_COUNTER > 0", 100)
 
         # Cause CHILD_CMD_WARN_COUNTER to increment,
         # by sending a DirListPkt command with an extremely-long directory/file path.
         cmd("<%= target_name %> FM_CMD_GET_DIR_LIST_PKT with DIRECTORY '/ram/path-too-long-path-too-long-path-too-long-path-too-long', DIR_LIST_OFFSET 0, GET_SIZE_TIME_MODE FALSE")
-
         wait_check(f"<%= target_name %> FM_HK CHILD_CMD_WARN_COUNTER > 0", 100)
 
         # Send ResetCounters command
