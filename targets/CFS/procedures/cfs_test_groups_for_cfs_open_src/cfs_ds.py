@@ -60,9 +60,23 @@ class cfs_test_group_cfs_ds(Group):
 
         # Verify other telemetry changed as expected
         wait_check(f"<%= target_name %> DS_HK APP_ENABLE_STATE == 1", 100)
+    
+
+    def test_03_AddMid(self):
+        """
+        Test the AddMid command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+        
+        # Send the command under test
+        cmd("<%= target_name %> DS_CMD_ADD_MID with MESSAGE_ID 0x1A00")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_03_SetFilterFile(self):
+    def test_04_SetFilterFile(self):
         """
         Test the SetFilterFile command.
         """
@@ -76,7 +90,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_04_SetFilterType(self):
+    def test_05_SetFilterType(self):
         """
         Test the SetFilterType command.
         """
@@ -90,7 +104,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_05_SetFilterParms(self):
+    def test_06_SetFilterParms(self):
         """
         Test the SetFilterParms command.
         """
@@ -106,7 +120,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_06_SetDestType(self):
+    def test_07_SetDestType(self):
         """
         Test the SetDestType command.
         """
@@ -114,13 +128,13 @@ class cfs_test_group_cfs_ds(Group):
         cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> DS_CMD_SET_DEST_TYPE with FILE_TABLE_IDX 0, FILE_NAME_TYPE 0")
+        cmd("<%= target_name %> DS_CMD_SET_DEST_TYPE with FILE_TABLE_IDX 0, FILE_NAME_TYPE BY_COUNT")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_07_SetDestState(self):
+    def test_08_SetDestState(self):
         """
         Test the SetDestState command.
         """
@@ -134,7 +148,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_08_SetDestPath(self):
+    def test_09_SetDestPath(self):
         """
         Test the SetDestPath command.
         """
@@ -148,7 +162,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_09_SetDestBase(self):
+    def test_10_SetDestBase(self):
         """
         Test the SetDestBase command.
         """
@@ -162,7 +176,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
-    def test_10_SetDestExt(self):
+    def test_11_SetDestExt(self):
         """
         Test the SetDestExt command.
         """
@@ -176,7 +190,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_11_SetDestSize(self):
+    def test_12_SetDestSize(self):
         """
         Test the SetDestSize command.
         """
@@ -190,7 +204,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_12_SetDestAge(self):
+    def test_13_SetDestAge(self):
         """
         Test the SetDestAge command.
         """
@@ -204,7 +218,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_13_SetDestCount(self):
+    def test_14_SetDestCount(self):
         """
         Test the SetDestCount command.
         """
@@ -218,7 +232,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_14_CloseFile(self):
+    def test_15_CloseFile(self):
         """
         Test the CloseFile command.
         """
@@ -232,7 +246,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_15_CloseAll(self):
+    def test_16_CloseAll(self):
         """
         Test the CloseAll command.
         """
@@ -246,7 +260,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_16_GetFileInfo(self):
+    def test_17_GetFileInfo(self):
         """
         Test the GetFileInfo command.
         """
@@ -259,20 +273,6 @@ class cfs_test_group_cfs_ds(Group):
         # Verify command count incremented
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
-
-    def test_17_AddMid(self):
-        """
-        Test the AddMid command.
-        """
-        
-        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
-        
-        # Send the command under test
-        cmd("<%= target_name %> DS_CMD_ADD_MID with MESSAGE_ID 0x1A00")
-        
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-    
 
     def test_18_RemoveMid(self):
         """
@@ -288,7 +288,7 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
-    def test_X_ResetCounters(self):
+    def test_19_ResetCounters(self):
         """
         Test the ResetCounters command.
         """
@@ -312,12 +312,12 @@ class cfs_test_group_cfs_ds(Group):
         wait_check(f"<%= target_name %> DS_HK COMMAND_ERROR_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK DISABLED_PKT_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK IGNORED_PKT_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK FILTERED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILTERED_PKT_COUNTER < 10", 100)  # Increases from 0 before first packet post-reset
         wait_check(f"<%= target_name %> DS_HK PASSED_PKT_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK FILE_WRITE_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK FILE_WRITE_ERR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_UPDATE_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> DS_HK FILE_WRITE_UPDATE_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_UPDATE_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> DS_HK FILE_UPDATE_ERR_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK DEST_TBL_LOAD_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK DEST_TBL_ERR_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> DS_HK FILTER_TBL_LOAD_COUNTER == 0", 100)

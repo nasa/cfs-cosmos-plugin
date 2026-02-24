@@ -32,6 +32,8 @@
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_SET_DEST_TYPE', 6, "Telecommand Message") %>
    APPEND_PARAMETER FILE_TABLE_IDX    16 UINT 0 MAX_UINT16 0 "Index into Destination File Table"
    APPEND_PARAMETER FILE_NAME_TYPE    16 UINT 0 MAX_UINT16 0 "Filename type - count vs time"
+      STATE BY_COUNT 1
+      STATE BY_TIME  2
 
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_SET_DEST_STATE', 7, "Telecommand Message") %>
    APPEND_PARAMETER FILE_TABLE_IDX    16 UINT 0 MAX_UINT16 0 "Index into Destination File Table"
@@ -47,7 +49,7 @@
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_SET_DEST_BASE', 9, "Telecommand Message") %>
    APPEND_PARAMETER FILE_TABLE_IDX    16 UINT 0 MAX_UINT16 0 "Index into Destination File Table"
    APPEND_PARAMETER PADDING           16 UINT 0 0 0          "Padding"
-   APPEND_PARAMETER BASENAME         512 STRING ""           "Base portion of filename"
+   APPEND_PARAMETER BASENAME         160 STRING ""           "Base portion of filename"
 
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_SET_DEST_EXT', 10, "Telecommand Message") %>
    APPEND_PARAMETER FILE_TABLE_IDX    16 UINT 0 MAX_UINT16 0 "Index into Destination File Table"
@@ -78,7 +80,7 @@
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_ADD_MID', 16, "Telecommand Message") %>
    APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID to add to Packet Filter Table"
 
-<%= cfs_cmd_hdr(target_name, 'DS_CMD_CLOSE_ALL', 17, "Telecommand Message") %>
-
-<%= cfs_cmd_hdr(target_name, 'DS_CMD_REMOVE_MID', 18, "Telecommand Message") %>
+<%= cfs_cmd_hdr(target_name, 'DS_CMD_REMOVE_MID', 17, "Telecommand Message") %>
    APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID to remove from Packet Filter Table"
+
+<%= cfs_cmd_hdr(target_name, 'DS_CMD_CLOSE_ALL', 18, "Telecommand Message") %>
