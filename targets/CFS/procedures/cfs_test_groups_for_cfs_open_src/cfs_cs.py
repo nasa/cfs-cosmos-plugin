@@ -1,12 +1,13 @@
 from openc3.script.suite import Group
+# Verify CS commands work properly.  Not testing error cases.
 
 # Group class name should indicate what the scripts are testing
 class cfs_test_group_cfs_cs(Group):
     """
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
-
-    def test_aliveness(self):
+    
+    def test_00_Aliveness(self):
         """
         FSW Aliveness Test
         - Send a no-op command
@@ -14,23 +15,277 @@ class cfs_test_group_cfs_cs(Group):
         - Reset the command counter
             then verify the command was received (by checking the command counter was cleared)
         """
-        app_name = "CS"
-
-        Group.print(f"Testing {app_name} aliveness on <%= target_name %>")
-
-        # Verify that we have a recent packet (by waiting for a new one to arrive)
-        wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
-
+        
+        Group.print("Testing CS aliveness on <%= target_name %>")
+        
+        wait_check_packet("<%= target_name %>", "CS_HK", 1, 100)
+        
         # Assuming no one else is sending commands, grab the latest command count
-        cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
+        cmd_count = tlm("<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        # Send NOOP command, then check result to prove application is up and running
+        cmd("<%= target_name %> CS_CMD_NOOP")
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        
+        # Send Reset Counters command, check resullt
+        cmd("<%= target_name %> CS_CMD_RESET_COUNTERS")
+        wait_check("<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
+    
+    
+    def test_01_NoOp(self):
+        """
+        Test the no-op command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_NOOP")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
 
-        # Check accepted NOOP command proving application is up and running
-        cmd(f"<%= target_name %> {app_name}_CMD_NOOP")
-        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+    def test_02_OneShot(self):
+        """
+        Test the OneShot command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER with ADDRESS 0x00000000, SIZE 1, MAX_BYTES_PER_CYCLE 1")
+        
+        cmd("<%= target_name %> CS_CMD_ONE_SHOT")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+        wait_check(f"<%= target_name %> CS_HK Lastoneshotaddress == 0x00000000", 100)
+        wait_check(f"<%= target_name %> CS_HK Lastoneshotsize == 1", 100)
+        wait_check(f"<%= target_name %> CS_HK Lastoneshotmaxbytespercycle == 1", 100)
+        wait_check(f"<%= target_name %> CS_HK Lastoneshotchecksun == 0", 100)
+    
 
-        # Check accepted Reset Counters command
-        cmd(f"<%= target_name %> {app_name}_CMD_RESET_COUNTERS")
-        wait_check(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER == 0", 100)
+    def test_03_CancelOneShot(self):
+        """
+        Test the CancelOneShot command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_CANCEL_ONE_SHOT")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_04_EnableAllCS(self):
+        """
+        Test the EnableAllCS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_ALL_CS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Checksumstate == ENABLED", 100)
+    
+
+    def test_05_DisableAllCS(self):
+        """
+        Test the DisableAllCS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_ALL_CS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Checksumstate == DISABLED", 100)
+    
+
+    def test_06_EnableCfeCore(self):
+        """
+        Test the EnableCfeCore command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_CFE_CORE")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Cfecorecsstate == ENABLED", 100)
+    
+
+    def test_07_DisableCfeCore(self):
+        """
+        Test the DisableCfeCore command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_CFE_CORE")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Cfecorecsstate == DISABLED", 100)
+
+
+    def test_08_ReportBaselineCfeCore(self):
+        """
+        Test the ReportBaselineCfeCore command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_CFE_CORE")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_09_RecomputeBaselineCfeCore(self):
+        """
+        Test the RecomputeBaselineCfeCore command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_CFE_CORE")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100)
+        # FIXME: Does this stay true long enough to make it into the HK packet?
+    
+
+    def test_10_EnableOS(self):
+        """
+        Test the EnableOS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_OS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Oscsstate == ENABLED", 100)
+    
+
+    def test_11_DisableOS(self):
+        """
+        Test the DisableOS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_OS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Oscsstate == DISABLED", 100)
+
+
+
+
+
+
+
+
+
+# 
+# 
+# CS_CMD_DISABLE_OS
+# CS_CMD_REPORT_BASELINE_OS
+# CS_CMD_RECOMPUTE_BASELINE_OS
+# CS_CMD_ENABLE_EEPROM
+# CS_CMD_DISABLE_EEPROM
+# CS_CMD_REPORT_BASELINE_EEPROM
+# CS_CMD_RECOMPUTE_BASELINE_EEPROM
+# CS_CMD_ENABLE_ENTRY_EEPROM
+# CS_CMD_DISABLE_ENTRY_EEPROM
+# CS_CMD_GET_ENTRY_ID_EEPROM
+# CS_CMD_ENABLE_MEMORY
+# CS_CMD_DISABLE_MEMORY
+# CS_CMD_REPORT_BASELINE_MEMORY
+# CS_CMD_RECOMPUTE_BASELINE_MEMORY
+# CS_CMD_ENABLE_ENTRY_MEMORY
+# CS_CMD_DISABLE_ENTRY_MEMORY
+# CS_CMD_GET_ENTRY_ID_MEMORY
+# CS_CMD_ENABLE_TABLES
+# CS_CMD_DISABLE_TABLES
+# CS_CMD_REPORT_BASELINE_TABLE
+# CS_CMD_RECOMPUTE_BASELINE_TABLE
+# CS_CMD_ENABLE_NAME_TABLE
+# CS_CMD_DISABLE_NAME_TABLE
+# CS_CMD_ENABLE_APPS
+# CS_CMD_DISABLE_APPS
+# CS_CMD_REPORT_BASELINE_APP
+# CS_CMD_RECOMPUTE_BASELINE_APP
+# CS_CMD_ENABLE_NAME_APP
+# CS_CMD_DISABLE_NAME_APP
+
+
+
+
+
+
+
+
+    # FIXME: Update for CS
+    #
+    def test_X_ResetCounters(self):
+        """
+        Test the ResetCounters command.
+        """
+
+        # NOTE: Current initial version is simplified to only increment COMMAND_COUNTER and COMMAND_ERROR_COUNTER before reset.
+
+        # Increment COMMAND_COUNTER by sending CreateDirectory command
+        cmd("<%= target_name %> CS_CMD_NOOP")
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER > 0", 100)
+        
+        # Cause COMMAND_ERROR_COUNTER to increment,
+        # by sending SetFilterFile cmd with invalid message ID
+        cmd("<%= target_name %> CS_CMD_SET_FILTER_FILE with MESSAGE_ID 0x9999, FILTER_PARAMS_IDX 0, FILE_TABLE_IDX 0")
+        wait_check(f"<%= target_name %> CS_HK COMMAND_ERROR_COUNTER > 0", 100)
+
+        # Send ResetCounters command
+        cmd(f"<%= target_name %> CS_CMD_RESET_COUNTERS")
+        
+        # Verify counters are reset to zero
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK COMMAND_ERROR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK DISABLED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK IGNORED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILTERED_PKT_COUNTER < 10", 100)  # Increases from 0 before first packet post-reset
+        wait_check(f"<%= target_name %> CS_HK PASSED_PKT_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILE_WRITE_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILE_WRITE_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILE_UPDATE_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILE_UPDATE_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK DEST_TBL_LOAD_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK DEST_TBL_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILTER_TBL_LOAD_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK FILTER_TBL_ERR_COUNTER == 0", 100)
 
 
     def setup(self):
