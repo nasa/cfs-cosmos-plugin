@@ -26,8 +26,28 @@ Users should modify this file to match their mission-specific configuration.
 """
 
 # Target and packet names for event messages
-EVENT_TARGET_NAME = "CFE_EVS"
+# Due to the way COSMOS builds the gems, the Target name cannot be a ruby embedded variable
+EVENT_TARGET_NAME = "TARGET_NAME_NEEDS_SET"
 EVENT_PACKET_NAME = "EVS_LONG_EVENT"
+
+def set_event_target_name(target_name: str):
+    """
+    Set the EVENT_TARGET_NAME for use in event utilities.
+    Use this function to change the target name on a multi-target system
+    
+    Args:
+        target_name: The name of the target to set
+    """
+    global EVENT_TARGET_NAME
+    EVENT_TARGET_NAME = target_name
+
+def get_event_target_name():
+    """
+    Get the EVENT_TARGET_NAME that is currently set for use in event utilities.
+    Use this function to find what the currently set target name is
+    """
+    global EVENT_TARGET_NAME
+    return EVENT_TARGET_NAME
 
 # Event packet field names
 EVENT_APP_FIELD = "APP"           # Application name field

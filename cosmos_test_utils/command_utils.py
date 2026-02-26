@@ -678,7 +678,7 @@ class CommandSender:
         
         for i in range(count):
             # Calculate the expected telemetry value for this command
-            expected_value = base_tlm_value + (expected_increment_per_cmd * i)
+            expected_value = base_tlm_value + (expected_increment_per_cmd * (i + 1))
 
             # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_requirement(
@@ -806,7 +806,7 @@ class CommandSender:
         
         for i in range(count):
             # Calculate the expected telemetry value for this command
-            expected_value = base_tlm_value + (expected_increment_per_cmd * i)
+            expected_value = base_tlm_value + (expected_increment_per_cmd * (i + 1))
 
             # Send command and check requirements (using the same requirement_ids for all)
             success = self.send_cmd_with_timing_requirement(

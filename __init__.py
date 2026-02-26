@@ -6,6 +6,8 @@ A collection of utility functions for testing with the OpenC3 COSMOS ground syst
 
 from .cosmos_test_utils.system_config import (
     EVENT_TARGET_NAME,
+    set_event_target_name,
+    get_event_target_name,
     EVENT_PACKET_NAME,
     EVENT_TYPE_TO_TXT,
     EVENT_TXT_TO_TYPE,

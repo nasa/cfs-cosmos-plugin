@@ -32,7 +32,7 @@ The background logging system ensures that:
 
 from typing import Optional, Tuple, Union
 from .system_config import (
-    EVENT_TARGET_NAME,
+    get_event_target_name,
     EVENT_PACKET_NAME,
     EVENT_TYPE_TO_TXT,
     EVENT_TXT_TO_TYPE,
@@ -53,7 +53,7 @@ _event_packets = []  # To store packets for multiple find_events calls
 
 
 def set_event_search_point(
-    target_name: str = EVENT_TARGET_NAME, 
+    target_name: str = None, 
     packet_name: str = EVENT_PACKET_NAME
 ) -> str:
     """Set the point that a find_events call will search back to.
@@ -78,6 +78,9 @@ def set_event_search_point(
     # Import and use the COSMOS subscribe_packets function
     from openc3.script import subscribe_packets
     
+    if target_name is None:
+        target_name = get_event_target_name()
+    
     # Reset the stored packets when setting a new search point
     _event_packets = []
     
@@ -88,7 +91,7 @@ def set_event_search_point(
 
 
 def open_event_log_for_script_logging(
-    target_name: str = EVENT_TARGET_NAME, 
+    target_name: str = None, 
     packet_name: str = EVENT_PACKET_NAME
 ) -> str:
     """Subscribe to event packets for script logging.
@@ -111,6 +114,9 @@ def open_event_log_for_script_logging(
     
     # Import and use the COSMOS subscribe_packets function
     from openc3.script import subscribe_packets
+    
+    if target_name is None:
+        target_name = get_event_target_name()
     
     # Subscribe to event packets
     _event_logging_id = subscribe_packets([[target_name, packet_name]])
@@ -336,14 +342,14 @@ def start_background_event_logging(name: str = "default", filename: Optional[str
         stash_set('event_logger_ready', 'starting')
 
         # Store system_config values in stash for the script to access
-        from cosmos_test_utils.system_config import (
-            EVENT_TARGET_NAME, EVENT_PACKET_NAME, EVENT_TYPE_TO_TXT,
+        from .system_config import (
+            get_event_target_name, EVENT_PACKET_NAME, EVENT_TYPE_TO_TXT,
             EVENT_APP_FIELD, EVENT_ID_FIELD, EVENT_TYPE_FIELD,
             EVENT_MESSAGE_FIELD, EVENT_SCID_FIELD, EVENT_PROCID_FIELD, EVENT_TIME_FIELD
         )
 
         # Store basic configuration
-        stash_set('evt_target_name', EVENT_TARGET_NAME)
+        stash_set('evt_target_name', get_event_target_name())
         stash_set('evt_packet_name', EVENT_PACKET_NAME)
         stash_set('evt_app_field', EVENT_APP_FIELD)
         stash_set('evt_id_field', EVENT_ID_FIELD)
@@ -362,8 +368,10 @@ def start_background_event_logging(name: str = "default", filename: Optional[str
             i += 1
 
         # Create the script content with synchronization
-        script_content = '''# Event logging script created by cosmos_test_utils
+        script_content = '''
+        # Event logging script created by cosmos_test_utils
         # Get configuration from stash
+        set_line_delay(0.0)
         EVENT_TARGET_NAME = stash_get('evt_target_name')
         EVENT_PACKET_NAME = stash_get('evt_packet_name')
         EVENT_APP_FIELD = stash_get('evt_app_field')
@@ -444,7 +452,7 @@ def start_background_event_logging(name: str = "default", filename: Optional[str
         '''
 
         # Use script_create to create the script
-        script_name = "event_logger_report"
+        script_name = "event_logger_report.rb"
         script_create(script_name, script_content)
 
         # Start the script
@@ -456,7 +464,7 @@ def start_background_event_logging(name: str = "default", filename: Optional[str
 
         # Wait for the script to signal that it's ready to capture events
         print("Waiting for event logger to initialize...")
-        max_wait_time = 5.0  # Maximum time to wait for script to be ready
+        max_wait_time = 10.0  # Maximum time to wait for script to be ready
         wait_start = time.time()
         
         while time.time() - wait_start < max_wait_time:
@@ -551,7 +559,7 @@ def is_background_event_logging_running(name: str = "default") -> bool:
 
 
 def open_event_log_for_search(
-    target_name: str = EVENT_TARGET_NAME, 
+    target_name: str = None, 
     packet_name: str = EVENT_PACKET_NAME
 ) -> int:
     """Set the point that a find_events call will search back to.
@@ -559,4 +567,7 @@ def open_event_log_for_search(
     This is deprecated and included for backward compatibility.
     Use set_event_search_point() for more understandable code.
     """
+    if target_name is None:
+        target_name = get_event_target_name()
+    
     return set_event_search_point(target_name, packet_name)
