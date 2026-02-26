@@ -58,7 +58,8 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == FALSE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+        wait_check(f"<%= target_name %> CS_HK Oneshotinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
         wait_check(f"<%= target_name %> CS_HK Lastoneshotaddress == 0x00000000", 100)
         wait_check(f"<%= target_name %> CS_HK Lastoneshotsize == 1", 100)
         wait_check(f"<%= target_name %> CS_HK Lastoneshotmaxbytespercycle == 1", 100)
@@ -202,6 +203,235 @@ class cfs_test_group_cfs_cs(Group):
 
         # Verify any other telemetry changes
         wait_check(f"<%= target_name %> CS_HK Oscsstate == DISABLED", 100)
+    
+
+    def test_12_ReportBaselineOS(self):
+        """
+        Test the ReportBaselineOS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_OS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_13_RecomputeBaselineOS(self):
+        """
+        Test the RecomputeBaselineOS command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_OS")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+
+
+    def test_14_EnableEEPROM(self):
+        """
+        Test the EnableEEPROM command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_EEPROM")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Eepromcsstate == ENABLED", 100)
+    
+
+    def test_15_DisableEEPROM(self):
+        """
+        Test the DisableEEPROM command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_EEPROM")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Eepromcsstate == DISABLED", 100)
+    
+
+    def test_16_ReportBaselineEntryIDEeprom(self):
+        """
+        Test the ReportBaselineEntryIDEeprom command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_EEPROM, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_17_RecomputeBaselineEntryIDEeprom(self):
+        """
+        Test the RecomputeBaselineEntryIDEeprom command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_EEPROM, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+
+
+    def test_18_EnableEntryIDEepromCmd(self):
+        """
+        Test the EnableEntryIDEeprom command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_EEPROM")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_18_DisableEntryIDEepromCmd(self):
+        """
+        Test the DisableEntryIDEeprom command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_EEPROM")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_19_GetEntryIDEepromCmd(self):
+        """
+        Test the DisableEntryIDEeprom command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_EEPROM, with Address 0x00000000")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_18_EnableMemory(self):
+        """
+        Test the EnableMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_MEMORY")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Memorycsstate == ENABLED", 100)
+    
+
+    def test_19_DisableMemory(self):
+        """
+        Test the DisableMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_MEMORY")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Memorycsstate == DISABLED", 100)
+    
+
+    def test_20_ReportBaselineEntryIDMemory(self):
+        """
+        Test the ReportBaselineEntryIDMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_MEMORY, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_21_RecomputeBaselineMemory(self):
+        """
+        Test the RecomputeBaselineMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_MEMORY, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+
+
+    def test_22_EnableEntryIDMemory(self):
+        """
+        Test the EnableEntryIDMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_MEMORY, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_23_DisableEntryIDMemory(self):
+        """
+        Test the DisableEntryIDMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_MEMORY, with EntryID 0")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_24_GetEntryIDMemory(self):
+        """
+        Test the GetEntryIDMemory command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_MEMORY, with Address 0x00000000")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
 
@@ -211,25 +441,7 @@ class cfs_test_group_cfs_cs(Group):
 
 
 
-# 
-# 
-# CS_CMD_DISABLE_OS
-# CS_CMD_REPORT_BASELINE_OS
-# CS_CMD_RECOMPUTE_BASELINE_OS
-# CS_CMD_ENABLE_EEPROM
-# CS_CMD_DISABLE_EEPROM
-# CS_CMD_REPORT_BASELINE_EEPROM
-# CS_CMD_RECOMPUTE_BASELINE_EEPROM
-# CS_CMD_ENABLE_ENTRY_EEPROM
-# CS_CMD_DISABLE_ENTRY_EEPROM
-# CS_CMD_GET_ENTRY_ID_EEPROM
-# CS_CMD_ENABLE_MEMORY
-# CS_CMD_DISABLE_MEMORY
-# CS_CMD_REPORT_BASELINE_MEMORY
-# CS_CMD_RECOMPUTE_BASELINE_MEMORY
-# CS_CMD_ENABLE_ENTRY_MEMORY
-# CS_CMD_DISABLE_ENTRY_MEMORY
-# CS_CMD_GET_ENTRY_ID_MEMORY
+
 # CS_CMD_ENABLE_TABLES
 # CS_CMD_DISABLE_TABLES
 # CS_CMD_REPORT_BASELINE_TABLE
