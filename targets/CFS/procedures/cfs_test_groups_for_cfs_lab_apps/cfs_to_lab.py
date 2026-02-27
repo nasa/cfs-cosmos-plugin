@@ -110,7 +110,7 @@ class cfs_test_group_cfs_to_lab(Group):
 
         # Load, Validate, Activate the default table (to re-enable tlm flow)
         default_table_name = "TO_LAB.Subscriptions"
-        default_table_filename = "/cf/to_lab_sub_alt.tbl"
+        default_table_filename = "/cf/to_lab_sub.tbl"
         cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{default_table_filename}'")
         wait(8)
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{default_table_name}'")
