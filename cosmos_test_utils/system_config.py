@@ -56,6 +56,7 @@ EVENT_TYPE_FIELD = "EVENTTYPE"    # Event type field
 EVENT_MESSAGE_FIELD = "EVMSG"     # Event message text field
 EVENT_SCID_FIELD = "SCID"         # Spacecraft ID field
 EVENT_PROCID_FIELD = "PROCID"     # Processor ID field
+
 # Next is the COSMOS Formatted time field. 
 # This is a standard derived value, but if your project uses a different derived mnemonic for the timestamp (seconds and subseconds), place it here
 EVENT_TIME_FIELD = "PACKET_TIMEFORMATTED"  
@@ -90,8 +91,8 @@ COMMON_PACKET_SEQUENCE_DESC = "CCSDS Packet Sequence Count"
 # Configuration variables:
 # (Not project specific, but effect the default behavior of various functions)
 
-# Block time (in milliseconds) when waiting for events
-EVENT_BLOCK_TIMEOUT = 4000
+# Block time (in seconds) when waiting for events
+EVENT_BLOCK_TIMEOUT = 4
 
 # Default settings for telemetry waiting
 DEFAULT_POLL_INTERVAL = 0.1

@@ -532,28 +532,31 @@ def stop_background_event_logging(name: str = "default"):
         print(f"Error stopping background event logging: {str(e)}")
 
 
-def is_background_event_logging_running(name: str = "default") -> bool:
+def is_background_event_logging_running(name: str = None) -> bool:
     """Check if background event logging is currently running.
     
     Args:
-        name: Name to check for a specific logging session (default: "default")
+        name (str, optional): Name of the specific logging session to check for.
+            If None (default), checks if any logger is running regardless of name.
     
     Returns:
-        bool: True if background event logging is running (and matches the name if provided), False otherwise
-        
+        bool: True if a background event logging session is running, False otherwise.
+            If a name is provided, it returns True only if a logger with that specific name is running.
+            If no name is provided, it returns True if any logger is running.
+    
     Example:
         if is_background_event_logging_running():
-            print("Default logging session is active")
+            print("A logging session is active")
         
         if is_background_event_logging_running("my_test_logging"):
-            print("Specific logging session is active")
+            print("The 'my_test_logging' session is active")
     """
     from openc3.script import stash_get
     
     try:
         script_id = stash_get('background_event_log_id')
         current_name = stash_get('background_event_log_name')
-        return script_id is not None and current_name == name
+        return script_id is not None and (name is None or current_name == name)
     except:
         return False
 
