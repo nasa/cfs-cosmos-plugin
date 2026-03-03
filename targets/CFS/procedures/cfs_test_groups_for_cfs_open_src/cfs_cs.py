@@ -506,24 +506,127 @@ class cfs_test_group_cfs_cs(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_31_DisableNameTable(self):
+        """
+        Test the DisableNameTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_NAME_TABLE, with NAME 'tablename.tbl'") # FIXME: Get table name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_32_DisableNameTable(self):
+        """
+        Test the DisableNameTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_NAME_TABLE, with NAME 'tablename.tbl'") # FIXME: Get table name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_33_EnableApps(self):
+        """
+        Test the EnableApps command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_APPS, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Appcsstate == ENABLED", 100)
+    
+
+    def test_34_DisableApps(self):
+        """
+        Test the DisableApps command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_APPS, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Appcsstate == DISABLED", 100)
+    
+
+    def test_35_ReportBaselineApp(self):
+        """
+        Test the ReportBaselineApp command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_APP, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_36_RecomputeBaselineApp(self):
+        """
+        Test the RecomputeBaselineApp command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_APP, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
 
 
+    def test_37_EnableNameApp(self):
+        """
+        Test the EnableNameApp command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_NAME_APP, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Appcsstate == ENABLED", 100)
+    
+
+    def test_38_DisableNameApp(self):
+        """
+        Test the DisableNameApp command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_DISABLE_NAME_APP, with NAME 'appname'") # FIXME: Get app name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Appcsstate == ENABLED", 100)
 
 
-
-
-
-
-
-
-
-# CS_CMD_DISABLE_NAME_TABLE
-# CS_CMD_ENABLE_APPS
-# CS_CMD_DISABLE_APPS
-# CS_CMD_REPORT_BASELINE_APP
-# CS_CMD_RECOMPUTE_BASELINE_APP
-# CS_CMD_ENABLE_NAME_APP
-# CS_CMD_DISABLE_NAME_APP
 
 
 
@@ -536,7 +639,7 @@ class cfs_test_group_cfs_cs(Group):
     #
     def test_X_ResetCounters(self):
         """
-        Test the ResetCounters command.
+        Test the Reset Counters command.
         """
 
         # NOTE: Current initial version is simplified to only increment COMMAND_COUNTER and COMMAND_ERROR_COUNTER before reset.
@@ -546,8 +649,8 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER > 0", 100)
         
         # Cause COMMAND_ERROR_COUNTER to increment,
-        # by sending SetFilterFile cmd with invalid message ID
-        cmd("<%= target_name %> CS_CMD_SET_FILTER_FILE with MESSAGE_ID 0x9999, FILTER_PARAMS_IDX 0, FILE_TABLE_IDX 0")
+        # by sending ReportBaselineApp cmd with invalid app name
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_APP, with NAME 'Nonexistent'")
         wait_check(f"<%= target_name %> CS_HK COMMAND_ERROR_COUNTER > 0", 100)
 
         # Send ResetCounters command
@@ -556,18 +659,15 @@ class cfs_test_group_cfs_cs(Group):
         # Verify counters are reset to zero
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> CS_HK COMMAND_ERROR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK DISABLED_PKT_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK IGNORED_PKT_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILTERED_PKT_COUNTER < 10", 100)  # Increases from 0 before first packet post-reset
-        wait_check(f"<%= target_name %> CS_HK PASSED_PKT_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILE_WRITE_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILE_WRITE_ERR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILE_UPDATE_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILE_UPDATE_ERR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK DEST_TBL_LOAD_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK DEST_TBL_ERR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILTER_TBL_LOAD_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK FILTER_TBL_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Eepromcserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Memorycserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Appcserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Tablescserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Cfecorecserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Oscserrcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK Passcounter == 0", 100)
+
+          # FIXME: Add this to any lines above where it applies: Increases from 0 before first packet post-reset
 
 
     def setup(self):
