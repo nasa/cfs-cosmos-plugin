@@ -60,6 +60,7 @@ class RequirementTracker:
         3. Cannot move from IA to I or A
         4. Cannot move any state to U
         5. Moving from I to A or from A to I results in IA
+        6. Ignores attempts to set state "U" for existing requirements
         
         Args:
             requirement_id: The unique identifier for the requirement
@@ -105,7 +106,7 @@ class RequirementTracker:
         # Check if this is the first time setting this requirement
         if requirement_id not in self.requirements:
             # Initialize this requirement
-            set_state = state  # FIXED: Define set_state for initialization case
+            set_state = state
             
             self.requirements[requirement_id] = {
                 "state": set_state,
@@ -136,6 +137,16 @@ class RequirementTracker:
             attempted_state = state
             set_state = prev_state  # Default to keeping the same state
             transition_message = ""
+            
+            # Ignore attempts to set state "U" for existing requirements
+            if attempted_state == "U":
+                return {
+                    "result": "success",
+                    "message": "Ignored attempt to set state 'U' for existing requirement",
+                    "display_message": "",
+                    "state_message": "",
+                    "set_message": ""
+                }
             
             # Apply transition rules
             if (

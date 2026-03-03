@@ -21,7 +21,7 @@
 """Utilities for sending commands and tracking responses in COSMOS tests."""
 
 import time  # Used for timestamps
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from .system_config import DEFAULT_WAIT_TIMEOUT, DEFAULT_POLL_INTERVAL
 
@@ -305,7 +305,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_ids: str,
+        requirement_ids: Union[str, List[str]],
         tlm_timeout: float = DEFAULT_WAIT_TIMEOUT,
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
         **kwargs
@@ -325,7 +325,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_ids: Comma-separated string of requirement IDs to update
+            requirement_ids: Comma-separated string or list of requirement IDs to update
             tlm_timeout: Maximum time to wait for telemetry response in seconds (default from system_config)
             tlm_poll_interval: Time between telemetry checks in seconds (default from system_config)
             **kwargs: Additional arguments passed directly to the COSMOS cmd() function
@@ -416,7 +416,7 @@ class CommandSender:
         item: str,
         comparison: str,
         comparison_value: Any,
-        requirement_ids: str,
+       requirement_ids: Union[str, List[str]],
         min_time: Optional[float] = None,
         max_time: Optional[float] = None,
         tlm_timeout: float = DEFAULT_WAIT_TIMEOUT,
@@ -438,7 +438,7 @@ class CommandSender:
             item: The specific COSMOS telemetry item name to monitor for the comparison
             comparison: Comparison operator comparing item to comparison_value
             comparison_value: The value to compare against the telemetry 'item' using 'comparison'
-            requirement_ids: Comma-separated string of requirement IDs to update
+            requirement_ids: Comma-separated string or list of requirement IDs to update
             min_time: Minimum acceptable response time (None for no minimum)
             max_time: Maximum acceptable response time (None for no maximum)
             tlm_timeout: Maximum time to wait for telemetry response in seconds (default from system_config)
@@ -594,7 +594,7 @@ class CommandSender:
         packet: str,
         item: str,
         base_tlm_value: int,
-        requirement_ids: str,
+        requirement_ids: Union[str, List[str]],
         expected_increment_per_cmd: int = 1,
         cmd_delay: float = 0.0,
         tlm_timeout_ea_cmd: float = DEFAULT_WAIT_TIMEOUT,
@@ -623,7 +623,7 @@ class CommandSender:
             packet: The COSMOS telemetry packet name for telemetry monitoring
             item: The specific COSMOS telemetry item name to monitor for the comparison
             base_tlm_value: The base telemetry value to start comparisons from (integer)
-            requirement_ids: Comma-separated string of requirement IDs to update for each command
+            requirement_ids: Comma-separated string or list of requirement IDs to update
             expected_increment_per_cmd: Expected increment of telemetry value per command (integer, default: 1)
             cmd_delay: Delay in seconds between commands (non-negative)
             tlm_timeout_ea_cmd: Maximum time to wait for each tlm response condition to be met
@@ -713,7 +713,7 @@ class CommandSender:
         packet: str,
         item: str,
         base_tlm_value: int,
-        requirement_ids: str,
+        requirement_ids: Union[str, List[str]],
         expected_increment_per_cmd: int = 1,
         min_time: Optional[float] = None,
         max_time: Optional[float] = None,
@@ -744,7 +744,7 @@ class CommandSender:
             packet: The COSMOS telemetry packet name for telemetry monitoring
             item: The specific COSMOS telemetry item name to monitor for the comparison
             base_tlm_value: The base telemetry value to start comparisons from (integer)
-            requirement_ids: Comma-separated string of requirement IDs to update for each command
+            requirement_ids: Comma-separated string or list of requirement IDs to update
             expected_increment_per_cmd: Expected increment of telemetry value per command (integer, default: 1)
             min_time: Minimum acceptable response time (None for no minimum)
             max_time: Maximum acceptable response time (None for no maximum)

@@ -39,6 +39,7 @@ from .cosmos_test_utils.print_utils import (
 )
 
 from .cosmos_test_utils.telemetry_utils import (
+    get_tlm_point,
     report_telemetry,
     report_all_telemetry,
     report_all_targets_telemetry

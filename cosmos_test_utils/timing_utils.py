@@ -182,7 +182,7 @@ class TimingTracker:
     
     def verify_timing_requirement(
         self,
-        requirement_id: str,
+        requirement_ids: Union[str, List[str]],
         name: str,
         min_time: Optional[float] = None, 
         max_time: Optional[float] = None,
@@ -192,7 +192,7 @@ class TimingTracker:
         """Verify that a timing event meets timing requirements and update requirement status.
         
         Args:
-            requirement_id: The requirement ID to update
+            requirement_ids: Comma-separated string or list of requirement IDs to update
             name: Name for this timing event
             min_time: Minimum acceptable time in seconds (None for no minimum)
             max_time: Maximum acceptable time in seconds (None if timeout is the maximum)
@@ -231,12 +231,12 @@ class TimingTracker:
         else:
             req_message = f"Timing '{name}' measured at {elapsed:.6f}s (no specific timing requirement)"
         
-        # Update the requirement if tracker is available
+        # Update the requirements if tracker is available
         if req_tracker is not None:
             if success:
-                req_tracker.set_requirement(requirement_id, "P", req_message)
+                req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
             else:
-                req_tracker.set_requirement(requirement_id, "F", req_message)
+                req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Print result only if no requirement tracker (to avoid redundant messages)
             print_func(req_message)

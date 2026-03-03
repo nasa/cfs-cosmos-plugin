@@ -35,6 +35,46 @@ from .system_config import (
 prev_vals: Dict[str, Dict[str, Dict[str, Any]]] = {}
 current_vals: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
+def get_tlm_point(target: str, packet: str, item: str, type: str = 'CONVERTED') -> Any:
+    """
+    Get a single telemetry point from COSMOS.
+
+    This function is a wrapper for the COSMOS tlm function, allowing easy access
+    to individual telemetry points with a simpler interface.
+
+    Args:
+        target (str): Name of the target of the telemetry item.
+        packet (str): Name of the telemetry packet of the telemetry item.
+        item (str): Name of the telemetry item.
+        type (str, optional): Type of telemetry value to return. 
+                              Options are 'RAW', 'CONVERTED', or 'FORMATTED'.
+                              Defaults to 'CONVERTED'.
+
+    Returns:
+        Any: The value of the requested telemetry point. The type can vary
+             depending on the nature of the telemetry item and the requested
+             type (raw, converted, or formatted).
+
+    Raises:
+        ValueError: If an invalid type is specified.
+
+    Example:
+        value = get_tlm_point("INST", "HEALTH_STATUS", "COLLECTS")
+        raw_value = get_tlm_point("INST", "HEALTH_STATUS", "COLLECTS", type='RAW')
+        formatted_value = get_tlm_point("INST", "HEALTH_STATUS", "COLLECTS", type='FORMATTED')
+    """
+    # Import the COSMOS tlm function
+    from openc3.script import tlm
+
+    # Validate the type parameter
+    valid_types = ['RAW', 'CONVERTED', 'FORMATTED']
+    if type.upper() not in valid_types:
+        raise ValueError(f"Invalid type '{type}'. Must be one of: {', '.join(valid_types)}")
+
+    # Call the COSMOS tlm function and return the result
+    return tlm(f"{target} {packet} {item}", type=type.upper())
+
+
 def _update_telemetry_values(
     target_name: str,
     packet_name: str

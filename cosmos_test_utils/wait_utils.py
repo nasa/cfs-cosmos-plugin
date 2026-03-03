@@ -44,7 +44,7 @@ def wait_for_telemetry_value(
     timeout: float = DEFAULT_WAIT_TIMEOUT,
     poll_interval: float = DEFAULT_POLL_INTERVAL,
     return_timing: bool = False,
-    requirement_id: Optional[str] = None,
+    requirement_ids: Optional[Union[str, List[str]]] = None,
     req_tracker: Optional[Any] = None,
     print_func: Optional[Callable] = None
 ) -> Union[bool, Tuple[bool, float]]:
@@ -61,8 +61,8 @@ def wait_for_telemetry_value(
         poll_interval: Time between checks in seconds (default from system_config)
         print_func: Function to use for printing status/debug info (default: test_print)
         return_timing: If True, return (success, elapsed_time) tuple instead of just success
-        requirement_id: Optional requirement ID to update based on the result
-        req_tracker: RequirementTracker instance to use (required if requirement_id provided)
+        requirement_ids: Optional comma-separated string or list of requirement IDs to update based on the result
+        req_tracker: RequirementTracker instance to use (required if requirement_ids provided)
         
     Returns:
         bool or Tuple[bool, float]: 
@@ -83,13 +83,13 @@ def wait_for_telemetry_value(
         tracker = RequirementTracker()
         success = wait_for_telemetry_value(
             "SPACECRAFT", "HEALTH_TLM", "BATTERY", "==", 100,
-            requirement_id="REQ-123", req_tracker=tracker
+            requirement_ids="REQ-123", req_tracker=tracker
         )
         
         # With both timing and requirement tracking
         success, elapsed_time = wait_for_telemetry_value(
             "SPACECRAFT", "HEALTH_TLM", "BATTERY", "==", 100,
-            return_timing=True, requirement_id="REQ-456", req_tracker=tracker
+            return_timing=True, requirement_ids="REQ-456, REQ-457", req_tracker=tracker
         )
     """
     # Use test_print as the default print function if none provided
@@ -126,11 +126,11 @@ def wait_for_telemetry_value(
                 response_time = time.perf_counter() - start_time
                 
                 # Update requirement if tracking
-                if requirement_id is not None and req_tracker is not None:
+                if requirement_ids is not None and req_tracker is not None:
                     req_message = f"Telemetry condition met: {target} {packet} {item} {comparison} {comparison_value} in {response_time:.6f}s"
-                    req_tracker.set_requirement(requirement_id, "P", req_message)
-                elif requirement_id is not None:
-                    print_func("Warning: requirement_id provided but no req_tracker. Cannot update requirement status.")
+                    req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
+                elif requirement_ids is not None:
+                    print_func("Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
                 
                 # Return based on return_timing flag
                 if return_timing:
@@ -159,10 +159,10 @@ def wait_for_telemetry_value(
     print_func(timeout_message)
     
     # Update requirement if tracking (failure case)
-    if requirement_id is not None and req_tracker is not None:
-        req_tracker.set_requirement(requirement_id, "F", timeout_message)
-    elif requirement_id is not None:
-        print_func("Warning: requirement_id provided but no req_tracker. Cannot update requirement status.")
+    if requirement_ids is not None and req_tracker is not None:
+        req_tracker.set_multiple_requirements(requirement_ids, "F", timeout_message)
+    elif requirement_ids is not None:
+        print_func("Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
     
     # Return based on return_timing flag (timeout case)
     if return_timing:
@@ -538,7 +538,7 @@ def wait_for_telemetry_in_timing_range(
     max_time: Optional[float] = None,
     timeout: float = DEFAULT_WAIT_TIMEOUT,
     poll_interval: float = DEFAULT_POLL_INTERVAL,
-    requirement_id: Optional[str] = None,
+    requirement_ids: Optional[Union[str, List[str]]] = None,
     req_tracker: Optional[Any] = None,
     print_func: Optional[Callable] = None
 ) -> Tuple[bool, float]:
@@ -558,8 +558,8 @@ def wait_for_telemetry_in_timing_range(
         max_time: Maximum acceptable time in seconds (None for no maximum)
         timeout: Maximum wait time in seconds (default from system_config)
         poll_interval: Time between telemetry checks in seconds (default from system_config)
-        requirement_id: Optional requirement ID to update
-        req_tracker: RequirementTracker instance to use (required if requirement_id provided)
+        requirement_ids: Optional comma-separated string or list of requirement IDs to update
+        req_tracker: RequirementTracker instance to use (required if requirement_ids provided)
         print_func: Function to use for printing status/debug info (default: test_print)
         
     Returns:
@@ -584,7 +584,7 @@ def wait_for_telemetry_in_timing_range(
         success, response_time = wait_for_telemetry_in_timing_range(
             "SPACECRAFT", "HK_TLM", "MODE", "==", "SCIENCE",
             min_time=1.0, max_time=5.0,
-            requirement_id="REQ-123", req_tracker=tracker
+            requirement_ids="REQ-123, REQ-124", req_tracker=tracker
         )
         
         # Only minimum time requirement
@@ -671,11 +671,11 @@ def wait_for_telemetry_in_timing_range(
                     req_message = f"{condition_desc} occurred in {response_time:.6f}s (before timeout of {timeout}s)"
                 
                 # Update the requirement if tracking, otherwise print the message
-                if requirement_id is not None and req_tracker is not None:
+                if requirement_ids is not None and req_tracker is not None:
                     if success:
-                        req_tracker.set_requirement(requirement_id, "P", req_message)
+                        req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
                     else:
-                        req_tracker.set_requirement(requirement_id, "F", req_message)
+                        req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
                 else:
                     print_func(req_message)
                 
@@ -697,8 +697,8 @@ def wait_for_telemetry_in_timing_range(
         req_message = f"TIMEOUT: {target} {packet} {item} never reached {comparison_value} (timeout: {timeout}s, error getting final value)"
     
     # Update the requirement if tracking, otherwise print the message
-    if requirement_id is not None and req_tracker is not None:
-        req_tracker.set_requirement(requirement_id, "F", req_message)
+    if requirement_ids is not None and req_tracker is not None:
+        req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
     else:
         print_func(req_message)        
     
