@@ -432,6 +432,80 @@ class cfs_test_group_cfs_cs(Group):
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_25_EnableTables(self):
+        """
+        Test the EnableTables command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_TABLES")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Tablescsstate == ENABLED", 100)
+    
+ 
+    def test_26_DisableTables(self):
+        """
+        Test the DisableTables command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_TABLES")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Tablescsstate == DISABLED", 100)
+    
+
+    def test_28_ReportBaselineTable(self):
+        """
+        Test the ReportBaselineTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_TABLE, with NAME 'tablename.tbl'") # FIXME: Get table name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
+
+    def test_29_RecomputeBaselineTable(self):
+        """
+        Test the RecomputeBaselineTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_TABLE, with NAME 'tablename.tbl'") # FIXME: Get table name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
+        # Verify any other telemetry changes
+        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == TRUE", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+
+
+    def test_30_EnableNameTable(self):
+        """
+        Test the EnableNameTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_ENABLE_NAME_TABLE, with NAME 'tablename.tbl'") # FIXME: Get table name
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
 
@@ -442,11 +516,7 @@ class cfs_test_group_cfs_cs(Group):
 
 
 
-# CS_CMD_ENABLE_TABLES
-# CS_CMD_DISABLE_TABLES
-# CS_CMD_REPORT_BASELINE_TABLE
-# CS_CMD_RECOMPUTE_BASELINE_TABLE
-# CS_CMD_ENABLE_NAME_TABLE
+
 # CS_CMD_DISABLE_NAME_TABLE
 # CS_CMD_ENABLE_APPS
 # CS_CMD_DISABLE_APPS
