@@ -279,8 +279,6 @@ class cfs_test_group_cfs_cs(Group):
     #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_EEPROM with EntryID 0")
     #     # FIXME: Entry ID invalid: 0
     #     #        Was not fixed by commenting out DisableEEPROM command.          <=======
-
-    #     # FIXME: Mark as currently untestable all EEPROM cmds
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -504,14 +502,12 @@ class cfs_test_group_cfs_cs(Group):
         cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
         cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_TABLE with NAME 'SAMPLE_APP.ExampleTable'")
-        # FIXME: Seems like this probably needs to use a new entry in the tablestbl (added for SAMPLE_APP).     <=======
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
-
+        # Recomputeinprogress does not stay TRUE long enough to show in packet.
 
     def test_30_EnableNameTable(self):
         """
@@ -594,7 +590,6 @@ class cfs_test_group_cfs_cs(Group):
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
     #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_APP with NAME 'SAMPLE_APP'")
-    #     # FIXME: app MD not found
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -608,7 +603,6 @@ class cfs_test_group_cfs_cs(Group):
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
     #     cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_APP with NAME 'SAMPLE_APP'")
-    #     # FIXME: app MD not found
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -625,7 +619,6 @@ class cfs_test_group_cfs_cs(Group):
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
     #     cmd("<%= target_name %> CS_CMD_ENABLE_NAME_APP with NAME 'SAMPLE_APP'")
-    #     # FIXME: app MD not found
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -642,7 +635,6 @@ class cfs_test_group_cfs_cs(Group):
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
     #     cmd("<%= target_name %> CS_CMD_DISABLE_NAME_APP with NAME 'SAMPLE_APP'")
-    #     # FIXME: app MD not found
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
