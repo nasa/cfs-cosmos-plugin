@@ -10,9 +10,7 @@
    APPEND_ITEM PIPE_OPTS_ERROR_COUNTER 8 UINT "Count of errors in set/get pipe options API"
    APPEND_ITEM DUPLICATE_SUBSCRIPTIONS_COUNTER 8 UINT "Count of duplicate subscriptions"
    APPEND_ITEM GET_PIPE_ID_BY_NAME_ERROR_COUNTER 8 UINT "Count of errors in get pipe id by name API"
-<% if $cfs_globals_eds_enabled == false %>
    APPEND_ITEM SPARE_TO_ALIGN 8 UINT "Spare padding for alignment"
-<% end %>
    APPEND_ITEM PIPE_OVERFLOW_ERROR_COUNTER 16 UINT "Count of pipe overflow errors"
    APPEND_ITEM MSG_LIMIT_ERROR_COUNTER 16 UINT "Count of msg id to pipe errors"
    APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Handle to SB's Memory Pool"
