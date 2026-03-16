@@ -649,8 +649,10 @@ class cfs_test_group_cfs_cs(Group):
         """
 
         # NOTE: Current initial version is simplified to only increment COMMAND_COUNTER and COMMAND_ERROR_COUNTER before reset.
+        #       Because of this, only those two counters are actually being tested for reset.
+        #       Future versions of the test need to check that all counters are non-zero before checking they have been reset.
 
-        # Increment COMMAND_COUNTER by sending CreateDirectory command
+        # Increment COMMAND_COUNTER by sending No-Op command
         cmd("<%= target_name %> CS_CMD_NOOP")
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER > 0", 100)
         
