@@ -26,9 +26,12 @@
           STATE MEM32  5
 <% if $cfs_globals_mem_addr_size == 64 %>
      APPEND_ITEM       Address           64 UINT  "Fully resolved address used for last command"
+          FORMAT_STRING  "0x%011X"
 <% else %>
      APPEND_ITEM       Address           32 UINT  "Fully resolved address used for last command"
+          FORMAT_STRING  "0x%08X"
 <% end %>
      APPEND_ITEM       Datavalue         32 UINT  "Last command data (fill pattern or peek/poke value)"
+          FORMAT_STRING  "0x%08X"
      APPEND_ITEM       Bytesprocessed    32 UINT  "Bytes processed for last command"
      APPEND_ITEM       Filename          512 STRING "Name of the data file used for last command, where applicable"
