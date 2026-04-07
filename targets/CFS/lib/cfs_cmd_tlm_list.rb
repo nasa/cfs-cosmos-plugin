@@ -391,7 +391,7 @@ $CFS_CMD_TLM_LIST = {
         packet_names: [
             "LC_CMD_NOOP",
             "LC_CMD_RESET_COUNTERS",
-            "LC_CMD_SET_APP_STATE",
+            "LC_CMD_SET_LC_STATE",
             "LC_CMD_SET_AP_STATE",
             "LC_CMD_SET_AP_PERM_OFF",
             "LC_CMD_RESET_AP_STATS",
