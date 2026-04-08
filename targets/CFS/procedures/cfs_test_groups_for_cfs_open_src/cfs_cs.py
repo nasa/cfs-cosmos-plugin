@@ -481,20 +481,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK Tablescsstate == 'DISABLED'", 100)
     
 
-    def test_28_ReportBaselineTable(self):
-        """
-        Test the ReportBaselineTable command.
-        """
-        
-        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
-        
-        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_TABLE with NAME 'SAMPLE_APP.ExampleTable'")
-        
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-    
-
-    def test_29_RecomputeBaselineTable(self):
+    def test_28_RecomputeBaselineTable(self):
         """
         Test the RecomputeBaselineTable command.
         """
@@ -508,6 +495,20 @@ class cfs_test_group_cfs_cs(Group):
 
         # Verify any other telemetry changes
         # Recomputeinprogress does not stay TRUE long enough to show in packet.
+
+
+    def test_29_ReportBaselineTable(self):
+        """
+        Test the ReportBaselineTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_TABLE with NAME 'SAMPLE_APP.ExampleTable'")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    
 
     def test_30_EnableNameTable(self):
         """
