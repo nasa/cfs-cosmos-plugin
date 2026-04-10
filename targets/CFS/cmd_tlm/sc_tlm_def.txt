@@ -42,10 +42,10 @@
   APPEND_ITEM NEXT_RTS_TIME      32 UINT "Next RTS cmd Absolute Time"
   APPEND_ITEM NEXT_ATS_TIME      32 UINT "Next ATS Command Time (seconds)"
 <% $sc_num_rts_status_fields.times do |n|  %>
-  APPEND_ITEM RTS_W<%=n%>_EXE_STATUS 16 UINT "RTS Executing Status Word <%=n%> Bit Map"
-    FORMAT_STRING "0x%04X"
+  APPEND_ITEM RTS_W<%=n%>_EXE_STATUS 8 UINT "RTS Executing Status Word <%=n%> Bit Map"
+    FORMAT_STRING "0x%02X"
 <% end %>
 <% $sc_num_rts_status_fields.times do |n|  %>
-  APPEND_ITEM RTS_W<%=n%>_DIS_STATUS 16 UINT "RTS Disabled Status Word <%=n%> Bit Map"
-    FORMAT_STRING "0x%04X"
+  APPEND_ITEM RTS_W<%=n%>_DIS_STATUS 8 UINT "RTS Disabled Status Word <%=n%> Bit Map"
+    FORMAT_STRING "0x%02X"
 <% end %>
