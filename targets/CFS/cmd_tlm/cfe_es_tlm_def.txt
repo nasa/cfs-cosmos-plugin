@@ -79,63 +79,66 @@
 <% end %>
 
 <%= cfs_tlm_hdr(target_name, 'CFE_ES_APP', "CFE_ES App Info Tlm") %>
-   APPEND_ITEM APP_INFO_RESOURCE_ID 32 UINT "Application or Libary ID for this resource"
+   APPEND_ITEM RESOURCE_ID 32 UINT "Application or Libary ID for this resource"
       FORMAT_STRING "0x%08X"
-   APPEND_ITEM APP_INFO_TYPE 32 UINT "App Type"
+   APPEND_ITEM TYPE 32 UINT "App Type"
       STATE CORE     1
       STATE EXTERNAL 2
       STATE LIBRARY  3
-   APPEND_ITEM APP_INFO_NAME 160 STRING "The Registered Name of the Application"
-   APPEND_ITEM APP_INFO_ENTRY_POINT 160 STRING "The Entry Point label for the Application"
-   APPEND_ITEM APP_INFO_FILE_NAME 512 STRING "The Filename of the file containing the Application"
+   APPEND_ITEM NAME 160 STRING "The Registered Name of the Application"
+   APPEND_ITEM ENTRY_POINT 160 STRING "The Entry Point label for the Application"
+   APPEND_ITEM FILE_NAME 512 STRING "The Filename of the file containing the Application"
 <% if $cfs_globals_mem_addr_size == 64 %>
-   APPEND_ITEM APP_INFO_STACK_SIZE 64 UINT "The Stack Size of the Application"
+   APPEND_ITEM STACK_SIZE 64 UINT "The Stack Size of the Application"
 <% else %>
-   APPEND_ITEM APP_INFO_STACK_SIZE 32 UINT "The Stack Size of the Application"
+   APPEND_ITEM STACK_SIZE 32 UINT "The Stack Size of the Application"
 <% end %>
-   APPEND_ITEM APP_INFO_ADDRESSES_ARE_VALID 32 UINT "Indicates that the Code, Data, and BSS addresses/sizes are valid"
+   APPEND_ITEM ADDRESSES_ARE_VALID 32 UINT "Indicates that the Code, Data, and BSS addresses/sizes are valid"
       STATE FALSE 0
       STATE TRUE  1
 <% if $cfs_globals_mem_addr_size == 64 %>
-   APPEND_ITEM APP_INFO_CODE_ADDRESS 64 UINT "The Address of the Application Code Segment"
+   APPEND_ITEM PADDING1 32 UINT "Padding for alignment"
+   APPEND_ITEM CODE_ADDRESS 64 UINT "The Address of the Application Code Segment"
       FORMAT_STRING "0x%016X"
-   APPEND_ITEM APP_INFO_CODE_SIZE 64 UINT "The Code Size of the Application"
-   APPEND_ITEM APP_INFO_DATA_ADDRESS 64 UINT "The Address of the Application Data Segment"
+   APPEND_ITEM CODE_SIZE 64 UINT "The Code Size of the Application"
+   APPEND_ITEM DATA_ADDRESS 64 UINT "The Address of the Application Data Segment"
       FORMAT_STRING "0x%016X"
-   APPEND_ITEM APP_INFO_DATA_SIZE 64 UINT "The Data Size of the Application"
-   APPEND_ITEM APP_INFO_BSS_ADDRESS 64 UINT "The Address of the Application BSS Segment"
+   APPEND_ITEM DATA_SIZE 64 UINT "The Data Size of the Application"
+   APPEND_ITEM BSS_ADDRESS 64 UINT "The Address of the Application BSS Segment"
       FORMAT_STRING "0x%016X"
-   APPEND_ITEM APP_INFO_BSS_SIZE 64 UINT "The BSS Size of the Application"
-   APPEND_ITEM APP_INFO_START_ADDRESS 64 UINT "The Start Address of the Application"
+   APPEND_ITEM BSS_SIZE 64 UINT "The BSS Size of the Application"
+   APPEND_ITEM START_ADDRESS 64 UINT "The Start Address of the Application"
       FORMAT_STRING "0x%016X"
 <% else %>
-   APPEND_ITEM APP_INFO_CODE_ADDRESS 32 UINT "The Address of the Application Code Segment"
+   APPEND_ITEM CODE_ADDRESS 32 UINT "The Address of the Application Code Segment"
       FORMAT_STRING "0x%08X"
-   APPEND_ITEM APP_INFO_CODE_SIZE 32 UINT "The Code Size of the Application"
-   APPEND_ITEM APP_INFO_DATA_ADDRESS 32 UINT "The Address of the Application Data Segment"
+   APPEND_ITEM CODE_SIZE 32 UINT "The Code Size of the Application"
+   APPEND_ITEM DATA_ADDRESS 32 UINT "The Address of the Application Data Segment"
       FORMAT_STRING "0x%08X"
-   APPEND_ITEM APP_INFO_DATA_SIZE 32 UINT "The Data Size of the Application"
-   APPEND_ITEM APP_INFO_BSS_ADDRESS 32 UINT "The Address of the Application BSS Segment"
+   APPEND_ITEM DATA_SIZE 32 UINT "The Data Size of the Application"
+   APPEND_ITEM BSS_ADDRESS 32 UINT "The Address of the Application BSS Segment"
       FORMAT_STRING "0x%08X"
-   APPEND_ITEM APP_INFO_BSS_SIZE 32 UINT "The BSS Size of the Application"
-   APPEND_ITEM APP_INFO_START_ADDRESS 32 UINT "The Start Address of the Application"
+   APPEND_ITEM BSS_SIZE 32 UINT "The BSS Size of the Application"
+   APPEND_ITEM START_ADDRESS 32 UINT "The Start Address of the Application"
       FORMAT_STRING "0x%08X"
 <% end %>
-   APPEND_ITEM APP_INFO_EXCEPTION_ACTION 8 UINT "What should occur if Application has an exception"
+   APPEND_ITEM EXCEPTION_ACTION 8 UINT "What should occur if Application has an exception"
       STATE RESTART_APP 0
       STATE RESTART_CPU 1
-   APPEND_ITEM SPARE 8 UINT "Spare for alignment"
-   APPEND_ITEM APP_INFO_PRIORITY 16 UINT "The Priority of the Application"
-   APPEND_ITEM APP_INFO_MAIN_TASK_ID 32 UINT "The Application's Main Task ID"
+   APPEND_ITEM PADDING2 8 UINT "Padding for alignment"
+   APPEND_ITEM PRIORITY 16 UINT "The Priority of the Application"
+   APPEND_ITEM MAIN_TASK_ID 32 UINT "The Application's Main Task ID"
       FORMAT_STRING "0x%08X"
-   APPEND_ITEM APP_INFO_EXECUTION_COUNTER 32 UINT "The Application's Main Task Execution Counter"
-   APPEND_ITEM APP_INFO_MAIN_TASK_NAME 160 STRING "The Application's Main Task Name"
-   APPEND_ITEM APP_INFO_NUM_OF_CHILD_TASKS 32 UINT "Number of Child tasks for an App"
+   APPEND_ITEM EXECUTION_COUNTER 32 UINT "The Application's Main Task Execution Counter"
+   APPEND_ITEM MAIN_TASK_NAME 160 STRING "The Application's Main Task Name"
+   APPEND_ITEM NUM_OF_CHILD_TASKS 32 UINT "Number of Child tasks for an App"
+   APPEND_ITEM PADDING3 32 UINT "Padding for 64-bit alignment"
 
 <%= cfs_tlm_hdr(target_name, 'CFE_ES_MEMSTATS', "CFE_ES Mem Stats Tlm") %>
    APPEND_ITEM POOL_HANDLE 32 UINT "Handle of memory pool whose stats are being telemetered"
       FORMAT_STRING "0x%08X"
 <% if $cfs_globals_mem_addr_size == 64 %>
+   APPEND_ITEM PADDING   32 UINT
    APPEND_ITEM POOL_SIZE 64 UINT "Size of Memory Pool (in bytes)"
 <% else %>
    APPEND_ITEM POOL_SIZE 32 UINT "Size of Memory Pool (in bytes)"

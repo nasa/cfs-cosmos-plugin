@@ -16,20 +16,21 @@ class cfs_test_group_cfs_cs(Group):
             then verify the command was received (by checking the command counter was cleared)
         """
         
-        Group.print("Testing CS aliveness on <%= target_name %>")
-        
-        wait_check_packet("<%= target_name %>", "CS_HK", 1, 100)
-        
+        Group.print(f"Testing CS aliveness on <%= target_name %>")
+
+        # Verify that we have a recent packet (by waiting for a new one to arrive)
+        wait_check_packet(f"<%= target_name %>", "CS_HK", 1, 100)
+
         # Assuming no one else is sending commands, grab the latest command count
-        cmd_count = tlm("<%= target_name %> CS_HK COMMAND_COUNTER")
-        
-        # Send NOOP command, then check result to prove application is up and running
-        cmd("<%= target_name %> CS_CMD_NOOP")
-        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # Send Reset Counters command, check resullt
-        cmd("<%= target_name %> CS_CMD_RESET_COUNTERS")
-        wait_check("<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+
+        # Check accepted NOOP command proving application is up and running
+        cmd(f"<%= target_name %> CS_CMD_NOOP")
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Reset Counters command
+        cmd(f"<%= target_name %> CS_CMD_RESET_COUNTERS")
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
     
     
     def test_01_NoOp(self):
@@ -58,12 +59,12 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Lastoneshotaddress == 0x00000000", 100)
-        wait_check(f"<%= target_name %> CS_HK Lastoneshotsize == 1", 100)
-        wait_check(f"<%= target_name %> CS_HK Lastoneshotmaxbytespercycle == 1", 100)
-        wait_check(f"<%= target_name %> CS_HK Lastoneshotchecksum == 0", 100)
-        # Recomputeinprogress does not stay FALSE long enough to show in packet.
-        # Oneshotinprogress does not stay TRUE long enough to show in packet.
+        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_ADDRESS == 0x00000000", 100)
+        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_SIZE == 1", 100)
+        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_MAX_BYTES_PER_CYCLE == 1", 100)
+        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_CHECKSUM == 0", 100)
+        # RECOMPUTE_IN_PROGRESS does not stay FALSE long enough to show in packet.
+        # ONE_SHOT_IN_PROGRESS does not stay TRUE long enough to show in packet.
     
 
     def test_03_CancelOneShot(self):
@@ -93,7 +94,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Checksumstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK CHECKSUM_STATE == 'ENABLED'", 100)
     
 
     def test_05_DisableAllCS(self):
@@ -109,7 +110,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Checksumstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK CHECKSUM_STATE == 'DISABLED'", 100)
     
 
     def test_06_EnableCfeCore(self):
@@ -125,7 +126,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Cfecorecsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK CFE_CORE_CS_STATE == 'ENABLED'", 100)
     
 
     def test_07_DisableCfeCore(self):
@@ -141,7 +142,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Cfecorecsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK CFE_CORE_CS_STATE == 'DISABLED'", 100)
 
 
     def test_08_ReportBaselineCfeCore(self):
@@ -170,7 +171,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        # Recomputeinprogress does not stay TRUE long enough to show in packet.
+        # RECOMPUTE_IN_PROGRESS does not stay TRUE long enough to show in packet.
     
 
     def test_10_EnableOS(self):
@@ -186,7 +187,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Oscsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK OS_CS_STATE == 'ENABLED'", 100)
     
 
     def test_11_DisableOS(self):
@@ -202,7 +203,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Oscsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK OS_CS_STATE == 'DISABLED'", 100)
     
 
     def test_12_ReportBaselineOS(self):
@@ -231,7 +232,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        # Recomputeinprogress does not stay TRUE long enough to show in packet.
+        # RECOMPUTE_IN_PROGRESS does not stay TRUE long enough to show in packet.
 
 
     def test_14_EnableEEPROM(self):
@@ -247,7 +248,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Eepromcsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK EEPROM_CS_STATE == 'ENABLED'", 100)
     
 
     def test_15_DisableEEPROM(self):
@@ -263,7 +264,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Eepromcsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK EEPROM_CS_STATE == 'DISABLED'", 100)
     
     # TODO: The tests below were implemented, then commented-out because EEPROM and Memory
     #       functions currently can't be tested in a straightforward way. That requires a change to the PSP module.
@@ -276,7 +277,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_EEPROM with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_EEPROM with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
     #     #        Was not fixed by commenting out DisableEEPROM command.          <=======
         
@@ -291,14 +292,14 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_EEPROM with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_EEPROM with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
     #     # Verify any other telemetry changes
-    #     wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+    #     wait_check(f"<%= target_name %> CS_HK RECOMPUTE_IN_PROGRESS == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
 
 
     # def test_18_EnableEntryIDEepromCmd(self):
@@ -308,7 +309,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_EEPROM with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_EEPROM with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
@@ -322,7 +323,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_EEPROM with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_EEPROM with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
@@ -336,7 +337,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_EEPROM with Address 0x00000000")
+    #     cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_EEPROM with ADDRESS 0x00000000")
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -355,7 +356,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Memorycsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK MEMORY_CS_STATE == 'ENABLED'", 100)
     
 
     def test_19_DisableMemory(self):
@@ -371,7 +372,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Memorycsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK MEMORY_CS_STATE == 'DISABLED'", 100)
     
     # TODO: The tests below were implemented, then commented-out because EEPROM and Memory
     #       functions currently can't be tested in a straightforward way. That requires a change to the PSP module.
@@ -384,7 +385,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_MEMORY with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_MEMORY with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
@@ -398,14 +399,14 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_MEMORY with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_RECOMPUTE_BASELINE_MEMORY with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
     #     # Verify any other telemetry changes
-    #     wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+    #     wait_check(f"<%= target_name %> CS_HK RECOMPUTE_IN_PROGRESS == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
 
 
     # def test_22_EnableEntryIDMemory(self):
@@ -415,7 +416,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_MEMORY with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_ENABLE_ENTRY_MEMORY with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
@@ -429,7 +430,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_MEMORY with EntryID 0")
+    #     cmd("<%= target_name %> CS_CMD_DISABLE_ENTRY_MEMORY with ENTRY_ID 0")
     #     # FIXME: Entry ID invalid: 0
         
     #     # Verify command count incremented
@@ -443,7 +444,7 @@ class cfs_test_group_cfs_cs(Group):
         
     #     cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
         
-    #     cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_MEMORY with Address 0x00000000")
+    #     cmd("<%= target_name %> CS_CMD_GET_ENTRY_ID_MEMORY with ADDRESS 0x00000000")
         
     #     # Verify command count incremented
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -462,7 +463,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Tablescsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK TABLES_CS_STATE == 'ENABLED'", 100)
     
  
     def test_26_DisableTables(self):
@@ -478,7 +479,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Tablescsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK TABLES_CS_STATE == 'DISABLED'", 100)
     
 
     def test_28_RecomputeBaselineTable(self):
@@ -494,7 +495,21 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        # Recomputeinprogress does not stay TRUE long enough to show in packet.
+        # RECOMPUTE_IN_PROGRESS does not stay TRUE long enough to show in packet.
+
+
+    def test_29_ReportBaselineTable(self):
+        """
+        Test the ReportBaselineTable command.
+        """
+        
+        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
+        
+        cmd("<%= target_name %> CS_CMD_REPORT_BASELINE_TABLE with NAME 'SAMPLE_APP.ExampleTable'")
+        
+        # Verify command count incremented
+        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
 
 
     def test_29_ReportBaselineTable(self):
@@ -562,7 +577,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Appcsstate == 'ENABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK APP_CS_STATE == 'ENABLED'", 100)
     
 
     def test_34_DisableApps(self):
@@ -578,7 +593,7 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK Appcsstate == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> CS_HK APP_CS_STATE == 'DISABLED'", 100)
     
     # TODO: The tests below were implemented, then commented-out because app functions currently can't
     # be tested.  This is because the Linux implementation of the module loader isn't able to get the actual addresses.
@@ -609,7 +624,7 @@ class cfs_test_group_cfs_cs(Group):
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
     #     # Verify any other telemetry changes
-    #     wait_check(f"<%= target_name %> CS_HK Recomputeinprogress == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
+    #     wait_check(f"<%= target_name %> CS_HK RECOMPUTE_IN_PROGRESS == 'TRUE'", 100) # FIXME: Does this stay true long enough to make it into the HK packet?
 
 
     # def test_37_EnableNameApp(self):
@@ -625,7 +640,7 @@ class cfs_test_group_cfs_cs(Group):
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
     #     # Verify any other telemetry changes
-    #     wait_check(f"<%= target_name %> CS_HK Appcsstate == 'ENABLED'", 100)
+    #     wait_check(f"<%= target_name %> CS_HK APP_CS_STATE == 'ENABLED'", 100)
     
 
     # def test_38_DisableNameApp(self):
@@ -641,7 +656,7 @@ class cfs_test_group_cfs_cs(Group):
     #     wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
     #     # Verify any other telemetry changes
-    #     wait_check(f"<%= target_name %> CS_HK Appcsstate == 'ENABLED'", 100)
+    #     wait_check(f"<%= target_name %> CS_HK APP_CS_STATE == 'ENABLED'", 100)
 
 
     def test_39_ResetCounters(self):
@@ -668,13 +683,13 @@ class cfs_test_group_cfs_cs(Group):
         # Verify counters are reset to zero
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> CS_HK COMMAND_ERROR_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Eepromcserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Memorycserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Appcserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Tablescserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Cfecorecserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Oscserrcounter == 0", 100)
-        wait_check(f"<%= target_name %> CS_HK Passcounter == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK EEPROM_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK MEMORY_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK APP_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK TABLES_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK CFE_CORE_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK OS_CS_ERR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CS_HK PASS_COUNTER == 0", 100)
 
 
     def setup(self):

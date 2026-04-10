@@ -4,8 +4,8 @@
 <% require 'cfs_fleet_globals' %>
 
 # To expose the EDS enabled flag to the plugin install, uncomment the lines below
-# VARIABLE cfs_eds_enabled false
-# <% cfs_globals_set_eds_enabled(cfs_eds_enabled) %>
+VARIABLE cfs_eds_enabled false
+<% cfs_globals_set_eds_enabled(cfs_eds_enabled) %>
 
 # To set the memory size, uncomment the lines below
 VARIABLE cfs_mem_addr_size 64

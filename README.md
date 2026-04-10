@@ -89,12 +89,16 @@ Navigate to `http://localhost:2900` in a web browser to access the OpenC3 COSMOS
 1. Go to the OpenC3 Admin Tool, Plugins Tab
 1. Click the paperclip icon and choose your plugin.gem file
 1. Fill out the plugin parameters:
+   * `cfs_eds_enabled`
+      - Default: `false`
+      - If running FSW built with EDS enabled, use `true`
    * `cfs_mem_addr_size`
       - Default: `64`
       - If running a 32-bit system, use `32`
    * `cfs_endianness`
       - Default: `LITTLE_ENDIAN`
       - If running on a big endian system, use `BIG_ENDIAN`
+      - If running FSW built with EDS enabled, use `BIG_ENDIAN`
    * `cfs_1_intf_ip` and `cfs_2_intf_ip`:
       - Default: `172.17.0.1`
             - This should match the IP address listed for the default docker network bridge (`docker0`)

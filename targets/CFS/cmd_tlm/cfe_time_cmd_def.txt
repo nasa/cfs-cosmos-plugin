@@ -1,4 +1,4 @@
-<%= cfs_cmd_hdr(target_name, 'CFE_TIME_SEND_HK_CMD',   0, "CFE_TIME Housekeeping Request Cmd") %>
+<%= cfs_cmd_hdr(target_name, 'CFE_TIME_SEND_HK_CMD', 0, 'CFE_TIME housekeeping request command') %>
 
 <%= cfs_cmd_hdr(target_name, 'CFE_TIME_CMD_NOOP',  0, "Telecommand Message") %>
 
@@ -7,7 +7,7 @@
 <%= cfs_cmd_hdr(target_name, 'CFE_TIME_CMD_SEND_DIAGNOSTIC',  2, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'CFE_TIME_CMD_SET_SOURCE',  3, "Telecommand Message") %>
-   APPEND_PARAMETER TIME_SOURCE 16 INT 1 2 1 "Clock Source Selection Parameters"
+   APPEND_PARAMETER TIME_SOURCE 16 UINT 1 2 1 "Clock Source Selection Parameters"
       STATE INTERNAL 1
       STATE EXTERNAL 2
 
@@ -57,7 +57,7 @@
    APPEND_PARAMETER SUBSECONDS 32 UINT 0 MAX_UINT32 0 "Unsigned 32 bit integer"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_TIME_CMD_SET_SIGNAL',  15, "Telecommand Message") %>
-   APPEND_PARAMETER TONE_SOURCE 16 INT 1 2 1 "Tone Signal Selection Parameters"
+   APPEND_PARAMETER TONE_SOURCE 16 UINT 1 2 1 "Tone Signal Selection Parameters"
       STATE TONE_PRI 1
       STATE TONE_RED 2
       

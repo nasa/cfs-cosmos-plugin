@@ -1,5 +1,5 @@
 <%= cfs_tlm_hdr(target_name, 'SC_HK', "SC Hk Tlm") %>
-  APPEND_ITEM ATS_NUMBER          8 UINT "Current ATS number 1 = ATS A, 2 = ATS B"
+  APPEND_ITEM CURR_ATS_NUM        8 UINT "Current ATS number 1 = ATS A, 2 = ATS B"
   APPEND_ITEM ATP_STATE           8 UINT "Current ATP state"
     STATE EMPTY        0
     STATE LOADED       1
@@ -20,7 +20,7 @@
     STATE NO  0
     STATE YES 1
   APPEND_ITEM NUM_RTS_ACTIVE     16 UINT "Number of RTSs currently active"
-  APPEND_ITEM RTS_NUMBER         16 UINT "Next RTS number"
+  APPEND_ITEM NEXT_RTS_NUM       16 UINT "Next RTS number"
   APPEND_ITEM RTS_ACTIVE_CTR     16 UINT "Increments when an RTS is started without error"
   APPEND_ITEM RTS_ACTIVE_ERR_CTR 16 UINT "Increments when an attempt to start an RTS fails"
   APPEND_ITEM ATS_CMD_CTR        16 UINT "Total ATS cmd cnter counts commands sent by the ATS"
