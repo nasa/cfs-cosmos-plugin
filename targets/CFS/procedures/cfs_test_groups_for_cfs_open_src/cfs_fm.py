@@ -56,7 +56,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -65,7 +65,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_COPY_FILE with OVERWRITE OVERWRITE, SOURCE_PATH '/cf/file_rt.dat', TARGET_PATH '/cf/file_rt-cp.dat'")
+        cmd("<%= target_name %> FM_CMD_COPY_FILE with OVERWRITE OVERWRITE, SOURCE_PATH '/ram/fm_test/file_rt.dat', TARGET_PATH '/ram/fm_test/file_rt-cp.dat'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -73,10 +73,10 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the files that were created
         # ############################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt-cp.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt-cp.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
     
@@ -90,7 +90,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -99,7 +99,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_MOVE_FILE with OVERWRITE OVERWRITE, SOURCE_PATH '/cf/file_rt.dat', TARGET_PATH '/cf/file_rt-mv.dat'")
+        cmd("<%= target_name %> FM_CMD_MOVE_FILE with OVERWRITE OVERWRITE, SOURCE_PATH '/ram/fm_test/file_rt.dat', TARGET_PATH '/ram/fm_test/file_rt-mv.dat'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -107,7 +107,7 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the file that was created/moved
         # ###############################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt-mv.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt-mv.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
@@ -120,7 +120,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -129,7 +129,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_RENAME_FILE with SOURCE_PATH '/cf/file_rt.dat', TARGET_PATH '/cf/file_rt-rnm.dat'")
+        cmd("<%= target_name %> FM_CMD_RENAME_FILE with SOURCE_PATH '/ram/fm_test/file_rt.dat', TARGET_PATH '/ram/fm_test/file_rt-rnm.dat'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -137,7 +137,7 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the file that was created/renamed
         # ###############################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt-rnm.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt-rnm.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
@@ -150,7 +150,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -159,7 +159,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt.dat'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -174,7 +174,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt1.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt1.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -182,7 +182,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt2.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt2.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -191,7 +191,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_DELETE_ALL_FILES with PATH '/cf/'")
+        cmd("<%= target_name %> FM_CMD_DELETE_ALL_FILES with PATH '/ram/fm_test/'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -223,7 +223,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt1.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt1.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -231,7 +231,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt2.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt2.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -240,7 +240,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_CONCAT_FILES with SOURCE_PATH1 '/cf/file_rt1.dat', SOURCE_PATH2 '/cf/file_rt2.dat', TARGET_PATH '/cf/file_rt3.dat'")
+        cmd("<%= target_name %> FM_CMD_CONCAT_FILES with SOURCE_PATH1 '/ram/fm_test/file_rt1.dat', SOURCE_PATH2 '/ram/fm_test/file_rt2.dat', TARGET_PATH '/ram/fm_test/file_rt3.dat'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -248,13 +248,13 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the files that were created
         # ############################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt1.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt1.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt2.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt2.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt3.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt3.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
@@ -268,7 +268,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -277,7 +277,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_GET_FILE_INFO with PATH '/cf/file_rt.dat', CRC_METHOD CRC_NONE")
+        cmd("<%= target_name %> FM_CMD_GET_FILE_INFO with PATH '/ram/fm_test/file_rt.dat', CRC_METHOD CRC_NONE")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -285,7 +285,7 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the file that was created
         # #########################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
@@ -311,7 +311,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the CreateDirectory command
-        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/cf/new-directory'")
+        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/ram/new-directory'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -319,7 +319,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the DeleteDirectory command
-        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/cf/new-directory'")
+        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/ram/new-directory'")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -391,7 +391,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
         # Send CFE_SB_CMD_WRITE_ROUTING_INFO command
-        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/file_rt.dat'")
+        cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/ram/fm_test/file_rt.dat'")
 
         # Verify the command was successful
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -400,7 +400,7 @@ class cfs_test_group_cfs_fm(Group):
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
         
         # Send the command under test
-        cmd("<%= target_name %> FM_CMD_SET_PERMISSIONS with PATH '/cf/file_rt.dat', PERMISSIONS 777")
+        cmd("<%= target_name %> FM_CMD_SET_PERMISSIONS with PATH '/ram/fm_test/file_rt.dat', PERMISSIONS 777")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
@@ -408,7 +408,7 @@ class cfs_test_group_cfs_fm(Group):
         # Cleanup: Delete the file that was created
         # #########################################
         cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/cf/file_rt.dat'")
+        cmd("<%= target_name %> FM_CMD_DELETE_FILE with PATH '/ram/fm_test/file_rt.dat'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
 
@@ -418,15 +418,10 @@ class cfs_test_group_cfs_fm(Group):
         """
 
         # Increment COMMAND_COUNTER and CHILD_COMMAND_COUNTER by sending CreateDirectory command
-        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/cf/new-directory'")
+        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/ram/new-directory'")
         wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER > 0", 100)
         wait_check(f"<%= target_name %> FM_HK CHILD_COMMAND_COUNTER > 0", 100)
 
-        # Delete the created directory, for cleanup
-        cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
-        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/cf/new-directory'")
-        wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
         # Cause COMMAND_ERROR_COUNTER and CHILD_COMMAND_ERROR_COUNTER to increment,
         # by sending a DeleteDirectory command with a non-existant directory. 
         cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/ram/non-existant'")
@@ -434,9 +429,20 @@ class cfs_test_group_cfs_fm(Group):
         wait_check(f"<%= target_name %> FM_HK CHILD_COMMAND_ERROR_COUNTER > 0", 100)
 
         # Cause CHILD_COMMAND_WARNING_COUNTER to increment,
-        # by sending a DirListPkt command with an extremely-long directory/file path.
-        cmd("<%= target_name %> FM_CMD_GET_DIR_LIST_PKT with PATH '/ram/path-too-long-path-too-long-path-too-long-path-too-long', OFFSET 0, GET_SIZE_TIME_MODE FALSE")
+        # by creating a directory within a directory, and then sending a DeleteAllFiles command
+        # on the outer directory (DeleteAllFiles skips subdirectory, increments count)
+        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/ram/new-directory/subdir'")
+        wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER > 0", 100)
+        cmd("<%= target_name %> FM_CMD_DELETE_ALL_FILES with PATH '/ram/new-directory'")
         wait_check(f"<%= target_name %> FM_HK CHILD_COMMAND_WARNING_COUNTER > 0", 100)
+
+        # Delete the created directories, for cleanup
+        cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
+        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/ram/new-directory/subdir'")
+        wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        cmd_count = tlm(f"<%= target_name %> FM_HK COMMAND_COUNTER")
+        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/ram/new-directory'")
+        wait_check(f"<%= target_name %> FM_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
 
         # Send ResetCounters command
         cmd(f"<%= target_name %> FM_CMD_RESET_COUNTERS")
@@ -455,6 +461,9 @@ class cfs_test_group_cfs_fm(Group):
         - Runs when Group Setup button is pressed
         - Runs before all scripts when Group Start is pressed
         """
+        # Create test directory to work in
+        cmd("<%= target_name %> FM_CMD_CREATE_DIRECTORY with PATH '/ram/fm_test'")
+
         # Wait for a new housekeeping packet, to ensure we're using its latest status info
         wait_check_packet(f"<%= target_name %>", "FM_HK", 1, 100)
 
@@ -475,4 +484,6 @@ class cfs_test_group_cfs_fm(Group):
         - Runs when Group Teardown button is pressed
         - Runs after all scripts when Group Start is pressed
         """
+        # Cleanup: Delete test directory
+        cmd("<%= target_name %> FM_CMD_DELETE_DIRECTORY with PATH '/ram/fm_test'")
         pass
