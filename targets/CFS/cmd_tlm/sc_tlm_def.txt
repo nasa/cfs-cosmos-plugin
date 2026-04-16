@@ -15,7 +15,7 @@
     STATE TRUE  1
   APPEND_ITEM COMMAND_ERROR_COUNTER 8 UINT "Counts Request Errors"
   APPEND_ITEM COMMAND_COUNTER     8 UINT "Counts Ground Requests"
-  APPEND_ITEM PADDING8            8 UINT ""
+  APPEND_ITEM PADDING1            8 UINT ""
   APPEND_ITEM SWITCH_PEND_FLAG   16 UINT "Is an ats switch pending? 0 = NO, 1 = YES This means that the ATS switch is waiting until a safe time"
     STATE NO  0
     STATE YES 1
@@ -49,3 +49,4 @@
   APPEND_ITEM RTS_W<%=n%>_DIS_STATUS 8 UINT "RTS Disabled Status Word <%=n%> Bit Map"
     FORMAT_STRING "0x%02X"
 <% end %>
+  APPEND_ARRAY_ITEM PADDING2 8 UINT 16
