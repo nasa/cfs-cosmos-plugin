@@ -835,14 +835,13 @@ def get_cfs_msg_id_from_base(stream_id_base, cpu_num)
     # The cpu num is a 3-bit field, so the max value is b'111' (7)
     cpu_num_min = 0
     cpu_num_max = $cfs_total_valid_cpus - 1
-    num_cpu     = cpu_num - 1
     # Set the CPU Number bit field
-    if ((num_cpu >= cpu_num_min) && (num_cpu <= cpu_num_max))
+    if ((cpu_num >= cpu_num_min) && (cpu_num <= cpu_num_max))
         stream_id = stream_id_base
         stream_id = stream_id & 0xF8FF # clear the 3-bit cpu-num field
-        stream_id = stream_id | (num_cpu << 8)
+        stream_id = stream_id | (cpu_num << 8)
     else
-        # On num_cpu range error, return the base by default
+        # On cpu_num range error, return the base by default
         stream_id = stream_id_base
     end
     return stream_id
@@ -851,8 +850,8 @@ end
 
 #------------------------------------------------------------------------------
 # Embedded Ruby Utility to output a Message ID based on the following:
-# 1. msg_id_name
-#    - must be a key from the $CFS_CMD_TLM_LIST hash, above
+# 1. pkt_name
+#    - must be a packet name found in a $CFS_CMD_TLM_LIST entry's packet_names array
 # 2. cpu_num
 #    - must be '1' or '2'
 #------------------------------------------------------------------------------
@@ -879,9 +878,8 @@ end
 # Tests for definitions in this file
 #------------------------------------------------------------------------------
 def cfs_cmd_tlm_list_test
-    raise "TEST_FAIL" unless (get_cfs_pkt_msg_id("CFE_TBL_CMD", "1") == "0x1804")
-    raise "TEST_FAIL" unless (get_cfs_pkt_msg_id("CFE_TBL_CMD", "2") == "0x1904")
+    raise "TEST_FAIL" unless (get_cfs_pkt_msg_id("CFE_TBL_CMD_NOOP", "1") == "0x1804")
+    raise "TEST_FAIL" unless (get_cfs_pkt_msg_id("CFE_TBL_CMD_NOOP", "2") == "0x1904")
 end
 
-# Uncomment to run tests
-# cfs_cmd_tlm_list_test()
+cfs_cmd_tlm_list_test()
