@@ -490,6 +490,22 @@ $CFS_CMD_TLM_LIST = {
             "DS_SEND_HK_CMD",
         ]
     ),
+    "TA_CMD" => FswMsgInfo.new(
+    base_stream_id: 0x1812,
+    packet_names: [
+            "TA_CMD_NOOP",
+            "TA_CMD_RESET_COUNTERS",
+            "TA_CMD_QUERY_ALL_TASKS",
+            "TA_CMD_SET_TASK_AFFINITY",
+            "TA_CMD_GET_TASK_AFFINITY",
+        ]
+    ),
+    "TA_SEND_HK_CMD" => FswMsgInfo.new(
+        base_stream_id: 0x1813,
+        packet_names: [
+            "TA_SEND_HK_CMD",
+        ]
+    ),    
 
     # -------------------------------------------------------------------------
     # Telemetry
@@ -786,6 +802,12 @@ $CFS_CMD_TLM_LIST = {
         base_stream_id: 0x08BA,
         packet_names: [
             "DS_COMP",
+        ]
+    ),   
+    "TA_HK" => FswMsgInfo.new(
+        base_stream_id: 0x080F,
+        packet_names: [
+            "TA_HK",
         ]
     ),
 }
