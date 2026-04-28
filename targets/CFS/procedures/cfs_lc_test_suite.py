@@ -1,12 +1,6 @@
 from openc3.script.suite import Suite, Group
 
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc.py")
-# FIXME: Later on, divide into the following test groups:
-# load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc_acceptance.py")
-# load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc_functional.py")
-# load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc_error.py")
-# load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc_tables.py")
-# load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_lc_resets.py")
 
 
 class cfs_lc_test_suite(Suite):
@@ -19,12 +13,6 @@ class cfs_lc_test_suite(Suite):
       # these are added in alphabetical order
       # -----------------------------------------------------------------------
       self.add_group(cfs_test_group_cfs_lc)
-      # FIXME: Later on, divide into the following test groups:
-      # self.add_group(cfs_test_group_cfs_lc_acceptance)
-      # self.add_group(cfs_test_group_cfs_lc_functional)
-      # self.add_group(cfs_test_group_cfs_lc_error)
-      # self.add_group(cfs_test_group_cfs_lc_tables)
-      # self.add_group(cfs_test_group_cfs_lc_resets)
     
 
   def setup(self):
