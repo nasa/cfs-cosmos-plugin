@@ -1,4 +1,4 @@
-<%= cfs_cmd_hdr(target_name, 'CFE_ES_SEND_HK_CMD',     0, "CFE_ES Housekeeping Request Cmd") %>
+<%= cfs_cmd_hdr(target_name, 'CFE_ES_SEND_HK_CMD', 0, 'CFE_ES housekeeping request command') %>
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_NOOP',  0, "Telecommand Message") %>
 
@@ -20,12 +20,10 @@
 <% end %>
    APPEND_PARAMETER EXCEPTION_ACTION 8 UINT 0 1 0 "Identifies action to take if exception occurs"
       STATE RESTART_CPU 0
-      STATE RESTART_APP 1  
-   APPEND_PARAMETER SPARE 8 UINT 0 0 0 "Spare for alignment"
+      STATE RESTART_APP 1
+   APPEND_PARAMETER PADDING1 8 UINT 0 0 0
    APPEND_PARAMETER PRIORITY 16 UINT 0 MAX_UINT16 0 "The new Applications runtime priority."
-<% if $cfs_globals_mem_addr_size == 64 %>
-   APPEND_PARAMETER SPARE_32 32 UINT 0 0 0 "Spare for 64-bit alignment"
-<% end %>
+   APPEND_PARAMETER PADDING2 32 UINT 0 0 0
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_STOP_APP',  5, "Telecommand Message") %>
    APPEND_PARAMETER APPLICATION 160 STRING "" "ASCII text string containing Application Name"

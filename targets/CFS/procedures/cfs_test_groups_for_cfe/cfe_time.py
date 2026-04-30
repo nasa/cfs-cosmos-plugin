@@ -25,7 +25,7 @@ class cfs_test_group_cfe_time(Group):
         
         # Send NOOP command, then check result to prove application is up and running
         cmd("<%= target_name %> CFE_TIME_CMD_NOOP")
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         
         # Send Reset Counters command, check resullt
         cmd("<%= target_name %> CFE_TIME_CMD_RESET_COUNTERS")
@@ -42,7 +42,7 @@ class cfs_test_group_cfe_time(Group):
         cmd("<%= target_name %> CFE_TIME_CMD_NOOP")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
     
     
     def test_02_SendDiagnosticTlm(self):
@@ -86,7 +86,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'INVALID'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct clock state is set
         wait_check(f"<%= target_name %> CFE_TIME_HK CLOCK_STATE_API == 'INVALID'", 100)
@@ -103,7 +103,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'VALID'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct clock state is set
         wait_check(f"<%= target_name %> CFE_TIME_HK CLOCK_STATE_API == 'VALID'", 100)
@@ -120,7 +120,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'FLYWHEEL'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct clock state is set
         wait_check(f"<%= target_name %> CFE_TIME_HK CLOCK_STATE_API == 'FLYWHEEL'", 100)
@@ -139,7 +139,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SOURCE with TIME_SOURCE 'INTERNAL'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct clock source is set
         # Request a new diags packet to check this telemetry
@@ -161,7 +161,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SOURCE with TIME_SOURCE 'EXTERNAL'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct clock source is set
         # Request a new diags packet to check this telemetry
@@ -183,7 +183,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SIGNAL with TONE_SOURCE 'TONE_PRI'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct tone source is set
         # Request a new diags packet to check this telemetry
@@ -205,7 +205,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SIGNAL with TONE_SOURCE 'TONE_RED'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct tone source is set
         # Request a new diags packet to check this telemetry
@@ -227,7 +227,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_DELAY with SECONDS 1, MICROSECONDS 2")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct delay is set
         wait_check(f"<%= target_name %> CFE_TIME_HK SECONDS_DELAY == 1", 100)
@@ -249,7 +249,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_DELAY with SECONDS 1, MICROSECONDS 2")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct delay is set
         wait_check(f"<%= target_name %> CFE_TIME_HK SECONDS_DELAY == 0", 100)
@@ -267,7 +267,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_TIME with SECONDS 3, MICROSECONDS 4")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
 
     def test_13_SetMETCmd(self):
@@ -281,7 +281,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_MET with SECONDS 4, MICROSECONDS 5")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Notes seconds / subseconds changes too quickly to be checked
         # wait_check(f"<%= target_name %> CFE_TIME_HK SECONDS_MET >= 4", 100)
@@ -298,12 +298,12 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STCF with SECONDS 5, MICROSECONDS 6")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct values are set
         # Note: microseconds converted to (and reported as) subseconds in FSW
-        wait_check(f"<%= target_name %> CFE_TIME_HK SECONDS_STCF == 5", 100)
-        wait_check(f"<%= target_name %> CFE_TIME_HK SUBSECS_STCF == 25770", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK STCF_SECONDS == 5", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK STCF_SUBSECONDS == 25770", 100)
 
 
     def test_15_SetLeapSecondsCmd(self):
@@ -317,7 +317,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_LEAP_SECONDS with LEAP_SECONDS 99")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct value of leap seconds is set
         wait_check(f"<%= target_name %> CFE_TIME_HK LEAP_SECONDS == 99", 100)
@@ -334,7 +334,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_ADJUST with SECONDS 1, MICROSECONDS 2")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
 
     def test_17_SubAdjustCmd(self):
@@ -348,7 +348,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ADJUST with SECONDS 1, MICROSECONDS 2")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
 
     def test_18_AddOneHzAdjustmentCmd(self):
@@ -362,7 +362,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_ONE_HZ_ADJUSTMENT with SECONDS 1, SUBSECONDS 2")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Get current number of CFE_TIME_DIAG packets received by GSW
         prev_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")
@@ -396,7 +396,7 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ONE_HZ_ADJUSTMENT with SECONDS 3, SUBSECONDS 4")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Get current number of CFE_TIME_DIAG packets received by GSW
         prev_time_diag_pkt_rcvd_count = tlm(f"<%= target_name %> CFE_TIME_DIAG RECEIVED_COUNT")

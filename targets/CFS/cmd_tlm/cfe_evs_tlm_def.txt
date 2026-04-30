@@ -19,9 +19,9 @@
    APPEND_ITEM LOG_ENABLED 8 UINT "Current event log enable/disable state"
       STATE FALSE 0
       STATE TRUE  1
-   APPEND_ITEM SPARE_1 8 UINT "Spare Alignment Byte 1"
-   APPEND_ITEM SPARE_2 8 UINT "Spare Alignment Byte 2"
-   APPEND_ITEM SPARE_3 8 UINT "Spare Alignment Byte 3"
+   APPEND_ITEM PADDING_1 8 UINT "Spare Alignment Byte 1"
+   APPEND_ITEM PADDING_2 8 UINT "Spare Alignment Byte 2"
+   APPEND_ITEM PADDING_3 8 UINT "Spare Alignment Byte 3"
 <% 16.times do |app_data_index| %>
    APPEND_ITEM APP_DATA_<%= app_data_index %>_APP_ID 32 UINT "Numerical application identifier"
       FORMAT_STRING "0x%08X"
@@ -43,8 +43,7 @@
    APPEND_ITEM PACKET_ID_SPACECRAFT_ID 32 UINT "Spacecraft identifier"
    APPEND_ITEM PACKET_ID_PROCESSOR_ID 32 UINT "Numeric processor identifier"
    APPEND_ITEM MESSAGE 976 STRING "Event message string"
-   APPEND_ITEM SPARE_TO_ALIGN_1 8 UINT "Spare padding for alignment"
-   APPEND_ITEM SPARE_TO_ALIGN_2 8 UINT "Spare padding for alignment"
+   APPEND_ARRAY_ITEM PADDING 8 UINT 16 "Packet alignment padding"
 
 <%= cfs_tlm_hdr(target_name, 'CFE_EVS_SHORT_EVENT_MSG', "Short Event Message") %>
    APPEND_ITEM PACKET_ID_APP_NAME 160 STRING "Application name"

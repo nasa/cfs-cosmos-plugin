@@ -20,18 +20,17 @@ class cfs_test_group_cfe_es(Group):
         
         Group.print("Testing CFE_ES aliveness on <%= target_name %>")
         
-        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 100)
-        
         # Assuming no one else is sending commands, grab the latest command count
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm("<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send NOOP command, then check result to prove application is up and running
         cmd("<%= target_name %> CFE_ES_CMD_NOOP")
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         # Send Reset Counters command, check resullt
         cmd("<%= target_name %> CFE_ES_CMD_RESET_COUNTERS")
-        wait_check("<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 100)
+        wait_check("<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 20)
     
     
     def test_01_NoOp(self):
@@ -39,12 +38,13 @@ class cfs_test_group_cfe_es(Group):
         Test the no-op command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         cmd("<%= target_name %> CFE_ES_CMD_NOOP")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     # FIXME: Currently don't have a good way to restart cFS from COSMOS.
@@ -112,13 +112,14 @@ class cfs_test_group_cfe_es(Group):
             self.StartApp_test()
             wait(1)
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_RESTART_APP with APPLICATION 'SAMPLE_APP'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         wait(10) # Wait for the app to fully restart (5 for stop, 5 for start).
         
@@ -139,13 +140,14 @@ class cfs_test_group_cfe_es(Group):
             stopSampleAppAtEnd = True
             self.StartApp_test()
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_RELOAD_APP with APPLICATION 'SAMPLE_APP', APP_FILE_NAME 'sample_app'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         wait(10) # Wait for the app to fully restart (5 for stop, 5 for start).
 
@@ -158,13 +160,14 @@ class cfs_test_group_cfe_es(Group):
         Test the QueryOne command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'CS'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_08_QueryAll(self):
@@ -172,13 +175,14 @@ class cfs_test_group_cfe_es(Group):
         Test the QueryAll command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL with FILE_NAME 'apps.txt'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL with FILE_NAME '/cf/apps.txt'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_09_QueryAllTasks(self):
@@ -186,13 +190,14 @@ class cfs_test_group_cfe_es(Group):
         Test the QueryAllTasks command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under tests
-        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL_TASKS with FILE_NAME 'sample_app'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL_TASKS with FILE_NAME '/cf/sample_app'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_10_WriteSysLog(self):
@@ -200,13 +205,14 @@ class cfs_test_group_cfe_es(Group):
         Test the WriteSysLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm("<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd("<%= target_name %> CFE_ES_CMD_WRITE_SYS_LOG with FILE_NAME 'logfile.txt'")
+        cmd("<%= target_name %> CFE_ES_CMD_WRITE_SYS_LOG with FILE_NAME '/cf/logfile.txt'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_11_ClearSysLog(self):
@@ -214,13 +220,14 @@ class cfs_test_group_cfe_es(Group):
         Test the ClearSysLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_CLEAR_SYS_LOG")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_12_OverwriteSysLog_Discard(self):
@@ -228,13 +235,14 @@ class cfs_test_group_cfe_es(Group):
         Test the OverwriteSysLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_OVER_WRITE_SYS_LOG with MODE DISCARD")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_13_OverwriteSysLog_Overwrite(self):
@@ -242,13 +250,14 @@ class cfs_test_group_cfe_es(Group):
         Test the OverwriteSysLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_OVER_WRITE_SYS_LOG with MODE OVERWRITE")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_14_WriteERLog(self):
@@ -256,13 +265,14 @@ class cfs_test_group_cfe_es(Group):
         Test the WriteERLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_WRITE_ER_LOG with FILE_NAME 'logfile.txt'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_WRITE_ER_LOG with FILE_NAME '/cf/logfile.txt'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_15_ClearERLog(self):
@@ -270,13 +280,14 @@ class cfs_test_group_cfe_es(Group):
         Test the ClearERLog command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_CLEAR_ER_LOG")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_16_StartPerfData(self):
@@ -284,13 +295,14 @@ class cfs_test_group_cfe_es(Group):
         Test the StartPerfData command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_START_PERF_DATA with TRIGGER_MODE START")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_17_StopPerfData(self):
@@ -298,13 +310,14 @@ class cfs_test_group_cfe_es(Group):
         Test the StopPerfData command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_PERF_DATA with DATA_FILE_NAME 'datafile.txt'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_PERF_DATA with DATA_FILE_NAME '/cf/datafile.txt'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_18_SetPerfFilterMask(self):
@@ -312,13 +325,14 @@ class cfs_test_group_cfe_es(Group):
         Test the SetPerfFilterMask command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_SET_PERF_FILTER_MASK with FILTER_MASK_NUM 1, FILTER_MASK 10")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_19_SetPerfTriggerMask(self):
@@ -326,13 +340,14 @@ class cfs_test_group_cfe_es(Group):
         Test the SetPerfTriggerMask command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_SET_PERF_TRIGGER_MASK with TRIGGER_MASK_NUM 1, TRIGGER_MASK 10")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_20_ResetPRCount(self):
@@ -340,13 +355,14 @@ class cfs_test_group_cfe_es(Group):
         Test the ResetPRCount command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_RESET_PR_COUNT")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_21_SetMaxPRCount(self):
@@ -354,13 +370,14 @@ class cfs_test_group_cfe_es(Group):
         Test the SetMaxPRCount command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_SET_MAX_PR_COUNT with MAX_PR_COUNT 1")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     # FIXME: Add this back when we start implementing non-nominal test cases.
@@ -373,13 +390,14 @@ class cfs_test_group_cfe_es(Group):
     #     # First, delete the CS app, so we're allowed to delete its CDS
     #     CFE_ES_DeleteApp(AppID)
     #
+    #     wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
     #     cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
     #
     #     # Send command under test
     #     cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
     #
     #     # Verify command count incremented
-    #     wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+    #     wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     #
     
     
@@ -389,21 +407,23 @@ class cfs_test_group_cfe_es(Group):
         """
         
         # First, stop the CS app, so we're allowed to delete its CDS
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         wait(5)  # Wait for the CS app to finish exiting
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         # Re-start the CS app, to restore the system state to as it was before this step
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'CS', APP_ENTRY_POINT 'CS_AppMain', APP_FILE_NAME 'cs', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 65")
@@ -415,15 +435,17 @@ class cfs_test_group_cfe_es(Group):
         """
         
         # Get and save SB HK mempool handle.  Needed for command.
+        wait_check_packet("<%= target_name %>", "CFE_SB_HK", 1, 20)
         sb_mempool_handle = tlm("<%= target_name %> CFE_SB_HK MEM_POOL_HANDLE")
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with APPLICATION 'TO', POOL_HANDLE {sb_mempool_handle}")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_24_DumpCDSRegistry(self):
@@ -431,13 +453,14 @@ class cfs_test_group_cfe_es(Group):
         Test the DumpCDSRegistry command.
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_DUMP_CDS_REGISTRY with DUMP_FILENAME 'dumpfile.txt'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_DUMP_CDS_REGISTRY with DUMP_FILENAME '/cf/dumpfile.txt'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
     
     
     def test_25_ResetCounters(self):
@@ -452,8 +475,8 @@ class cfs_test_group_cfe_es(Group):
         cmd(f"<%= target_name %> CFE_ES_CMD_RESET_COUNTERS")
         
         # Verify counter are reset to zero
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 100)
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_ERROR_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 20)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_ERROR_COUNTER == 0", 20)
     
     
     def is_Sample_App_Running(self) -> bool:
@@ -466,6 +489,7 @@ class cfs_test_group_cfe_es(Group):
                 - False if Sample_App is notrunning
         """
         # save counters to dermine if Sample_App is running
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         saved_cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         seq_count = tlm(f"<%= target_name %> CFE_ES_HK CCSDS_SEQUENCE")
         
@@ -476,8 +500,9 @@ class cfs_test_group_cfe_es(Group):
         wait(1)
         
         # If this check fails, stop the test, no telemetry packet was received within the timeout
-        wait_check(f"<%= target_name %> CFE_ES_HK CCSDS_SEQUENCE > {seq_count}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK CCSDS_SEQUENCE > {seq_count}", 20)
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         current_cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         if(current_cmd_count == (saved_cmd_count + 1)):
@@ -494,13 +519,14 @@ class cfs_test_group_cfe_es(Group):
         Called from the StopApp_StartApp test
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'SAMPLE_APP'")
         
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
         
         wait(5) # wait for the application to stop
     
@@ -511,13 +537,14 @@ class cfs_test_group_cfe_es(Group):
         Called from the StopApp_StartApp test
         """
         
+        wait_check_packet("<%= target_name %>", "CFE_ES_HK", 1, 20)
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
 
         # Send command under test
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'SAMPLE_APP', APP_ENTRY_POINT 'SAMPLE_APP_Main', APP_FILE_NAME 'sample_app', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 50")
 
         # Verify command count incremented
-        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
 
         wait(5) # wait for the application to start
     
@@ -531,7 +558,7 @@ class cfs_test_group_cfe_es(Group):
         global sample_app_needs_shutdown_at_end # lets python know we plan to change this global in this function
 
         # Wait for a new housekeeping packet, to ensure we're using its latest status info
-        wait_check_packet(f"<%= target_name %>", f"CFE_ES_HK", 1, 100)
+        wait_check_packet(f"<%= target_name %>", f"CFE_ES_HK", 1, 20)
 
         # If the Sample_App is not running, start it, setting a var to stop it at the end of the test
         # this call here ensures that the system is in the state needed 

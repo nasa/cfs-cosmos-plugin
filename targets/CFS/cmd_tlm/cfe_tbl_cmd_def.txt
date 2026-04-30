@@ -1,4 +1,4 @@
-<%= cfs_cmd_hdr(target_name, 'CFE_TBL_SEND_HK_CMD',    0, "CFE_TBL Housekeeping Request Cmd") %>
+<%= cfs_cmd_hdr(target_name, 'CFE_TBL_SEND_HK_CMD', 0, 'CFE_TBL housekeeping request command') %>
 
 <%= cfs_cmd_hdr(target_name, 'CFE_TBL_CMD_NOOP',  0, "Telecommand Message") %>
 

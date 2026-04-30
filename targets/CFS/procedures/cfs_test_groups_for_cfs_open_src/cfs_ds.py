@@ -18,18 +18,19 @@ class cfs_test_group_cfs_ds(Group):
         
         Group.print("Testing DS aliveness on <%= target_name %>")
         
-        wait_check_packet("<%= target_name %>", "DS_HK", 1, 100)
-        
+        # Verify that we have a recent packet (by waiting for a new one to arrive)
+        wait_check_packet(f"<%= target_name %>", "DS_HK", 1, 100)
+
         # Assuming no one else is sending commands, grab the latest command count
-        cmd_count = tlm("<%= target_name %> DS_HK COMMAND_COUNTER")
-        
-        # Send NOOP command, then check result to prove application is up and running
-        cmd("<%= target_name %> DS_CMD_NOOP")
-        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # Send Reset Counters command, check resullt
-        cmd("<%= target_name %> DS_CMD_RESET_COUNTERS")
-        wait_check("<%= target_name %> DS_HK COMMAND_COUNTER == 0", 100)
+        cmd_count = tlm(f"<%= target_name %> DS_HK COMMAND_COUNTER")
+
+        # Check accepted NOOP command proving application is up and running
+        cmd(f"<%= target_name %> DS_CMD_NOOP")
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Check accepted Reset Counters command
+        cmd(f"<%= target_name %> DS_CMD_RESET_COUNTERS")
+        wait_check(f"<%= target_name %> DS_HK COMMAND_COUNTER == 0", 100)
     
     
     def test_01_NoOp(self):

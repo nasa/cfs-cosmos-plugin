@@ -1,6 +1,6 @@
-<%= cfs_cmd_hdr(target_name, 'SBN_CMD_NOOP', 0, "Telecommand Message") %>
+<%= cfs_cmd_hdr(target_name, 'SBN_CMD_SEND_HK', 0, "SBN Send Housekeeping command") %>
 
-<%= cfs_cmd_hdr(target_name, 'SBN_CMD_HK', 10, "Telecommand Message") %>
+<%= cfs_cmd_hdr(target_name, 'SBN_CMD_NOOP', 0, "Telecommand Message") %>
 
 <%= cfs_cmd_hdr(target_name, 'SBN_CMD_HK_NET', 11, "Telecommand Message") %>
   APPEND_PARAMETER NET_IDX 8 UINT 0 MAX_UINT8 0 "Net Index"
