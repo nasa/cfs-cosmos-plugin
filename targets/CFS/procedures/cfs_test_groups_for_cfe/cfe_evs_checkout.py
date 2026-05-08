@@ -16,8 +16,9 @@ class cfs_test_group_cfe_evs_checkout(Group):
 
         Group.print(f"CFE_EVS checkout test on <%= target_name %>")
 
-        # Save initial command count
+        # Save initial command counts
         cmd_count = tlm(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER")
+        cmd_err_count = tlm(f"<%= target_name %> CFE_EVS_HK COMMAND_ERROR_COUNTER")
 
         set_line_delay(0.15)  # 0.15 is about as fast as it can go.  0.1 causes a missed cmd.
 
@@ -46,11 +47,11 @@ class cfs_test_group_cfe_evs_checkout(Group):
         set_line_delay(0.0)
         
         # Check final command count has incremented by the number of commands sent
-        wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER >= {cmd_count} + 21", 30)
-        wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_ERROR_COUNTER == 0", 1)
+        wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER >= {cmd_count} + 21", 12)
+        check(f"<%= target_name %> CFE_EVS_HK COMMAND_ERROR_COUNTER == {cmd_err_count}")
 
         cmd(f"<%= target_name %> CFE_EVS_CMD_RESET_COUNTERS")
-        wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER == 0", 10)
+        wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER == 0", 12)
 
 
     def setup(self):
