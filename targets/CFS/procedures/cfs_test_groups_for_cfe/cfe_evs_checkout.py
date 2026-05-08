@@ -19,7 +19,7 @@ class cfs_test_group_cfe_evs_checkout(Group):
         # Save initial command count
         cmd_count = tlm(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER")
 
-        set_line_delay(0.2)
+        set_line_delay(0.15)  # 0.15 is about as fast as it can go.  0.1 causes a missed cmd.
 
         cmd(f"<%= target_name %> CFE_EVS_CMD_NOOP")
         cmd(f"<%= target_name %> CFE_EVS_CMD_DISABLE_EVENT_TYPE with BIT_MASK DEBUG")
