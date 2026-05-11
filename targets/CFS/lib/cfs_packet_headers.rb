@@ -31,9 +31,7 @@ def cfs_tlm_hdr(target_name, tlm_name, pkt_desc)
     tlmPacket << "     APPEND_ITEM    CCSDS_LENGTH         16 UINT         \"CCSDS Packet Data Length\" BIG_ENDIAN \n"
     tlmPacket << "     APPEND_ITEM    SECONDS              32 UINT         \"CCSDS Telemetry Secondary Header (seconds)\" BIG_ENDIAN \n"
     tlmPacket << "     APPEND_ITEM    SUBSECS              16 UINT         \"CCSDS Telemetry Secondary Header (subseconds)\" BIG_ENDIAN \n"
-    if $cfs_globals_eds_enabled == false
     tlmPacket << "     APPEND_ITEM    SPARE_FOR_64_ALIGN   32 UINT         \"Spare padding for 64-bit alignment\" \n"
-    end
     tlmPacket << "     ITEM PACKET_TIME 0 0 DERIVED \"Ruby time based on SECONDS and SUBSECS\" \n"
     tlmPacket << "       READ_CONVERSION unix_time_conversion_epoch_offset.rb SECONDS SUBSECS \n"
     return tlmPacket
@@ -61,4 +59,26 @@ def cfs_tbl_hdr(cfs_tbl_name, tbl_description, cfs_app_name)
     tblPacket << "    APPEND_PARAMETER \"Table_Name\" 320 STRING \"#{cfs_app_name}.#{cfs_tbl_name}\" \n"
     tblPacket << "\n"
     return tblPacket
+end
+
+# Output a cFS File Header (Standard 64-byte header)
+# Used for parsing cFE formatted files (like diagnostic dumps or logs)
+def cfs_file_hdr(target_name, file_pkt_name, file_desc)
+    filePacket = String.new
+    # Defines this as a TELEMETRY packet so COSMOS can display it in screens/Data Viewer
+    filePacket << "TELEMETRY #{target_name} #{file_pkt_name} #{$cfs_globals_endianness} \"#{file_desc}\" \n"
+    filePacket << "    APPEND_ITEM CONTENT_TYPE 32 UINT \"cFE Content Type (usually 0x63464531 for 'cFE1')\" BIG_ENDIAN \n"
+    filePacket << "      FORMAT_STRING \"0x%08X\" \n"
+    filePacket << "    APPEND_ITEM SUB_TYPE 32 UINT \"Type of Content Type\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM LENGTH 32 UINT \"Length of Primary Header\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM SPACECRAFT_ID 32 UINT \"Spacecraft that generated the file\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM PROCESSOR_ID 32 UINT \"Processor that generated the file\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM APPLICATION_ID 32 UINT \"Application that generated the file\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM CREATE_TIME_SECONDS 32 UINT \"File creation timestamp (seconds)\" BIG_ENDIAN \n"
+    filePacket << "    APPEND_ITEM CREATE_TIME_SUBSECS 32 UINT \"File creation timestamp (sub-seconds)\" BIG_ENDIAN \n"    
+    filePacket << "    APPEND_ITEM DESCRIPTION 256 STRING \"File description\" \n"
+    # Automatically calculate the Ruby time
+    filePacket << "    ITEM FILE_CREATE_TIME 0 0 DERIVED \"Ruby time based on SECONDS and SUBSECS\" \n"
+    filePacket << "      READ_CONVERSION unix_time_conversion_epoch_offset.rb CREATE_TIME_SECONDS CREATE_TIME_SUBSECS \n"
+    return filePacket
 end

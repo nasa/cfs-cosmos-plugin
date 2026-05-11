@@ -24,22 +24,22 @@ class cfs_test_group_cfs_lc(Group):
 
         # Check accepted NOOP command proving application is up and running
         cmd(f"<%= target_name %> LC_CMD_NOOP")
-        wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 20)
 
         # Check accepted Reset Counters command
         cmd(f"<%= target_name %> LC_CMD_RESET_COUNTERS")
-        wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == 0", 100)
+        wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == 0", 20)
 
-    def test_01_set_app_state(self):
+    def test_01_set_lc_state(self):
         """
-        FSW App State Test
-        - Send Set App State Command for ACTIVE, PASSIVE, and DISABLED
+        FSW LC State Test
+        - Send Set LC State Command for ACTIVE, PASSIVE, and DISABLED
             then verify the command was received (by checking the command counter
             incremented and state was set)
-        - Send Set App State Command with invalid state
+        - Send Set LC State Command with invalid state
             then verify the command was received (by checking the command error counter)
         """
-        Group.print(f"Testing LC set app state command on <%= target_name %>")
+        Group.print(f"Testing LC set LC State command on <%= target_name %>")
         
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"LC_HK", 1, 100)
@@ -50,40 +50,56 @@ class cfs_test_group_cfs_lc(Group):
         # Assuming no one else is sending commands, grab the latest command err count
         cmd_err_count = tlm(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER")
         
-        # Check accepted Set App State = 1 command
-        cmd(f"<%= target_name %> LC_CMD_SET_APP_STATE with NEW_STATE ACTIVE")
+        # Check accepted Set LC State = 1 command
+        cmd(f"<%= target_name %> LC_CMD_SET_LC_STATE with NEW_LC_STATE ACTIVE")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-        wait_check(f"<%= target_name %> LC_HK APP_STATE == 'ACTIVE'", 100)
+        wait_check(f"<%= target_name %> LC_HK CURRENT_LC_STATE == 'ACTIVE'", 100)
+        # NOTE: Expected event message: "Set LC state command: new state = 1"
         
-        # Check accepted Set App State = 2 command
-        cmd(f"<%= target_name %> LC_CMD_SET_APP_STATE with NEW_STATE PASSIVE")
+        # Check accepted Set LC State = 2 command
+        cmd(f"<%= target_name %> LC_CMD_SET_LC_STATE with NEW_LC_STATE PASSIVE")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 2}", 100)
-        wait_check(f"<%= target_name %> LC_HK APP_STATE == 'PASSIVE'", 100)
+        wait_check(f"<%= target_name %> LC_HK CURRENT_LC_STATE == 'PASSIVE'", 100)
+        # NOTE: Expected event message: "Set LC state command: new state = 2"
         
-        # Check accepted Set App State = 3 command
-        cmd(f"<%= target_name %> LC_CMD_SET_APP_STATE with NEW_STATE DISABLED")
+        # Check accepted Set LC State = 3 command
+        cmd(f"<%= target_name %> LC_CMD_SET_LC_STATE with NEW_LC_STATE DISABLED")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 3}", 100)
-        wait_check(f"<%= target_name %> LC_HK APP_STATE == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> LC_HK CURRENT_LC_STATE == 'DISABLED'", 100)
+        # NOTE: Expected event message: "Set LC state command: new state = 3"
         
-        # Check accepted Set App State = 4 (invalid) command
-        cmd(f"<%= target_name %> LC_CMD_SET_APP_STATE with NEW_STATE 4")
+        # Check accepted Set LC State = 4 (invalid) command
+        cmd(f"<%= target_name %> LC_CMD_SET_LC_STATE with NEW_LC_STATE 4")
         wait_check(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER == {cmd_err_count + 1}", 100)
-    
-    def disabled_test_02_set_ap_state(self):
+        # NOTE: Expected event message: "Set LC state error: invalid state = 4"
+            
+
+    def test_02_set_ap_state(self):
         """
         FSW AP State Test
         - Send Set AP State Command for ACTIVE, PASSIVE, DISABLED, and PERM_OFF
             then verify the command was received (by checking the command counter
             incremented and state was set)
-        - Send Set App State Command with invalid state
+        - Send Set LC State Command with invalid state
             then verify the command was received (by checking the command error counter)
         """
         
         Group.print(f"Testing LC set ap state command on <%= target_name %>")
         
         # Load table for test
-        # cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/lc_def_adt.tbl'")
-        # cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG ACTIVE, TABLE_NAME 'LC.LC_ADT'")
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/lc_def_adt-test.tbl'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Validate table for test
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME 'LC.LC_ADT'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        
+        # Activate table for test
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME 'LC.LC_ADT'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"LC_HK", 1, 100)
@@ -95,33 +111,33 @@ class cfs_test_group_cfs_lc(Group):
         cmd_err_count = tlm(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER")
         
         # Check accepted Set AP State = 1 command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_ID 0, NEW_STATE ACTIVE")
+        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_NUMBER 0, NEW_AP_STATE ACTIVE")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-        wait_check(f"<%= target_name %> LC_HK AP_1_STATE == 'ACTIVE'", 100)
+        wait_check(f"<%= target_name %> LC_HK AP_0_STATE == 'ACTIVE'", 100)
+        # NOTE: Expected event message: "Set AP state command: AP = 0, New state = 1"
         
         # Check accepted Set AP State = 2 command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_ID 0, NEW_STATE PASSIVE")
+        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_NUMBER 0, NEW_AP_STATE PASSIVE")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 2}", 100)
-        wait_check(f"<%= target_name %> LC_HK AP_1_STATE == 'PASSIVE'", 100)
+        wait_check(f"<%= target_name %> LC_HK AP_0_STATE == 'PASSIVE'", 100)
+        # NOTE: Expected event message: "Set AP state command: AP = 0, New state = 2"
         
-        # Check accepted Set App State = 3 command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_ID 0, NEW_STATE DISABLED")
+        # Check accepted Set AP State = 3 command
+        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_NUMBER 0, NEW_AP_STATE DISABLED")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 3}", 100)
-        wait_check(f"<%= target_name %> LC_HK AP_1_STATE == 'DISABLED'", 100)
+        wait_check(f"<%= target_name %> LC_HK AP_0_STATE == 'DISABLED'", 100)
+        # NOTE: Expected event message: "Set AP state command: AP = 0, New state = 3"
         
-        # Check accepted Set App State = 4 command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_ID 0, NEW_STATE PERM_OFF")
-        wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 4}", 100)
-        wait_check(f"<%= target_name %> LC_HK AP_1_STATE == 'PERM_OFF'", 100)
-        
-        # Check accepted Set App State = 5 (invalid) command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_ID 0, NEW_STATE 5")
+        # Check accepted Set AP State = 4 (invalid) command
+        cmd(f"<%= target_name %> LC_CMD_SET_AP_STATE with AP_NUMBER 0, NEW_AP_STATE PERM_OFF")
         wait_check(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER == {cmd_err_count + 1}", 100)
+        # NOTE: Expected event message: "Set AP state error: AP = %d, Invalid new state = 4"
 
-    def disabled_test_03_set_ap_perm_off(self):
+
+    def test_03_set_ap_perm_off(self):
         """
         FSW AP Perm Off Test
-        - Send Set AP Perm Off Command with AP_ID 0
+        - Send Set AP Perm Off Command with AP_NUMBER 0
             then verify the command was received (by checking the command counter
             incremented)
         """
@@ -129,9 +145,20 @@ class cfs_test_group_cfs_lc(Group):
         Group.print(f"Testing LC set ap perm off command on <%= target_name %>")
         
         # Load table for test
-        # cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/lc_def_adt.tbl'")
-        # cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG ACTIVE, TABLE_NAME 'LC.LC_ADT'")
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/lc_def_adt-test.tbl'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
+        # Validate table for test
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME 'LC.LC_ADT'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         
+        # Activate table for test
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME 'LC.LC_ADT'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"LC_HK", 1, 100)
 
@@ -142,13 +169,15 @@ class cfs_test_group_cfs_lc(Group):
         cmd_err_count = tlm(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER")
         
         # Check accepted Set AP Perm Off Command
-        cmd(f"<%= target_name %> LC_CMD_SET_AP_PERM_OFF with AP_ID 0")
+        cmd(f"<%= target_name %> LC_CMD_SET_AP_PERM_OFF with AP_NUMBER 0")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        # NOTE: Expected event message: "Set AP permanently off command: AP = 4"
         
+
     def test_04_reset_ap_stats(self):
         """
         FSW AP Stats Test
-        - Send Reset AP Stats Command for AP_ID 0
+        - Send Reset AP Stats Command for AP_NUMBER 0
             then verify the command was received (by checking the command counter
             incremented)
         """
@@ -165,13 +194,15 @@ class cfs_test_group_cfs_lc(Group):
         cmd_err_count = tlm(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER")
         
         # Check accepted Reset AP Stats Command
-        cmd(f"<%= target_name %> LC_CMD_RESET_AP_STATS with AP_ID 0")
+        cmd(f"<%= target_name %> LC_CMD_RESET_AP_STATS with AP_NUMBER 0")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        # NOTE: Expected event message: "Reset AP stats command: AP = 0"
+
 
     def test_05_reset_wp_stats(self):
         """
         FSW WP Stats Test
-        - Send Reset WP Stats Command for AP_ID 0
+        - Send Reset WP Stats Command for AP_NUMBER 0
             then verify the command was received (by checking the command counter
             incremented)
         """
@@ -188,8 +219,10 @@ class cfs_test_group_cfs_lc(Group):
         cmd_err_count = tlm(f"<%= target_name %> LC_HK COMMAND_ERROR_COUNTER")
         
         # Check accepted Reset WP Stats Command
-        cmd(f"<%= target_name %> LC_CMD_RESET_WP_STATS with WP_ID 0")
+        cmd(f"<%= target_name %> LC_CMD_RESET_WP_STATS with WP_NUMBER 0")
         wait_check(f"<%= target_name %> LC_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
+        # NOTE: Expected event message: "Reset WP stats command: WP = 0"
+
 
     def setup(self):
         """
@@ -198,6 +231,7 @@ class cfs_test_group_cfs_lc(Group):
         - Runs before all scripts when Group Start is pressed
         """
         pass
+
 
     def teardown(self):
         """

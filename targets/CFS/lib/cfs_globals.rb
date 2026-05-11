@@ -98,15 +98,9 @@ $sc_num_ats = 2
 $sc_num_rts = 4
 
 # -------------------------------------------------------------------------------------------------
-# Number of RTSs that can fit their statuses in a uint16
-#   Note: This value should correspond with SC_NUMBER_OF_RTS_IN_UINT16
+# Number of RTS status fields in the SC housekeeping telemetry (octets)
 # -------------------------------------------------------------------------------------------------
-$sc_num_rts_in_uint16 = 16
-
-# -------------------------------------------------------------------------------------------------
-# Number of uint16 RTS status fields in the SC housekeeping telemetry
-# -------------------------------------------------------------------------------------------------
-$sc_num_rts_status_fields = (($sc_num_rts + $sc_num_rts_in_uint16 - 1) / $sc_num_rts_in_uint16)
+$sc_num_rts_status_fields = (($sc_num_rts + 7) / 8)
 
 # -------------------------------------------------------------------------------------------------
 # Number of MD dwell tables defined in the system
