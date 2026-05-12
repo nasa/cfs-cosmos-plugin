@@ -23,17 +23,14 @@ class cfs_test_group_cfe_sb_checkout(Group):
         
         cmd(f"<%= target_name %> CFE_SB_CMD_NOOP")
         cmd(f"<%= target_name %> CFE_SB_CMD_SEND_SB_STATS")
-        cmd(f"<%= target_name %> FM_CMD_DELETE_FILE with FILENAME '/cf/func_file_route.dat'")
+        wait(0.5) # Without these waits, some commands fail
         cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_ROUTING_INFO with FILENAME '/cf/func_file_route.dat'")
-        cmd(f"<%= target_name %> FM_CMD_GET_FILE_INFO with FILE_CRC 'CRC_NONE', FILENAME '/cf/func_file_route.dat'")
-        cmd(f"<%= target_name %> FM_CMD_DELETE_FILE with FILENAME '/cf/func_file_pipe.dat'")
+        wait(0.5) # Without these waits, some commands fail
         cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_PIPE_INFO with FILENAME '/cf/func_file_pipe.dat'")
-        cmd(f"<%= target_name %> FM_CMD_GET_FILE_INFO with FILE_CRC 'CRC_NONE', FILENAME '/cf/func_file_pipe.dat'")
-        cmd(f"<%= target_name %> FM_CMD_DELETE_FILE with FILENAME '/cf/func_file_map.dat'")
+        wait(0.5) # Without these waits, some commands fail
         cmd(f"<%= target_name %> CFE_SB_CMD_WRITE_MAP_INFO with FILENAME '/cf/func_file_map.dat'")
-        cmd(f"<%= target_name %> FM_CMD_GET_FILE_INFO with FILE_CRC 'CRC_NONE', FILENAME '/cf/func_file_map.dat'")
         input_cmd_msg_id = <%= get_cfs_pkt_msg_id('CFE_EVS_CMD_NOOP', cfs_cpu_num_from_target_name(target_name)) %>
-        pipe_id = tlm(f"<%= target_name %> CFE_SB_STATS PIPE_DEPTH_STATS_0_PIPE_ID")
+        pipe_id = tlm(f"<%= target_name %> CFE_SB_STATS PIPE_DEPTH_STATS_1_PIPE_ID")
         cmd(f"<%= target_name %> CFE_SB_CMD_DISABLE_ROUTE with PIPE {pipe_id}, MSG_ID_VALUE {input_cmd_msg_id}")
         cmd(f"<%= target_name %> CFE_SB_CMD_ENABLE_ROUTE with PIPE {pipe_id}, MSG_ID_VALUE {input_cmd_msg_id}")
 
