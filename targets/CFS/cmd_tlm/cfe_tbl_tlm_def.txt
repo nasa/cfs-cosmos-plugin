@@ -14,9 +14,7 @@
    APPEND_ITEM FAILED_VAL_COUNTER 8 UINT "Total number of unsuccessful table validations"
    APPEND_ITEM NUM_VAL_REQUESTS 8 UINT "Unsigned 8 bit integer"
    APPEND_ITEM NUM_FREE_SHARED_BUFS 8 UINT "Number of free Shared Working Buffers"
-   APPEND_ITEM SPARE_1 8 UINT "Spare Alignment Byte 1"
-   APPEND_ITEM SPARE_2 8 UINT "Spare Alignment Byte 2"
-   APPEND_ITEM SPARE_3 8 UINT "Spare Alignment Byte 3"
+   APPEND_ARRAY_ITEM PADDING 8 UINT 24 "Padding for alignment"
    APPEND_ITEM MEM_POOL_HANDLE 32 UINT "Handle to TBL's memory pool"
       FORMAT_STRING "0x%08X"
    APPEND_ITEM LAST_UPDATE_TIME_SECONDS 32 UINT "Time of last table update (seconds)"
@@ -37,6 +35,7 @@
    APPEND_ITEM CRC 32 UINT "Most recently calculated CRC of Table"
       FORMAT_STRING "0x%08X"
 <% if $cfs_globals_mem_addr_size == 64 %>
+   APPEND_ITEM PADDING1 32 UINT
    APPEND_ITEM ACTIVE_BUFFER_ADDR 64 UINT "Address of Active Buffer"
       FORMAT_STRING "0x%016X"
    APPEND_ITEM INACTIVE_BUFFER_ADDR 64 UINT "Address of Inactive Buffer"
@@ -53,8 +52,8 @@
 <% end %>
    APPEND_ITEM TIME_OF_LAST_UPDATE_SECONDS 32 UINT "Time when Table was last updated"
    APPEND_ITEM TIME_OF_LAST_UPDATE_SUBSECONDS 32 UINT "Time when Table was last updated"
-   APPEND_ITEM FILE_CREATE_TIME_SECS 32 UINT "File creation time from last file loaded into table"
-   APPEND_ITEM FILE_CREATE_TIME_SUB_SECS 32 UINT "File creation time from last file loaded into table"
+   APPEND_ITEM FILE_CREATE_TIME_SECONDS 32 UINT "File creation time from last file loaded into table"
+   APPEND_ITEM FILE_CREATE_TIME_SUB_SECONDS 32 UINT "File creation time from last file loaded into table"
    APPEND_ITEM TABLE_LOADED_ONCE 8 UINT "Flag indicating whether table has been loaded once or not"
       STATE FALSE 0
       STATE TRUE  1
@@ -73,10 +72,9 @@
    APPEND_ITEM CRITICAL 8 UINT "Indicates whether table is Critical or not"
       STATE FALSE 0
       STATE TRUE  1
-   APPEND_ITEM BYTE_ALIGN_1 8 UINT "Spare byte to maintain byte alignment"
-   APPEND_ITEM BYTE_ALIGN_2 16 UINT "Spare bytes to maintain byte alignment"
+   APPEND_ARRAY_ITEM PADDING 8 UINT 56 "Padding for alignment"
    ITEM TIME_OF_LAST_UPDATE 0 0 DERIVED "Ruby time based on cFE timestamp"
       READ_CONVERSION unix_time_conversion_epoch_offset.rb TIME_OF_LAST_UPDATE_SECONDS TIME_OF_LAST_UPDATE_SUBSECONDS
    ITEM FILE_CREATE_TIME 0 0 DERIVED "Ruby time based on cFE timestamp"
-      READ_CONVERSION unix_time_conversion_epoch_offset.rb FILE_CREATE_TIME_SECS FILE_CREATE_TIME_SUB_SECS
+      READ_CONVERSION unix_time_conversion_epoch_offset.rb FILE_CREATE_TIME_SECONDS FILE_CREATE_TIME_SUB_SECONDS
    

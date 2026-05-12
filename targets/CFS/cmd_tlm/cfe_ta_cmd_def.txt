@@ -1,0 +1,18 @@
+<%= cfs_cmd_hdr(target_name, 'TA_SEND_HK_CMD', 0, "TA Housekeeping Request Cmd") %>
+
+<%= cfs_cmd_hdr(target_name, 'TA_CMD_NOOP', 0, "TA No-Op Command") %>
+
+<%= cfs_cmd_hdr(target_name, 'TA_CMD_RESET_COUNTERS', 1, "TA Reset Counters Command") %>
+
+<%= cfs_cmd_hdr(target_name, 'TA_CMD_QUERY_ALL_TASKS', 2, "TA Query All Tasks to File") %>
+   APPEND_PARAMETER FILENAME 512 STRING "" "Filename (and path) to write task affinity data"
+
+<%= cfs_cmd_hdr(target_name, 'TA_CMD_SET_TASK_AFFINITY', 3, "TA Set Affinity for a Specific Task") %>
+   APPEND_PARAMETER TASK_NAME 160 STRING "" "Name of the task to modify"
+   APPEND_PARAMETER AFFINITY_MASK1 32 UINT 0 0xFFFFFFFF 0 "CPU Core Affinity Mask (Bitfield)"
+   APPEND_PARAMETER AFFINITY_MASK2 32 UINT 0 0xFFFFFFFF 0 "CPU Core Affinity Mask (Bitfield)"
+   # Add 32 bits (4 bytes) of padding to match the C-compiler's struct alignment
+   APPEND_PARAMETER SPARE 32 UINT 0 0 0 "Padding" 
+   
+<%= cfs_cmd_hdr(target_name, 'TA_CMD_GET_TASK_AFFINITY', 4, "TA Get Affinity for a Specific Task") %>
+   APPEND_PARAMETER TASK_NAME 160 STRING "" "Name of the task to query"

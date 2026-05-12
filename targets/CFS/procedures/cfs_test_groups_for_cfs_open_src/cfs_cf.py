@@ -61,7 +61,7 @@ class cfs_test_group_cfs_cf(Group):
         cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_FREEZE with CHANNEL_NUM {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_FREEZE with CHANNEL_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -74,7 +74,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_THAW with CHANNEL_NUM {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_THAW with CHANNEL_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -86,7 +86,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_DISABLE_DEQUEUE with CHANNEL_NUM {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_DISABLE_DEQUEUE with CHANNEL_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -97,7 +97,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_ENABLE_DEQUEUE with CHANNEL_NUM {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_ENABLE_DEQUEUE with CHANNEL_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -108,7 +108,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_ENABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255, SPARE 0"
+            f"<%= target_name %> CF_CMD_ENABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -119,7 +119,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_DISABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255, SPARE 0"
+            f"<%= target_name %> CF_CMD_DISABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -130,7 +130,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_PURGE_QUEUE with CHANNEL_NUM {channel}, QUEUE_TYPE 2, SPARE 0"
+            f"<%= target_name %> CF_CMD_PURGE_QUEUE with CHANNEL_NUM {channel}, QUEUE_TYPE 2"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -152,7 +152,7 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 1: Suspend -----------------------------------------
         Group.print("Testing CF suspend transaction handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_SUSPEND with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_SUSPEND with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
@@ -161,7 +161,7 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 2: Resume ------------------------------------------
         Group.print("Testing CF resume transaction handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_RESUME with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_RESUME with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
@@ -170,7 +170,7 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 3: Cancel ------------------------------------------
         Group.print("Testing CF cancel transaction handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_CANCEL with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_CANCEL with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
@@ -179,7 +179,7 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 4: Abandon -----------------------------------------
         Group.print("Testing CF abandon transaction handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_ABANDON with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}, SPARE_1 0, SPARE_2 0, SPARE_3 0"
+            f"<%= target_name %> CF_CMD_ABANDON with TRANSACTION_SEQ_NUM 1, EID 23, CHAN {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
@@ -203,54 +203,64 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 1: TX File (expected error) -------------------------
         Group.print("Testing CF tx_file error handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_TX_FILE with CFDP_CLASS 0, KEEP 1, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_src', DST_FILENAME '/ram/missing_dst'"
+            f"<%= target_name %> CF_CMD_TX_FILE with CFDP_CLASS 0, KEEP_FILE_FLAG 1, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_src', DEST_FILENAME '/ram/missing_dst'"
         )
         try:
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 10)
-            cmd_count += 1
             err_expected = err_count
         except Exception:
             # Some CF builds accept the command and fail later in the transaction; handle either counter path.
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 10)
             err_expected = err_count + 1
-            err_count += 1
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_expected}", 10)
 
         #------------- Command 2: Playback Dir (expected error) --------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Testing CF playback_dir error handling on <%= target_name %>")
         cmd(
             f"<%= target_name %> CF_CMD_PLAYBACK_DIR with CFDP_CLASS 0, KEEP 1, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_dir', DST_FILENAME '/ram/missing_dir'"
         )
         try:
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 10)
-            cmd_count += 1
             err_expected = err_count
         except Exception:
             # Some CF builds accept the command and fail later in the transaction; handle either counter path.
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 10)
             err_expected = err_count + 1
-            err_count += 1
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_expected}", 10)
 
         #------------- Command 3: Write Queue (expected error) ---------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Testing CF write_queue error handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_WRITE_QUEUE with TYPE 1, CHAN {channel}, QUEUE 0, SPARE 0, FILENAME '/cf/tmp/cf_queue_error.txt'"
+            f"<%= target_name %> CF_CMD_WRITE_QUEUE with TYPE 1, CHAN {channel}, QUEUE 0, FILENAME '/cf/tmp/cf_queue_error.txt'"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
-        err_count += 1
 
         #------------- Command 4: Set Param ---------------------------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Testing CF set_param on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_SET_PARAM with VALUE 4, KEY 6, CHAN_NUM {channel}, SPARE 0"
+            f"<%= target_name %> CF_CMD_SET_PARAM with VALUE 4, KEY 6, CHAN_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
-        cmd_count += 1
 
         #------------- Command 5: Get Param ---------------------------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Testing CF get_param on <%= target_name %>")
         cmd(f"<%= target_name %> CF_CMD_GET_PARAM with KEY 6, CHAN_NUM {channel}")
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -272,16 +282,22 @@ class cfs_test_group_cfs_cf(Group):
         cmd("<%= target_name %> CF_CMD_ENABLE_ENGINE")
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
-        cmd_count += 1
 
         #------------- Command 2: Disable Engine ----------------------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Testing CF disable_engine on <%= target_name %>")
         cmd("<%= target_name %> CF_CMD_DISABLE_ENGINE")
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
-        cmd_count += 1
 
         #------------- Command 3: Enable Engine (restore) -------------------------
+        self._require_hk("CF")
+        cmd_count = tlm("<%= target_name %> CF_HK COMMAND_COUNTER")
+        err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
+
         Group.print("Restoring CF engine enable state on <%= target_name %>")
         cmd("<%= target_name %> CF_CMD_ENABLE_ENGINE")
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)

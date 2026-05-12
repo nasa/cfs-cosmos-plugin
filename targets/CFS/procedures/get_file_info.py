@@ -15,11 +15,11 @@ if curr_file_info_pkt_count is None:
 exp_file_info_pkt_count = curr_file_info_pkt_count + 1
 
 # Send FM get file information command
-cmd(f"<%= target_name %> FM_CMD_GET_FILE_INFO with FILENAME '{file_to_get}', FILE_CRC 'CRC_16'")
+cmd(f"<%= target_name %> FM_CMD_GET_FILE_INFO with PATH '{file_to_get}', CRC_METHOD 'CRC_16'")
 
 # Wait for a file info packet to be returned and validate its contents
 wait_check(f"<%= target_name %> FM_FILE_INFO RECEIVED_COUNT == {exp_file_info_pkt_count}", 10)
-check(f"<%= target_name %> FM_FILE_INFO FILENAME == '{file_to_get}'")
+check(f"<%= target_name %> FM_FILE_INFO NAME == '{file_to_get}'")
 check(f"<%= target_name %> FM_FILE_INFO CRC == {exp_file_crc}")
 
 print(f"File info for {file_to_get} successfully retrieved!")
