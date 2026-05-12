@@ -25,8 +25,14 @@ class cfs_test_group_cfe_tbl_checkout(Group):
         cmd(f"<%= target_name %> CFE_TBL_CMD_NOOP")
         test_table_name = "DS.FILE_TBL"
         test_table_filename = "/cf/ds_file_tbl.tbl"
+
         cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{test_table_filename}'")
+
+        # Table validate: must finish before beginning subsequent Activate command
+        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{test_table_name}'")
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
+
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME '{test_table_name}'")
         test_table_name = "HK.CopyTable"
         test_table_filename = "/cf/hk_cpy_tbl.tbl"
