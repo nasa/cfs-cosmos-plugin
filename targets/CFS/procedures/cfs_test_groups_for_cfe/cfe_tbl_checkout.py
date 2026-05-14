@@ -28,7 +28,7 @@ class cfs_test_group_cfe_tbl_checkout(Group):
         test_table_filename = "/cf/sample_app_tbl.tbl"
         cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{test_table_filename}'")
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{test_table_name}'")
-        wait(3) # Table validate must finish before beginning subsequent Activate command
+        wait(5) # Table validate must finish before beginning subsequent Activate command
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME '{test_table_name}'")
         wait(5)
 
@@ -38,8 +38,10 @@ class cfs_test_group_cfe_tbl_checkout(Group):
         cmd(f"<%= target_name %> CFE_TBL_CMD_SEND_REGISTRY with TABLE_NAME '{test_table_name}'")
 
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'MD'")
-        wait(10)
-        # FIXME: Using CFS app - put a disclaimer (at the top?) and later we may want to have some sort of configuration that would block that command from executing if the app is not included, but that is later.
+        wait(8)
+
+        # Note: This currently depends on a CFS app other than Sample App, because the Sample App
+        #       example table is not registered as critical in FSW.  This may change in the future.
         cmd(f"<%= target_name %> CFE_TBL_CMD_DELETE_CDS with TABLE_NAME 'MD.DWELL_TABLE4'")
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'MD', APP_ENTRY_POINT 'MD_AppMain', APP_FILE_NAME '/cf/md.so'")
 
