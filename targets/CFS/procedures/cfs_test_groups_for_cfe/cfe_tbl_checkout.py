@@ -23,36 +23,30 @@ class cfs_test_group_cfe_tbl_checkout(Group):
         set_line_delay(0.15)  # 0.15 is about as fast as it can go.  0.1 causes a missed cmd.
 
         cmd(f"<%= target_name %> CFE_TBL_CMD_NOOP")
-        test_table_name = "DS.FILE_TBL"
-        test_table_filename = "/cf/ds_file_tbl.tbl"
 
+        test_table_name = "SAMPLE_APP.ExampleTable"
+        test_table_filename = "/cf/sample_app_tbl.tbl"
         cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{test_table_filename}'")
-
-        # Table validate: must finish before beginning subsequent Activate command
-        cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{test_table_name}'")
-        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-
+        wait(3) # Table validate must finish before beginning subsequent Activate command
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME '{test_table_name}'")
-        test_table_name = "HK.CopyTable"
-        test_table_filename = "/cf/hk_cpy_tbl.tbl"
+        wait(5)
+
         cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{test_table_filename}'")
-        cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{test_table_name}'")
-        test_table_name = "TO_LAB.Subscriptions"
-        test_table_filename = "/cf/to_lab_sub_bad.tbl"
-        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '{test_table_filename}'")
-        cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME '{test_table_name}'")
         cmd(f"<%= target_name %> CFE_TBL_CMD_ABORT_LOAD with TABLE_NAME '{test_table_name}'")
         cmd(f"<%= target_name %> CFE_TBL_CMD_DUMP_REGISTRY with DUMP_FILENAME 'dump_registry.dat'")
-        cmd(f"<%= target_name %> CFE_TBL_CMD_SEND_REGISTRY with TABLE_NAME 'MD.DWELL_TABLE4'")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_SEND_REGISTRY with TABLE_NAME '{test_table_name}'")
+
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'MD'")
         wait(10)
+        # FIXME: Using CFS app - put a disclaimer (at the top?) and later we may want to have some sort of configuration that would block that command from executing if the app is not included, but that is later.
         cmd(f"<%= target_name %> CFE_TBL_CMD_DELETE_CDS with TABLE_NAME 'MD.DWELL_TABLE4'")
+        cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'MD', APP_ENTRY_POINT 'MD_AppMain', APP_FILE_NAME '/cf/md.so'")
 
         set_line_delay(0.0)
         
         # Check final command count has incremented by the number of commands sent
-        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER >= {cmd_count} + 12", 12)
+        wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER >= {cmd_count} + 9", 12)
         check(f"<%= target_name %> CFE_TBL_HK COMMAND_ERROR_COUNTER == {cmd_err_count}")
 
         cmd(f"<%= target_name %> CFE_TBL_CMD_RESET_COUNTERS")
