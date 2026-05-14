@@ -30,9 +30,10 @@ The background logging system ensures that:
 3. Stopping a logging session will only occur if the provided name matches the active session.
 """
 
-from typing import Optional, Tuple, Union
+from openc3.script import script_create, script_run, running_script_stop, stash_set, stash_get
+from typing import Optional, Tuple, Union, List
+import time
 from .system_config import (
-    get_event_target_name,
     EVENT_PACKET_NAME,
     EVENT_TYPE_TO_TXT,
     EVENT_TXT_TO_TYPE,
@@ -43,7 +44,8 @@ from .system_config import (
     EVENT_MESSAGE_FIELD,
     EVENT_SCID_FIELD,
     EVENT_PROCID_FIELD,
-    EVENT_TIME_FIELD
+    DERIVED_PACKET_TIMEFORMATTED_FIELD,
+    LOGGER_INIT_WAIT_TIME
 )
 
 # Module-level variables to store event subscription IDs
@@ -52,79 +54,61 @@ _event_logging_id = None  # For print_events_to_log
 _event_packets = []  # To store packets for multiple find_events calls
 
 
-def set_event_search_point(
-    target_name: str = None, 
-    packet_name: str = EVENT_PACKET_NAME
-) -> str:
-    """Set the point that a find_events call will search back to.
+def set_event_search_point(target_names: Union[str, List[str]]) -> str:
+    """
+    Set the point that a find_events call will search back to.
     
-    This function subscribes to event packets and stores the subscription ID
-    at the module level, so it can be used by find_events without requiring
-    the ID to be passed in each time.
+    This function subscribes to event packets for one or more targets and stores 
+    the subscription ID at the module level, so it can be used by find_events 
+    without requiring the ID to be passed in each time.
     
     Note: This function should be called multiple times. Each time it's called,
     it resets the point at which future find_events calls will begin searching.
     This is useful to narrow searches to specific sections of a test.
     
     Args:
-        target_name: COSMOS target name for events (default: from system_config)
-        packet_name: COSMOS packet name for events (default: from system_config)
+        target_names: COSMOS target name(s) for events. Can be:
+                     - str: Single target name
+                     - List[str]: List of target names
     
     Returns:
         The subscription ID (also stored internally for use by find_events)
+    
+    Examples:
+        set_event_search_point("TARGET1")  # Single target
+        set_event_search_point(["TARGET1", "TARGET2"])  # Multiple targets
     """
     global _event_search_id, _event_packets
     
     # Import and use the COSMOS subscribe_packets function
     from openc3.script import subscribe_packets
     
-    if target_name is None:
-        target_name = get_event_target_name()
+    # Normalize input to list of targets
+    if isinstance(target_names, str):
+        targets = [target_names]
+    elif isinstance(target_names, list):
+        if not all(isinstance(target, str) for target in target_names):
+            raise ValueError("All items in the target list must be strings.")
+        targets = target_names
+    else:
+        raise ValueError("Invalid target_name type. Expected str or List[str]")
     
     # Reset the stored packets when setting a new search point
     _event_packets = []
     
+    # Prepare subscription list
+    subscription_list = [[target, EVENT_PACKET_NAME] for target in targets]
+    
     # Subscribe to event packets
-    _event_search_id = subscribe_packets([[target_name, packet_name]])
+    _event_search_id = subscribe_packets(subscription_list)
+    
+    print(f" --> Event search point set for {", ".join(targets)}")
     
     return _event_search_id
 
 
-def open_event_log_for_script_logging(
-    target_name: str = None, 
-    packet_name: str = EVENT_PACKET_NAME
-) -> str:
-    """Subscribe to event packets for script logging.
-    
-    This function subscribes to event packets and stores the subscription ID
-    at the module level, so it can be used by print_events_to_log without 
-    requiring the ID to be passed in each time.
-    
-    Note: This function should only be called once at the beginning of a test,
-    unlike set_event_search_point which may be called multiple times.
-    
-    Args:
-        target_name: COSMOS target name for events (default: from system_config)
-        packet_name: COSMOS packet name for events (default: from system_config)
-    
-    Returns:
-        The subscription ID (also stored internally for use by print_events_to_log)
-    """
-    global _event_logging_id
-    
-    # Import and use the COSMOS subscribe_packets function
-    from openc3.script import subscribe_packets
-    
-    if target_name is None:
-        target_name = get_event_target_name()
-    
-    # Subscribe to event packets
-    _event_logging_id = subscribe_packets([[target_name, packet_name]])
-    
-    return _event_logging_id
-
-
 def find_events(
+    target: str,
     app_name: str,
     event_id: int,
     event_type: str,
@@ -138,6 +122,7 @@ def find_events(
     you must call set_event_search_point() to set up the event subscription.
     
     Args:
+        target: Target name to filter by
         app_name: Application name to filter by
         event_id: Event ID to filter by
         event_type: Event type ('DEBUG', 'INFO', 'ERROR', 'CRIT')
@@ -186,6 +171,14 @@ def find_events(
     num_found = 0
     num_searched = 0
     
+    # Print search details
+    print(f"Searching for {expected_num_found} event(s) with details:")
+    print(f"  Target: {target}")
+    print(f"  App: {app_name}")
+    print(f"  ID: {event_id}")
+    print(f"  Type: {event_type}")
+    print(f"  Partial text: '{partial_message_text}'")
+    
     # Get all packets since the last time this method was called
     # Block time is configured in system_config.py
     search_id, new_packets = get_packets(search_id, block=EVENT_BLOCK_TIMEOUT)
@@ -199,7 +192,8 @@ def find_events(
     
     for packet in _event_packets:
         num_searched += 1
-        if (packet[EVENT_APP_FIELD] == app_name and
+        if (packet['target_name'] == target and
+            packet[EVENT_APP_FIELD] == app_name and
             packet[EVENT_ID_FIELD] == event_id and
             packet[EVENT_TYPE_FIELD] == EVENT_TXT_TO_TYPE[event_type] and
             partial_message_text in packet[EVENT_MESSAGE_FIELD]):
@@ -216,6 +210,61 @@ def find_events(
         return (num_found == expected_num_found, num_found)
 
 
+def capture_events_for_script_logging(target_names: Union[str, List[str]]) -> str:
+    """
+    Subscribe to event packets for script logging.
+    
+    This function subscribes to event packets from one or more targets and stores 
+    the subscription ID at the module level, so it can be used by print_events_to_log 
+    without requiring the ID to be passed in each time.
+    
+    Note: This function should only be called once at the beginning of a test.
+    Calling it multiple times may overwrite previous subscriptions.
+    
+    Args:
+        target_names: COSMOS target name(s) for events. Can be:
+                     - str: Single target name
+                     - List[str]: List of target names
+    
+    Returns:
+        The subscription ID (also stored internally for use by print_events_to_log)
+    
+    Examples:
+        capture_events_for_script_logging("TARGET1")  # Single target
+        capture_events_for_script_logging(["TARGET1", "TARGET2"])  # Multiple targets
+    
+    Raises:
+        ValueError: If target_names is not str or List[str], or if any item in the list is not a string.
+    """
+    global _event_logging_id
+    
+    # Import and use the COSMOS subscribe_packets function
+    from openc3.script import subscribe_packets
+    
+    # Normalize input to list of targets
+    if isinstance(target_names, str):
+        targets = [target_names]
+    elif isinstance(target_names, list):
+        if not all(isinstance(target, str) for target in target_names):
+            raise ValueError("All items in the target list must be strings.")
+        targets = target_names
+    else:
+        raise ValueError("Invalid target_name type. Expected str or List[str]")
+    
+    # Prepare subscription list
+    subscription_list = [[target, EVENT_PACKET_NAME] for target in targets]
+    
+    # Check if there's an existing subscription
+    if _event_logging_id is not None:
+        print(" <!> Warning: A previous call to capture_events_for_script_logging was made. "
+              "This new subscription may overwrite the previous one.")
+    
+    # Subscribe to event packets
+    _event_logging_id = subscribe_packets(subscription_list)
+    
+    return _event_logging_id
+
+
 def print_events_to_log(
     log_id: Optional[int] = None,
     use_group_print: bool = False
@@ -223,7 +272,7 @@ def print_events_to_log(
     """Print all received event messages to the test log since the last call.
     
     Before using this function with the default log_id=None,
-    you must call open_event_log_for_script_logging() to set up the event subscription.
+    you must call capture_events_for_script_logging() to set up the event subscription.
     
     Args:
         log_id: Optional specific subscription ID to use
@@ -234,7 +283,7 @@ def print_events_to_log(
         Optional[int]: Updated subscription ID if a specific log_id was provided
         
     Raises:
-        RuntimeError: If log_id=None and open_event_log_for_script_logging() has not been called
+        RuntimeError: If log_id=None and capture_events_for_script_logging() has not been called
     """
     global _event_logging_id
     
@@ -244,11 +293,11 @@ def print_events_to_log(
         if _event_logging_id is None:
             raise RuntimeError(
                 "Event logging subscription not initialized in cosmos_test_utils.event_utils. "
-                "You must call open_event_log_for_script_logging() before using print_events_to_log() "
+                "You must call capture_events_for_script_logging() before using print_events_to_log() "
                 "or other functions that depend on event logging (like test_print). "
                 "Add this to your script:\n\n"
-                "    from cosmos_test_utils import open_event_log_for_script_logging\n"
-                "    open_event_log_for_script_logging()  # Call this once at the start of your test\n\n"
+                "    from cosmos_test_utils import capture_events_for_script_logging\n"
+                "    capture_events_for_script_logging()  # Call this once at the start of your test\n\n"
                 "Alternatively, you can provide a specific log_id parameter to this function from a separate COSMOS subscribe_packets() call."
             )
         current_log_id = _event_logging_id
@@ -275,7 +324,8 @@ def print_events_to_log(
         
     # Print each event packet using the system config event type mapping
     for packet in packets:
-        ptime = f"{packet[EVENT_TIME_FIELD]}"
+        target = f"{packet['target_name']}"
+        ptime = f"{packet[DERIVED_PACKET_TIMEFORMATTED_FIELD]}"
         app = f"{packet[EVENT_APP_FIELD]}"
         eid = f"{packet[EVENT_ID_FIELD]}"
         etype = f"{packet[EVENT_TYPE_FIELD]}"
@@ -283,7 +333,7 @@ def print_events_to_log(
         procid = f"{packet[EVENT_PROCID_FIELD]}"
         emsg = f"{packet[EVENT_MESSAGE_FIELD]}"
         
-        event = f"{ptime:<23} scid:{scid:<3} procid:{procid:<2} {EVENT_TYPE_TO_TXT[etype]:<5} {app:<13} {eid:>3}: {emsg}"
+        event = f"{target:<10} {ptime:<23} scid:{scid:<3} procid:{procid:<2} {EVENT_TYPE_TO_TXT[etype]:<5} {app:<13} {eid:>3}: {emsg}"
         print_func("Event: " + event)
         
     # Return the updated subscription ID if a specific one was provided
@@ -291,286 +341,349 @@ def print_events_to_log(
         return current_log_id
     
     
-def start_background_event_logging(name: str = "default", filename: Optional[str] = None):
-    """Start or restart a background event logging script.
-    
-    This function manages a background process that continuously logs event messages.
-    It's designed to support multi-level logging (suite, group, and test level) without conflicts.
-
-    Behavior:
-    1. If no logging is active, starts a new logging session.
-    2. If logging with the same name is active, stops and restarts it (useful for error recovery).
-    3. If logging with a different name is active, does not start a new session (preserves suite-level logging).
-
-    The background script runs parallel to the main test without interference.
+def is_background_packet_logging_running(name: Optional[str] = None) -> bool:
+    """
+    Check if a background packet logging session is running.
     
     Args:
-        name: Unique identifier for this logging session (default: "default")
-        filename: Optional path for log file. If None, logs to COSMOS log only.
-        
-    Example:
-        start_background_event_logging("my_test_logging")
-        # ... run tests ...
-        stop_background_event_logging("my_test_logging")
+        name (str, optional): Name of the specific logging session to check for.
+            If None, checks if any logger is running.
+    
+    Returns:
+        bool: True if a logging session is running, False otherwise.
     """
-    from openc3.script import script_create, script_run, stash_set, stash_get
-    import time
+    loggers = stash_get('background_packet_loggers') or {}
     
-    # Check if there's already a background logger running
-    if is_background_event_logging_running(name):
-        print(f"Background event logging '{name}' is already running. Stopping and restarting...")
-        stop_background_event_logging(name)
-    elif is_background_event_logging_running():
-        existing_name = stash_get('background_event_log_name')
-        print(f"Background event logging '{existing_name}' is already running.")
-        return
+    # Replace spaces with underscores in the name
+    name = name.replace(' ', '_')
     
-    # Store the filename for the script to use (if provided)
-    if filename:
-        stash_set('eventlog', filename)
-        print(f"Starting background event logging '{name}' to file: {filename} and COSMOS log file")
-    else:
-        # Clear any existing filename
-        try:
-            stash_set('eventlog', None)
-        except:
-            pass
-        print(f"Starting background event logging '{name}' to COSMOS log file")
+    if name:
+        return name in loggers
+    return bool(loggers)
 
+
+def _is_packet_already_logged(target: str, packet: str) -> bool:
+    """
+    Check if a specific target-packet pair is already being logged.
+    """
+    loggers = stash_get('background_packet_loggers') or {}
+    for logger_info in loggers.values():
+        if any(item == [target, packet] for item in logger_info['data']):
+            return True
+    return False
+
+
+def _normalize_input(input_data):
+    """
+    Normalize various input formats for packet logging into a standard format.
+
+    Converts input into a list of [TARGET, PACKET] pairs. If PACKET is not specified,
+    it defaults to EVENT_PACKET_NAME. Handles str and list inputs.
+    """
+    if isinstance(input_data, str):
+        return [[input_data, EVENT_PACKET_NAME]]
+    elif isinstance(input_data, list):
+        normalized = []
+        for item in input_data:
+            if isinstance(item, str):
+                normalized.append([item, EVENT_PACKET_NAME])
+            elif isinstance(item, list):
+                if len(item) == 1:
+                    normalized.append([item[0], EVENT_PACKET_NAME])
+                elif len(item) >= 2:
+                    if len(item) > 2:
+                        print(f" <!> Warning: More than 2 items in pair {item}. Ignoring excess items.")
+                    normalized.append([item[0], item[1]])
+        return normalized
+    else:
+        raise ValueError("Invalid input format")
+
+
+def start_background_packet_logging(what_to_log, name: str = "default") -> None:
+    """
+    Start a background packet logging script.
+    
+    This function manages a background process that continuously logs specified packet messages.
+    It allows logging of multiple packets from different targets.
+    
+    Note:
+        To specify a single target-packet pair, use a nested list: [["TARGET", "PACKET"]]
+        A single list [TARGET, PACKET] will be interpreted as two separate targets with default packets.
+    
+    Args:
+        what_to_log: Required. Can be one of the following:
+            - str: Single TARGET (logs default EVENT_PACKET_NAME)
+            - list of str: Multiple TARGETs (each logs default EVENT_PACKET_NAME)
+            - list of lists: Multiple [TARGET, PACKET] pairs
+            - Mixed list of str and lists: Combination of TARGETs and [TARGET, PACKET] pairs
+        name: Unique identifier for this logging session (default: "default")
+    
+    Raises:
+        ValueError: If what_to_log is None or empty
+    
+    Examples:
+        start_background_packet_logging("TARGET1")  # Logs default packet for TARGET1
+        start_background_packet_logging(["TARGET1", "TARGET2"])  # Logs default packet for both targets
+        start_background_packet_logging([["TARGET1", "PACKET1"]])  # Logs specific packet for TARGET1
+        start_background_packet_logging([["TARGET1", "PACKET1"], ["TARGET2", "PACKET2"]])  # Logs specific packets
+        start_background_packet_logging([["TARGET1", "PACKET1"], "TARGET2"])  # Mixed: specific for TARGET1, default for TARGET2
+    """
+    # Validate that what_to_log is provided
+    if what_to_log is None:
+        raise ValueError("what_to_log is required and cannot be None. Please specify at least one target.")
+    
+    if isinstance(what_to_log, list) and len(what_to_log) == 0:
+        raise ValueError("what_to_log cannot be an empty list. Please specify at least one target.")
+    
+    normalized_data = _normalize_input(what_to_log)
+    
+    # Replace spaces with underscores in the name
+    name = name.replace(' ', '_')
+    
+    # Check if logger with this name already exists
+    if is_background_packet_logging_running(name):
+        print(f"Background packet logging '{name}' is already running. Stopping and restarting...")
+        stop_background_packet_logging(name)
+    
+    # Check if any packets are already being logged
+    for target, packet in normalized_data:
+        if _is_packet_already_logged(target, packet):
+            print(f"Packet {target} {packet} is already being logged. Cannot start new logger.")
+            return None
+
+    print(f"Starting background packet logging '{name}' for: {normalized_data}")
+    
     try:
         # Set up the synchronization flag - initialize to "starting"
-        stash_set('event_logger_ready', 'starting')
-
-        # Store system_config values in stash for the script to access
-        from .system_config import (
-            get_event_target_name, EVENT_PACKET_NAME, EVENT_TYPE_TO_TXT,
-            EVENT_APP_FIELD, EVENT_ID_FIELD, EVENT_TYPE_FIELD,
-            EVENT_MESSAGE_FIELD, EVENT_SCID_FIELD, EVENT_PROCID_FIELD, EVENT_TIME_FIELD
-        )
-
-        # Store basic configuration
-        stash_set('evt_target_name', get_event_target_name())
-        stash_set('evt_packet_name', EVENT_PACKET_NAME)
-        stash_set('evt_app_field', EVENT_APP_FIELD)
-        stash_set('evt_id_field', EVENT_ID_FIELD)
-        stash_set('evt_type_field', EVENT_TYPE_FIELD)
-        stash_set('evt_msg_field', EVENT_MESSAGE_FIELD)
-        stash_set('evt_scid_field', EVENT_SCID_FIELD)
-        stash_set('evt_procid_field', EVENT_PROCID_FIELD)
-        stash_set('evt_time_field', EVENT_TIME_FIELD)
-
-        # Store the event type mapping
-        stash_set('evt_type_count', len(EVENT_TYPE_TO_TXT))
-        i = 0
-        for k, v in EVENT_TYPE_TO_TXT.items():
-            stash_set(f'evt_type_key_{i}', k)
-            stash_set(f'evt_type_val_{i}', v)
-            i += 1
-
-        # Create the script content with synchronization
-        script_content = '''
-        # Event logging script created by cosmos_test_utils
-        # Get configuration from stash
+        # Use unique keys per logger name to avoid race conditions
+        stash_set(f'packet_logger_ready_{name}', 'starting')
+        
+        # Store the packet information in stash with unique keys per logger
+        stash_set(f'packet_log_count_{name}', len(normalized_data))
+        all_event_packets = all(packet == EVENT_PACKET_NAME for _, packet in normalized_data)
+        stash_set(f'all_event_packets_{name}', all_event_packets)
+        
+        for i, (target, packet) in enumerate(normalized_data):
+            stash_set(f'packet_log_target_{name}_{i}', target)
+            stash_set(f'packet_log_packet_{name}_{i}', packet)
+        
+        # If all packets are EVENT_PACKET_NAME, store event field information
+        if all_event_packets:
+            from .system_config import (
+                EVENT_TYPE_TO_TXT, EVENT_APP_FIELD, EVENT_ID_FIELD, EVENT_TYPE_FIELD,
+                EVENT_MESSAGE_FIELD, EVENT_SCID_FIELD, EVENT_PROCID_FIELD, DERIVED_PACKET_TIMEFORMATTED_FIELD
+            )
+            stash_set(f'evt_app_field_{name}', EVENT_APP_FIELD)
+            stash_set(f'evt_id_field_{name}', EVENT_ID_FIELD)
+            stash_set(f'evt_type_field_{name}', EVENT_TYPE_FIELD)
+            stash_set(f'evt_msg_field_{name}', EVENT_MESSAGE_FIELD)
+            stash_set(f'evt_scid_field_{name}', EVENT_SCID_FIELD)
+            stash_set(f'evt_procid_field_{name}', EVENT_PROCID_FIELD)
+            stash_set(f'evt_time_field_{name}', DERIVED_PACKET_TIMEFORMATTED_FIELD)
+            
+            # Store the event type mapping
+            stash_set(f'evt_type_count_{name}', len(EVENT_TYPE_TO_TXT))
+            for i, (k, v) in enumerate(EVENT_TYPE_TO_TXT.items()):
+                stash_set(f'evt_type_key_{name}_{i}', k)
+                stash_set(f'evt_type_val_{name}_{i}', v)
+        
+        # Store the logger name in stash so the script can access it
+        stash_set(f'logger_name_{name}', name)
+        
+        # Create a unique script name
+        script_name = f"{name}_pkt_log_rpt.rb"
+        
+        # Create the Ruby script content with synchronization
+        script_content = f'''
+        # Packet logging script created by cosmos_test_utils
         set_line_delay(0.0)
-        EVENT_TARGET_NAME = stash_get('evt_target_name')
-        EVENT_PACKET_NAME = stash_get('evt_packet_name')
-        EVENT_APP_FIELD = stash_get('evt_app_field')
-        EVENT_ID_FIELD = stash_get('evt_id_field')
-        EVENT_TYPE_FIELD = stash_get('evt_type_field')
-        EVENT_MESSAGE_FIELD = stash_get('evt_msg_field')
-        EVENT_SCID_FIELD = stash_get('evt_scid_field')
-        EVENT_PROCID_FIELD = stash_get('evt_procid_field')
-        EVENT_TIME_FIELD = stash_get('evt_time_field')
-
-        # Get event type mapping
-        EVENT_TYPE_TO_TXT = {}
-        event_type_count = stash_get('evt_type_count').to_i
-        (0...event_type_count).each do |i|
-            k = stash_get("evt_type_key_#{i}")
-            v = stash_get("evt_type_val_#{i}")
-            EVENT_TYPE_TO_TXT[k] = v
+        
+        # Get the logger name to use for unique stash keys
+        logger_name = stash_get('logger_name_{name}')
+        
+        # Get packet information from stash using unique keys
+        packet_log_count = stash_get("packet_log_count_#{{logger_name}}").to_i
+        all_event_packets = stash_get("all_event_packets_#{{logger_name}}")
+        packets_to_subscribe = []
+        (0...packet_log_count).each do |i|
+            target = stash_get("packet_log_target_#{{logger_name}}_#{{i}}")
+            packet = stash_get("packet_log_packet_#{{logger_name}}_#{{i}}")
+            packets_to_subscribe << [target, packet]
         end
-
-        # Check if a specific log file was requested
-        log_filename = nil
-        begin
-            log_filename = stash_get('eventlog')
-        rescue
-            # No file specified, just print to COSMOS log
+        
+        # Subscribe to packets
+        id = subscribe_packets(packets_to_subscribe)
+        
+        # Print header
+        puts "Background Packet Logging Started"
+        puts "================================="
+        packets_to_subscribe.each do |target, packet|
+            puts "Logging: #{{target}} #{{packet}}"
         end
-
-        # Open log file if specified
-        log_file = nil
-        if log_filename
-            log_file = File.open(log_filename, 'w')
-            puts "Logging events to file: #{log_filename}"
+        puts "================================="
+        
+        if all_event_packets
+            # Get event field information using unique keys
+            EVENT_APP_FIELD = stash_get("evt_app_field_#{{logger_name}}")
+            EVENT_ID_FIELD = stash_get("evt_id_field_#{{logger_name}}")
+            EVENT_TYPE_FIELD = stash_get("evt_type_field_#{{logger_name}}")
+            EVENT_MESSAGE_FIELD = stash_get("evt_msg_field_#{{logger_name}}")
+            EVENT_SCID_FIELD = stash_get("evt_scid_field_#{{logger_name}}")
+            EVENT_PROCID_FIELD = stash_get("evt_procid_field_#{{logger_name}}")
+            DERIVED_PACKET_TIMEFORMATTED_FIELD = stash_get("evt_time_field_#{{logger_name}}")
+            
+            # Get event type mapping
+            EVENT_TYPE_TO_TXT = {{}}
+            event_type_count = stash_get("evt_type_count_#{{logger_name}}").to_i
+            (0...event_type_count).each do |i|
+                k = stash_get("evt_type_key_#{{logger_name}}_#{{i}}")
+                v = stash_get("evt_type_val_#{{logger_name}}_#{{i}}")
+                EVENT_TYPE_TO_TXT[k] = v
+            end
+            
+            # Print header line for event packets
+            header = "       TARGET     PACKET_TIMEFORMATTED    SCID     PROCID    Type  App           EID: Event Message Text"
+            puts header
         end
-
-        # Subscribe to event packets
-        id = subscribe_packets([[EVENT_TARGET_NAME, EVENT_PACKET_NAME]])
-
-        # Print header line to describe each column
-        header = "       PACKET_TIMEFORMATTED    SCID     PROCID    Type  App           EID: Event Message Text"
-        puts header
-        if log_file
-            log_file.puts header
-            log_file.flush
-        end
-
-        # Signal that we're ready to capture events
-        stash_set('event_logger_ready', 'ready')
-
+        
+        # Signal that we're ready to capture packets
+        stash_set("packet_logger_ready_#{{logger_name}}", 'ready')
+        
         begin
             while true
-                id, packets = get_packets(id, :block => 1000, :count => 1)
+                id, packets = get_packets(id, block: 1000)
                 packets.each do |packet|
-                    ptime = packet[EVENT_TIME_FIELD].to_s
-                    app = packet[EVENT_APP_FIELD].to_s
-                    eid = packet[EVENT_ID_FIELD].to_s
-                    etype = packet[EVENT_TYPE_FIELD].to_s
-                    scid = packet[EVENT_SCID_FIELD].to_s
-                    procid = packet[EVENT_PROCID_FIELD].to_s
-                    emsg = packet[EVENT_MESSAGE_FIELD].to_s
-
-                    # Log event message received
-                    event = sprintf("%-23s scid:%-3s procid:%-2s %-5s %-13s %3s: %s",
-                                   ptime, scid, procid, EVENT_TYPE_TO_TXT[etype], app, eid, emsg)
-                    event_line = "Event: " + event
-
-                    puts event_line
-                    if log_file
-                        log_file.puts event_line
-                        log_file.flush
+                    if all_event_packets
+                        target = packet['target_name']
+                        ptime = packet[DERIVED_PACKET_TIMEFORMATTED_FIELD].to_s
+                        app = packet[EVENT_APP_FIELD].to_s
+                        eid = packet[EVENT_ID_FIELD].to_s
+                        etype = packet[EVENT_TYPE_FIELD].to_s
+                        scid = packet[EVENT_SCID_FIELD].to_s
+                        procid = packet[EVENT_PROCID_FIELD].to_s
+                        emsg = packet[EVENT_MESSAGE_FIELD].to_s
+                        
+                        # Log event message received
+                        event = sprintf("%-10s %-23s scid:%-3s procid:%-2s %-5s %-13s %3s: %s",
+                                        target, ptime, scid, procid, EVENT_TYPE_TO_TXT[etype], app, eid, emsg)
+                        puts "Event: " + event
+                    else
+                        target_name = packet['target_name']
+                        packet_name = packet['packet_name']
+                        time = packet['PACKET_TIMEFORMATTED']
+                        
+                        # Log basic packet information
+                        puts "#{{time}}:"
+                        puts "  #{{target_name}} #{{packet_name}}"
+                        
+                        # Log all telemetry items
+                        packet.each do |key, value|
+                            next if ['target_name', 'packet_name', 'PACKET_TIMEFORMATTED'].include?(key)
+                            puts "  #{{key}}: #{{value}}"
+                        end
+                        puts "--------------------------------"
                     end
                 end
             end
-        ensure
-            if log_file
-                log_file.close
-            end
         end
         '''
-
+        
         # Use script_create to create the script
-        script_name = "event_logger_report.rb"
         script_create(script_name, script_content)
-
+        
         # Start the script
         script_id = script_run(script_name)
-
-        # Store the script ID and name for use in other functions
-        stash_set('background_event_log_id', script_id)
-        stash_set('background_event_log_name', name)
-
-        # Wait for the script to signal that it's ready to capture events
-        print("Waiting for event logger to initialize...")
-        max_wait_time = 10.0  # Maximum time to wait for script to be ready
+        
+        # Store logger information
+        logger_info = {
+            'id': script_id,
+            'data': normalized_data,
+            'name': name
+        }
+        
+        # Update stash
+        loggers = stash_get('background_packet_loggers') or {}
+        loggers[name] = logger_info
+        stash_set('background_packet_loggers', loggers)
+        
+        # Wait for the script to signal it's ready using unique key
+        print("Waiting for packet logger to initialize...")
+        max_wait_time = LOGGER_INIT_WAIT_TIME
         wait_start = time.time()
         
         while time.time() - wait_start < max_wait_time:
             try:
-                status = stash_get('event_logger_ready')
+                status = stash_get(f'packet_logger_ready_{name}')
                 if status == 'ready':
                     break
             except:
                 pass
-
             time.sleep(0.1)
         else:
             # We timed out waiting for the script to be ready
-            print("Warning: Timeout waiting for event logger to initialize fully")
-
-        print(f"Background event logging '{name}' started (script ID: {script_id})")
+            print("Warning: Timeout waiting for packet logger to initialize fully")
+        
+        print(f"Background packet logging '{name}' started (script ID: {script_id})")
         
     except Exception as e:
-        print(f"Error starting background event logging: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error starting background packet logging: {str(e)}")
         raise
 
 
-def stop_background_event_logging(name: str = "default"):
-    """Stop background event logging script.
-    
-    This stops the background event logging script with the specified name.
-    If no script with the given name is running, this function does nothing.
+def stop_background_packet_logging(name: str = "default") -> None:
+    """
+    Stop a background packet logging script.
     
     Args:
         name: The unique identifier of the logging session to stop (default: "default")
-        
-    Example:
-        start_background_event_logging("my_test_logging")
-        # ... run tests ...
-        stop_background_event_logging("my_test_logging")
     """
-    from openc3.script import running_script_stop, stash_get, stash_set
-    
     try:
-        if is_background_event_logging_running(name):
-            script_id = stash_get('background_event_log_id')
-            print(f"Stopping background event logging '{name}' (script ID: {script_id})")
+        loggers = stash_get('background_packet_loggers') or {}
+        
+        # Replace spaces with underscores in the name
+        name = name.replace(' ', '_')
+        
+        if name in loggers:
+            logger_info = loggers[name]
+            script_id = logger_info['id']
             running_script_stop(script_id)
             
-            # Clear the stored script ID and name
-            stash_set('background_event_log_id', None)
-            stash_set('background_event_log_name', None)
+            # Remove from stash storage
+            loggers.pop(name)
+            stash_set('background_packet_loggers', loggers)
             
-            # Clear the log filename
-            try:
-                stash_set('eventlog', None)
-            except:
-                pass
-                
-            print(f"Background event logging '{name}' stopped")
+            print(f"Background packet logging '{name}' stopped (script ID: {script_id})")
         else:
-            current_name = stash_get('background_event_log_name')
-            if current_name:
-                print(f"Background event logging '{current_name}' is running, but not stopping it as it doesn't match the requested name '{name}'")
-            else:
-                print("No background event logging script is currently running")
+            print(f"Background packet logging with name '{name}' not found (may not have been started or packet already being logged)")
     except Exception as e:
-        print(f"Error stopping background event logging: {str(e)}")
+        print(f"Error stopping background packet logging: {str(e)}")
 
 
-def is_background_event_logging_running(name: str = None) -> bool:
-    """Check if background event logging is currently running.
-    
-    Args:
-        name (str, optional): Name of the specific logging session to check for.
-            If None (default), checks if any logger is running regardless of name.
-    
-    Returns:
-        bool: True if a background event logging session is running, False otherwise.
-            If a name is provided, it returns True only if a logger with that specific name is running.
-            If no name is provided, it returns True if any logger is running.
-    
-    Example:
-        if is_background_event_logging_running():
-            print("A logging session is active")
-        
-        if is_background_event_logging_running("my_test_logging"):
-            print("The 'my_test_logging' session is active")
+def stop_all_background_packet_logging() -> None:
     """
-    from openc3.script import stash_get
+    Stop all running background packet logging scripts.
     
+    This function iterates through all active packet loggers and stops them.
+    It's useful for cleaning up all logging processes at once.
+    """
     try:
-        script_id = stash_get('background_event_log_id')
-        current_name = stash_get('background_event_log_name')
-        return script_id is not None and (name is None or current_name == name)
-    except:
-        return False
+        loggers = stash_get('background_packet_loggers') or {}
+        if not loggers:
+            print("No active background packet loggers found.")
+            return
 
-
-def open_event_log_for_search(
-    target_name: str = None, 
-    packet_name: str = EVENT_PACKET_NAME
-) -> int:
-    """Set the point that a find_events call will search back to.
-    
-    This is deprecated and included for backward compatibility.
-    Use set_event_search_point() for more understandable code.
-    """
-    if target_name is None:
-        target_name = get_event_target_name()
-    
-    return set_event_search_point(target_name, packet_name)
+        for name, logger_info in list(loggers.items()):  # Use list() to avoid modifying dict during iteration
+            script_id = logger_info['id']
+            running_script_stop(script_id)
+            
+            print(f"Stopped background packet logging '{name}' (script ID: {script_id})")
+            
+            # Remove from loggers dictionary
+            loggers.pop(name)
+        
+        # Update stash with empty loggers dictionary
+        stash_set('background_packet_loggers', {})
+        
+        print("All background packet loggers have been stopped.")
+    except Exception as e:
+        print(f"Error stopping all background packet logging: {str(e)}")

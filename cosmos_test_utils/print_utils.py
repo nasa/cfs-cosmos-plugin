@@ -39,17 +39,17 @@ def test_print(
     Args:
         text_to_print: Text to print to the test log
         event_log_id: Optional event subscription ID 
-                     (if None, uses module-level ID from open_event_log_for_script_logging)
+                     (if None, uses module-level ID from capture_events_for_script_logging)
         use_group_print_for_events: If True, use Group.print for events and text_to_print;
                                     If False, use built-in print(default: False - uses regular print)
                      
     Examples:
         # Basic usage
-        open_event_log_for_script_logging()
+        capture_events_for_script_logging()
         test_print("Command sent")
         
         # With specific event log ID
-        log_id = open_event_log_for_script_logging()
+        log_id = capture_events_for_script_logging()
         test_print("Message with specific log", event_log_id=log_id)
         
         # Using Group.print for events as well

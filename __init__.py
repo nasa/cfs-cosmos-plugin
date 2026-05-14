@@ -5,32 +5,24 @@ A collection of utility functions for testing with the OpenC3 COSMOS ground syst
 """
 
 from .cosmos_test_utils.system_config import (
-    EVENT_TARGET_NAME,
-    set_event_target_name,
-    get_event_target_name,
     EVENT_PACKET_NAME,
-    EVENT_TYPE_TO_TXT,
-    EVENT_TXT_TO_TYPE,
+    COMMON_PACKET_FIELDS,
+    DERIVED_PACKET_FIELDS,
     EVENT_BLOCK_TIMEOUT,
     DEFAULT_POLL_INTERVAL,
     DEFAULT_WAIT_TIMEOUT,
-    COMMON_PACKET_TIME_SECONDS_FIELD,
-    COMMON_PACKET_TIME_SUBSECS_FIELD,
-    COMMON_PACKET_SEQUENCE_COUNT_FIELD,
-    COMMON_PACKET_TIME_SECONDS_DESC,
-    COMMON_PACKET_TIME_SUBSECS_DESC,
-    COMMON_PACKET_SEQUENCE_DESC
+    LOGGER_INIT_WAIT_TIME
 )
 
 from .cosmos_test_utils.event_utils import (
     set_event_search_point,
-    open_event_log_for_script_logging,
+    capture_events_for_script_logging,
     find_events,
     print_events_to_log,
-    start_background_event_logging,
-    stop_background_event_logging,
-    is_background_event_logging_running,
-    open_event_log_for_search
+    is_background_packet_logging_running,
+    start_background_packet_logging,
+    stop_background_packet_logging,
+    stop_all_background_packet_logging
 )
 
 from .cosmos_test_utils.print_utils import (
@@ -40,9 +32,18 @@ from .cosmos_test_utils.print_utils import (
 
 from .cosmos_test_utils.telemetry_utils import (
     get_tlm_point,
+    get_telemetry_values,
+    validate_telemetry,
     report_telemetry,
     report_all_telemetry,
     report_all_targets_telemetry
+)
+
+from .cosmos_test_utils.test_tracking_utils import (
+    test_initialization,
+    test_step_start,
+    test_step_end,
+    test_end
 )
 
 from .cosmos_test_utils.requirement_utils import RequirementTracker
@@ -66,4 +67,4 @@ from .cosmos_test_utils.timing_utils import (
 from .cosmos_test_utils.command_utils import CommandSender
 
 # Define the version
-__version__ = '1.0.2'
+__version__ = '2.0.0'

@@ -706,8 +706,8 @@ def wait_for_telemetry_in_timing_range(
 
 
 def wait_multiple_telemetry(
-    conditions: List[Dict[str, Any]],
-    timeout: float = DEFAULT_WAIT_TIMEOUT,
+    conditions: List[List[Any]],
+    timeout: Optional[float] = None,
     poll_interval: float = DEFAULT_POLL_INTERVAL,
     require_all: bool = True,
     print_func: Optional[Callable] = None
@@ -716,27 +716,44 @@ def wait_multiple_telemetry(
     Wait for multiple telemetry conditions simultaneously.
     
     Args:
-        conditions: List of condition dictionaries, each with keys:
-                  - 'target': COSMOS target name
-                  - 'packet': COSMOS packet name
-                  - 'item': COSMOS telemetry item name
-                  - 'comparison': Comparison operator (optional, default: '==')
-                  - 'value': The value to compare against
-        timeout: Maximum wait time in seconds (default from system_config)
+        conditions: List of condition lists, each with elements:
+                  - target: COSMOS target name
+                  - packet: COSMOS packet name
+                  - item: COSMOS telemetry item name
+                  - comparison: Comparison operator (optional, default: '==')
+                  - value: The value to compare against
+        timeout: Maximum wait time in seconds (default: None, which uses system_config value)
         poll_interval: Time between checks in seconds (default from system_config)
         require_all: If True, all conditions must be met; if False, any condition met is success
         print_func: Function to use for printing status/debug info (default: test_print)
-        
+    
+    Valid comparison operators:
+        "==", "!=", "<", "<=", ">", ">=", "contains", "does_not_contain"
+    
     Returns:
         Tuple[bool, Dict[str, bool]]: 
             - bool: Overall success (True if requirements met based on require_all setting)
-            - Dict[str, bool]: Dictionary mapping condition name to individual result (True/False)
+            - Dict[str, bool]: Dictionary mapping auto-generated condition names to individual results (True/False)
+    
+    Raises:
+        ValueError: If the timeout is negative
+                    If a condition has an invalid number of elements
+                    If the target, packet, or item in a condition are not strings
+                    If an invalid comparison operator is provided.
+        Exception: If there's an error retrieving telemetry values.
         
     Examples:
         # Basic usage - check overall success first
+        # Using default comparison operator ('==') for first condition only
         overall_success, results = wait_multiple_telemetry([
-            {'target': 'TARGET', 'packet': 'HK_TLM_PK', 'item': 'MODE', 'comparison': '==', 'value': 'SAFE'},
-            {'target': 'TARGET', 'packet': 'HK_TLM_PK', 'item': 'BATTERY', 'comparison': '>=', 'value': 75}
+            ['TARGET', 'HK_TLM_PK', 'MODE', 'SAFE'],
+            ['TARGET', 'HK_TLM_PK', 'BATTERY', '>=', 75]
+        ])
+        
+        # Using default comparison operator ('==')
+        overall_success, results = wait_multiple_telemetry([
+            ['TARGET', 'HK_TLM_PK', 'MODE', 'SAFE'],
+            ['TARGET', 'HK_TLM_PK', 'POWER_STATE', 'ON']
         ])
         
         if overall_success:
@@ -749,10 +766,26 @@ def wait_multiple_telemetry(
         
         # Require any condition to pass (not all)
         overall_success, results = wait_multiple_telemetry([
-            {'target': 'TARGET', 'packet': 'HK_TLM_PK', 'item': 'MODE', 'comparison': '==', 'value': 'SAFE'},
-            {'target': 'TARGET', 'packet': 'HK_TLM_PK', 'item': 'MODE', 'comparison': '==', 'value': 'SCIENCE'}
+            ['TARGET', 'HK_TLM_PK', 'MODE', 'SAFE'],
+            ['TARGET', 'HK_TLM_PK', 'MODE', 'SCIENCE']
         ], require_all=False)
+    
+        # Simple example with building an expected_conditions variable and ignoring the detailed results return
+        expected_conditions = [
+            ['TARGET', 'HEALTH_TLM', 'TEMPERATURE', '<', 30],
+            ['TARGET', 'HEALTH_TLM', 'POWER_STATUS', 'ON']
+        ]
+        overall_success, _ = wait_multiple_telemetry(expected_conditions)
+    
+    
+    Note:
+        - If a telemetry retrieval error occurs for a condition, that condition is marked as failed.
+        - The function tracks state changes and only prints when a condition's state changes.
     """
+    if timeout is None:
+        timeout = DEFAULT_WAIT_TIMEOUT
+    elif timeout < 0:
+        raise ValueError("Timeout must be a non-negative number")
     
     if print_func is None:
         from .print_utils import test_print
@@ -762,33 +795,40 @@ def wait_multiple_telemetry(
     from openc3.script import tlm
     
     # Validate conditions and set up comparison functions
+    formatted_conditions = []
     for i, condition in enumerate(conditions):
-        # Ensure required fields are present
-        if 'target' not in condition or 'packet' not in condition or 'item' not in condition or 'value' not in condition:
-            raise ValueError(f"Condition {i} is missing required fields (target, packet, item, value)")
+        if len(condition) < 4 or len(condition) > 5:
+            raise ValueError(f"Condition {i} has invalid number of elements. Expected 4 or 5, got {len(condition)}")
         
-        # Set default comparison if not specified
-        if 'comparison' not in condition:
-            condition['comparison'] = "=="
+        # Check that target, packet, and item are strings
+        if not all(isinstance(elem, str) for elem in condition[:3]):
+            raise ValueError(f"Condition {i}: target, packet, and item must be strings")
         
-        if condition['comparison'] not in COMPARISON_OPERATORS:
+        formatted_condition = {
+            'target': condition[0],
+            'packet': condition[1],
+            'item': condition[2],
+            'comparison': '==' if len(condition) == 4 else condition[3],
+            'value': condition[-1]
+        }
+        
+        if formatted_condition['comparison'] not in COMPARISON_OPERATORS:
             valid_ops = ", ".join(COMPARISON_OPERATORS.keys())
-            raise ValueError(f"Invalid comparison operator '{condition['comparison']}' in condition {i}. Must be one of: {valid_ops}")
+            raise ValueError(f"Invalid comparison operator '{formatted_condition['comparison']}' in condition {i}. Must be one of: {valid_ops}")
             
         # Add the comparison function
-        condition['compare_func'] = COMPARISON_OPERATORS[condition['comparison']]
+        formatted_condition['compare_func'] = COMPARISON_OPERATORS[formatted_condition['comparison']]
          
         # Create a descriptive name for this condition
-        # Include the complete condition to avoid collisions when using same target/packet/item with different comparisons
-        condition['name'] = f"{condition['target']}_{condition['packet']}_{condition['item']}_{condition['comparison']}_{str(condition['value'])}"
+        formatted_condition['name'] = f"{formatted_condition['target']}_{formatted_condition['packet']}_{formatted_condition['item']}_{formatted_condition['comparison']}_{str(formatted_condition['value'])}"
+        
+        formatted_conditions.append(formatted_condition)
             
     # Initialize results dictionary and previous state tracking
-    results = {condition.get('name', i): False for i, condition in enumerate(conditions)}
-    previous_results = {condition.get('name', i): None for i, condition in enumerate(conditions)}  # None = untested
+    results = {condition['name']: False for condition in formatted_conditions}
+    previous_results = {condition['name']: None for condition in formatted_conditions}  # None = untested
     
     # Track start time
-    # Using time.perf_counter() for high precision timing
-    # perf_counter() is more accurate than time.time() for measuring elapsed time
     start_time = time.perf_counter()
     end_time = start_time + timeout
     
@@ -798,8 +838,8 @@ def wait_multiple_telemetry(
         all_met = True
         any_met = False
         
-        for condition in conditions:
-            name = condition.get('name', conditions.index(condition))
+        for condition in formatted_conditions:
+            name = condition['name']
             
             # Skip checking already satisfied conditions if not require_all
             if not require_all and results[name]:
@@ -818,14 +858,14 @@ def wait_multiple_telemetry(
                     if result:
                         # Condition newly met (from None/False to True)
                         print_func(
-                            f"Condition met: {condition['target']} {condition['packet']} {condition['item']} "
+                            f" <*> Condition met: {condition['target']} {condition['packet']} {condition['item']} "
                             f"{condition['comparison']} {condition['value']} (current: {current_value})"
                         )
                     else:
                         # Condition newly failed (from None/True to False)
                         if previous_results[name] is not None:  # Only print if it was previously met
                             print_func(
-                                f"Condition no longer met: {condition['target']} {condition['packet']} {condition['item']} "
+                                f" <!> Condition no longer met: Expecting {condition['target']} {condition['packet']} {condition['item']} "
                                 f"{condition['comparison']} {condition['value']} (current: {current_value})"
                             )
                 
@@ -842,7 +882,7 @@ def wait_multiple_telemetry(
                 # Handle errors that might occur when getting telemetry
                 # Only print error if it's a new error (state change)
                 if previous_results[name] != False:
-                    print_func(f"Error checking condition {name}: {str(e)}")
+                    print_func(f" <!> Error checking condition {name}: {str(e)}")
                 previous_results[name] = False
                 results[name] = False
                 all_met = False
@@ -857,13 +897,13 @@ def wait_multiple_telemetry(
         time.sleep(poll_interval)
     
     # If we get here, we timed out
-    print_func(f"Timeout waiting for {'all' if require_all else 'any'} telemetry conditions to be met")
-    for condition in conditions:
-        name = condition.get('name', conditions.index(condition))
+    print_func(f" <!> Timeout waiting for {'all' if require_all else 'any'} telemetry conditions to be met")
+    for condition in formatted_conditions:
+        name = condition['name']
         try:
             current_value = tlm(f"{condition['target']} {condition['packet']} {condition['item']}")
             print_func(
-                f"Condition {name}: {condition['target']} {condition['packet']} {condition['item']} "
+                f"Expected Condition: {condition['target']} {condition['packet']} {condition['item']} "
                 f"{condition['comparison']} {condition['value']} (current: {current_value}) = {results[name]}"
             )
         except Exception as e:
