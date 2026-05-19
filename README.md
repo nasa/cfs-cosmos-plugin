@@ -71,6 +71,43 @@ This is necessary before you can build the NASA OpenC3 cFS COSMOS plugin.
 
 ### Build the NASA OpenC3 COSMOS Plugin
 
+
+#### Recommended method
+
+This version now includes a Makefile to simplify creation of the gem file.  This is the preferred method to build
+the gem going forward, as it combines the local scripts with scripts provided in the various submodules, allowing
+more scripts to be included.
+
+To build, simply run:
+
+`make gem`
+
+By default, this will build the gem corresponding to the `native_std` build configuration, and set the gem version
+based on the most recent git tag.  This also adds an incrementing count each time the gem is re-built.  Other build
+configurations can be referenced by setting the `O` variable when running make, for example:
+
+`make gem O=/path/to/any/cfs/build`
+
+The directory specified only needs to have the `prep` step performed, it does not need to be a complete build.
+
+The version can also be directly specified by setting the PLUGIN_VERSION variable, such as:
+
+`make gem PLUGIN_VERSION=X.Y.Z`
+
+Note: If `openc3.sh` is not in the PATH, then the gem source will still be staged, but the binary file
+will not be created.  In this case the gem binary can be created by manually running the tool in the staging
+directory.
+
+The resulting gem file is produced in `<build>/cosmos/plugin` where `<build>` refers to the build directory
+specified via `O` (or native_std, if O was not specified).
+
+#### Local-only method
+
+This still supports building the gem directly using the `openc3.sh` script.  This is to preserve compatibility
+with existing workflows that build the gem using this method.  However, when building with this method, the gem
+will only include test scripts provided directly in this submodule; it will not contain tests from other
+submodules.
+
 With OpenC3 COSMOS running, and `openc3.sh` in your PATH, the plugin can be build using the following command:
 
 `openc3.sh cli rake build VERSION=X.Y.Z`
@@ -115,7 +152,7 @@ Navigate to `http://localhost:2900` in a web browser to access the OpenC3 COSMOS
 
 ## Using the Plugin
 
-This section describes common ways users interact with the cFS with this plugin. 
+This section describes common ways users interact with the cFS with this plugin.
 
 
 ### Enable cFS Telemetry
