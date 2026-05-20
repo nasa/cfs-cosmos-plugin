@@ -138,9 +138,9 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK APPEND_LOAD_COUNT == {prev_append_ld_count + 1}", 20)
 
         # Set SC time to 1000000 (because RTS1 starts shortly after that time).
-        exp_cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
+        hk_cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_TIME with SECONDS 1000000, MICROSECONDS 0")
-        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {exp_cmd_count + 1}", 20)
+        wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {hk_cmd_count + 1}", 20)
 
         ########################
         # Test Start ATS command
@@ -151,9 +151,9 @@ class cfs_test_group_cfs_sc(Group):
         exp_cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
 
         cmd(f"<%= target_name %> SC_CMD_START_ATS with ATS_NUM 1")
-        
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 1}", 20)
 
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK ATP_STATE == 'EXECUTING'", 20)
 
         # NOTE: expected event message text: "ATS A Execution Started"
@@ -168,7 +168,8 @@ class cfs_test_group_cfs_sc(Group):
 
         cmd(f"<%= target_name %> SC_CMD_SWITCH_ATS")
         
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 2}", 20)
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
 
         # Note: SWITCH_PEND_FLAG should go to YES, and then back to NO when switch completes.
         # #     This can't be checked, because the switch completes before the next HK packet.
@@ -185,12 +186,14 @@ class cfs_test_group_cfs_sc(Group):
 
         cmd(f"<%= target_name %> SC_CMD_APPEND_ATS with ATS_NUM 1")
         
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 3}", 20)
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK APPEND_CMD_ARG == 1", 20)
 
         cmd(f"<%= target_name %> SC_CMD_APPEND_ATS with ATS_NUM 2")
         
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 4}", 20)
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK APPEND_CMD_ARG == 2", 20)
 
         # NOTE: expected event message text: "Append ATS B command: %d ATS entries appended"
@@ -205,8 +208,8 @@ class cfs_test_group_cfs_sc(Group):
 
         cmd(f"<%= target_name %> SC_CMD_JUMP_ATS with NEW_TIME {new_time}")
         
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 5}", 20)
-
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK NEXT_ATS_TIME == 1000130", 20)
 
         # NOTE: expected event messages text:
@@ -222,8 +225,8 @@ class cfs_test_group_cfs_sc(Group):
         
         cmd(f"<%= target_name %> SC_CMD_STOP_ATS")
 
-        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 6}", 20)
-
+        exp_cmd_count = exp_cmd_count + 1
+        wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK ATP_STATE == 'IDLE'", 20)
 
         # NOTE: expected event message text: "ATS B stopped"
