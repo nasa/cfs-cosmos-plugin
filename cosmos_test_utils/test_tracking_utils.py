@@ -32,6 +32,7 @@ from openc3.script.suite import Group
 
 # Global variables
 current_test_stack: List[Dict] = []
+current_step_stack: List[Dict] = []
 
 
 def test_initialization(test_target_list: List[str], packets_to_report: Optional[List[List[str]]] = None, override_test_name: Optional[str] = None, override_type: Optional[str] = None):
@@ -66,8 +67,9 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
         - Test type is auto-determined: "Group" for setup(), "Test" otherwise
         - Creates a new RequirementTracker for this test level.
         - Sets initial status to "U" (Untested) in its own tracker and all parent trackers.
+        - **Can be called within a test step to create a nested test.**
         - Initializes background packet logging with a unique identifier (test_name + random suffix)
-          to prevent conflicts when the same test runs with different targets (paralellel execution on different targets).
+          to prevent conflicts when the same test runs with different targets (parallel execution on different targets).
         - Initializes event capturing for script logging.
         - If packets_to_report is provided, it initializes telemetry reporting for those packets.
     
@@ -79,7 +81,7 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
     if not test_target_list:
         raise ValueError("test_target_list must contain at least one target")
     
-    global current_test_stack
+    global current_test_stack, current_step_stack
     
     # Determine test name and type
     if override_test_name:
@@ -118,15 +120,25 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
     # Initialize test status
     new_test["tracker"].set_requirement(test_name, "U", f"{test_type} {test_name} initialized")
     
+    # Attach to parent step if one exists
+    if current_step_stack:
+        parent_step = current_step_stack[-1]
+        new_test["parent_step"] = parent_step  # Track step parent separately
+        parent_step["children"].append(new_test)
+    
+    # Attach to parent test if one exists
     if current_test_stack:
         parent = current_test_stack[-1]
         new_test["parent"] = parent
-        parent["children"].append(new_test)
+        # Only add to parent's children if NOT already added to a step
+        if not current_step_stack:
+            parent["children"].append(new_test)
         
         # Initialize test status in all parent trackers
-        while parent:
-            parent["tracker"].set_requirement(test_name, "U", f"Subtest {test_name} initialized")
-            parent = parent["parent"]
+        temp_parent = parent
+        while temp_parent:
+            temp_parent["tracker"].set_requirement(test_name, "U", f"Subtest {test_name} initialized")
+            temp_parent = temp_parent.get("parent")
     
     current_test_stack.append(new_test)
     
@@ -185,6 +197,8 @@ def test_step_start(step_name: str, track_step_status: bool = False) -> int:
     Note:
         - If track_step_status is True, it initializes the step's status in the current test's tracker.
         - The track_step_status setting is stored with the step and used in the corresponding test_step_end call.
+        - **Can be called within another test step to create nested substeps.**
+        - **The step remains "open" until test_step_end is called, allowing substeps or subtests to be added.**
     
     Requires:
         At least one test_initialization() must have been called before this function.
@@ -193,118 +207,218 @@ def test_step_start(step_name: str, track_step_status: bool = False) -> int:
     Example:
         step_num = test_step_start("Initialize Power Subsystem", track_step_status=True)
     """
-    global current_test_stack
+    global current_test_stack, current_step_stack
     
     if not current_test_stack:
         raise ValueError("test_initialization must be called before test_step_start")
     
     current_test = current_test_stack[-1]
-    step_num = len([child for child in current_test["children"] if "step_num" in child]) + 1
+    
+    # Determine parent for this step (could be another step or the test) - only use step from stack if it belongs to current test
+    if current_step_stack and current_step_stack[-1]["parent_test"] == current_test:
+        # This step belongs to current test, so we're creating a substep
+        parent_step = current_step_stack[-1]
+        step_num = len([child for child in parent_step["children"] if "step_num" in child]) + 1
+        parent_context = parent_step
+    else:
+        # No step in stack or step belongs to a different test, so add to test directly
+        step_num = len([child for child in current_test["children"] if "step_num" in child]) + 1
+        parent_context = current_test
     
     new_step = {
         "name": step_name,
         "status": "U",
         "step_num": step_num,
-        "track_step_status": track_step_status
+        "track_step_status": track_step_status,
+        "children": [],  # Steps can have children
+        "parent_test": current_test,  # Track which test this belongs to
+        "parent_step": current_step_stack[-1] if (current_step_stack and current_step_stack[-1]["parent_test"] == current_test) else None  # Track parent step if nested
     }
-    current_test["children"].append(new_step)
+    parent_context["children"].append(new_step)
+    
+    # Push this step onto the step stack
+    current_step_stack.append(new_step)
     
     if track_step_status:
-        step_id = f"{current_test['name']}, Step {step_num}"
+        # Determine step ID based on nesting
+        if new_step["parent_step"]:
+            step_id = f"{current_test['name']}, Step {new_step['parent_step']['step_num']}.{step_num}"
+        else:
+            step_id = f"{current_test['name']}, Step {step_num}"
         
         # Initialize step status in current test's tracker
         current_test["tracker"].set_requirement(step_id, "U", f"Step started: {step_name}")
         
-        # Propagate step initialization to parent trackers (just like test initialization)
-        parent = current_test["parent"]
+        # Propagate step initialization to parent trackers
+        parent = current_test.get("parent")
         while parent:
             parent["tracker"].set_requirement(step_id, "U", f"Substep from {current_test['name']}: {step_name}")
-            parent = parent["parent"]
+            parent = parent.get("parent")
     
     # Print any events from before this call
     print_events_to_log()
     
+    # Format step number with nesting indicator
+    if new_step["parent_step"]:
+        step_display = f"{new_step['parent_step']['step_num']}.{step_num}"
+    else:
+        step_display = f"{step_num}.0"
+    
     Group.print( "")
     Group.print( "|******************************************************************************")
-    Group.print(f"|  Step {step_num}.0: {step_name}")
+    Group.print(f"|  Step {step_display}: {step_name}")
     Group.print( "|******************************************************************************")
     
     return step_num
 
 
-def test_step_end(step_result: str, result_text: Optional[str] = None) -> str:
+def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] = None) -> str:
     """
     Mark the end of a test step, report its status, and update the test hierarchy.
     
-    This function finalizes a test step by setting and reporting its status. It processes
-    the provided result, normalizes it, and updates the current step's status in the test
-    hierarchy. If step status tracking was enabled in the corresponding test_step_start,
-    it also updates the status in the current test's tracker.
+    This function finalizes a test step by determining its final status based on either
+    the provided result, child steps/tests, or both. The step_result parameter is optional
+    when the step contains substeps or subtests (their status determines the step's status),
+    but required when the step has no children.
+    The step fails if either the input result is "Fail" OR any children failed/are untested.
+    It updates the current step's status in the test hierarchy. If step status tracking
+    was enabled in the corresponding test_step_start, it also updates the status in the
+    current test's tracker.
     
     Args:
-        step_result (str): The result of the test step. Accepted values are "P", "F", "Pass",
-                           or "Fail" (case-insensitive).
+        step_result (Optional[str]): The result of the test step. Accepted values are "P", "F", 
+                                     "Pass", or "Fail" (case-insensitive), or None.
+                                     - Required if the step has no substeps or subtests.
+                                     - Optional if the step has children (status determined from children).
+                                     Defaults to None.
         result_text (Optional[str]): Additional text to describe the result. Defaults to None.
     
     Returns:
-        str: The normalized result ("P" for Pass or "F" for Fail).
+        str: The final status ("P" for Pass or "F" for Fail).
     
     Raises:
-        ValueError: If test_step_start has not been called before this function, or if there
-                    is no active step to end.
+        ValueError: If test_step_start has not been called before this function,
+                    if there is no active step to end, or if step_result is None
+                    when the step has no children.
     
     Requires:
         At least one test_initialization() must have been called before this function to ensure
         proper script logging setup.
     
     Note:
-        - The status set here contributes to determining the overall status of the parent test.
+        - Status determination logic:
+          * If no children: step_result must be provided (P or F)
+          * If children exist and step_result is None: status determined solely from children
+          * If children exist and step_result is provided: combined logic applies
+            - Fails ("F") if: step_result is "F" OR any child is "F" or "U"
+            - Passes ("P") only if: step_result is "P" AND all children are "P"
+        - The status set here contributes to determining the overall status of the parent test/step.
         - If step status tracking was enabled in test_step_start, it updates the status
           in the current test's tracker.
     
-    Example:
+    Examples:
+        # Step with no children - result required
         result = test_step_end("Pass", "Power subsystem initialized successfully")
+        
+        # Step with substeps - result optional (determined from children)
+        result = test_step_end(result_text="All substeps completed")
+        
+        # Step with substeps - result provided for additional validation
+        result = test_step_end("Pass", "Subsystem test completed")
     """
-    global current_test_stack
+    global current_test_stack, current_step_stack
     
-    if not current_test_stack:
+    if not current_step_stack:
         raise ValueError("test_step_start must be called before test_step_end")
     
-    current_test = current_test_stack[-1]
-    if not current_test["children"] or "step_num" not in current_test["children"][-1]:
-        raise ValueError("No active step to end")
+    # Pop the current step from the stack
+    current_step = current_step_stack.pop()
+    current_test = current_step["parent_test"]
     
-    current_step = current_test["children"][-1]
+    # Validate step_result based on whether children exist
+    if not current_step["children"] and step_result is None:
+        raise ValueError(
+            f"step_result is required for step '{current_step['name']}' because it has no substeps or subtests. "
+            "Provide 'P'/'Pass' or 'F'/'Fail' to indicate the step's status."
+        )
     
-    normalized_result = "P" if step_result.upper() in ["P", "PASS"] else "F"
-    current_step["status"] = normalized_result
+    # Determine final status
+    if current_step["children"]:
+        # Step has children - determine status from children
+        child_statuses = [child.get("status", "U") for child in current_step["children"]]
+        
+        if any(status in ["F", "U"] for status in child_statuses):
+            # At least one child failed or is untested
+            final_status = "F"
+            
+            if step_result and step_result.upper() in ["P", "PASS"]:
+                # Input was Pass but children caused failure
+                additional_info = " (Failed due to substep/subtest failures)"
+                if result_text:
+                    result_text += additional_info
+                else:
+                    result_text = "Step had failures in substeps or subtests"
+        else:
+            # All children passed
+            if step_result:
+                # Use provided result (but children all passed, so only fails if input is F)
+                final_status = "P" if step_result.upper() in ["P", "PASS"] else "F"
+            else:
+                # No result provided, all children passed
+                final_status = "P"
+    else:
+        # No children - use provided result (already validated as not None)
+        final_status = "P" if step_result.upper() in ["P", "PASS"] else "F"
+    
+    current_step["status"] = final_status
     
     # Use the track_step_status value from the step itself
     if current_step.get("track_step_status", False):
-        step_id = f"{current_test['name']}, Step {current_step['step_num']}"
+        # Determine step ID based on nesting
+        if current_step["parent_step"]:
+            step_id = f"{current_test['name']}, Step {current_step['parent_step']['step_num']}.{current_step['step_num']}"
+        else:
+            step_id = f"{current_test['name']}, Step {current_step['step_num']}"
         
         # Update status in current test's tracker
-        current_test["tracker"].set_requirement(step_id, normalized_result, result_text or f"Step ended: {current_step['name']}")
+        current_test["tracker"].set_requirement(step_id, final_status, result_text or f"Step ended: {current_step['name']}")
         
-        # Propagate step status to parent trackers (just like test status propagation)
-        parent = current_test["parent"]
+        # Propagate step status to parent trackers
+        parent = current_test.get("parent")
         while parent:
-            parent["tracker"].set_requirement(step_id, normalized_result, f"Substep from {current_test['name']}: {result_text or current_step['name']}")
-            parent = parent["parent"]
+            parent["tracker"].set_requirement(step_id, final_status, f"Substep from {current_test['name']}: {result_text or current_step['name']}")
+            parent = parent.get("parent")
     
     # print any events left over from the step into the COSMOS log
     print_events_to_log()
     
-    # Report the status for the log (spaces to provide normailized view of the print-out)
+    # Report child summary if there were any
+    if current_step["children"]:
+        Group.print("|------------------------------------------------------------------------------")
+        Group.print("| Substep/Subtest Summary:")
+        for child in current_step["children"]:
+            if "step_num" in child:
+                child_name = f"Substep {child['step_num']}: {child['name']}"
+            else:
+                child_name = f"Subtest: {child['name']}"
+            Group.print(f"|     {child_name}: {child.get('status', 'U')}")
+    
+    # Format step number with nesting indicator
+    if current_step["parent_step"]:
+        step_display = f"{current_step['parent_step']['step_num']}.{current_step['step_num']}"
+    else:
+        step_display = current_step['step_num']
+    
+    # Report the status for the log
     Group.print(     "|------------------------------------------------------------------------------")
     Group.print(     "| Step Status:")
-    Group.print(    f"|     Step Number: {current_step['step_num']}, P/F Status: {normalized_result}")
+    Group.print(    f"|     Step Number: {step_display}, P/F Status: {final_status}")
     if result_text:
         Group.print(f"|     Result: {result_text}")
     Group.print(     "|------------------------------------------------------------------------------")
     
     #return the "Pass/Fail" of the step
-    return normalized_result
+    return final_status
 
 
 def test_end() -> str:
@@ -335,7 +449,11 @@ def test_end() -> str:
     Example:
         final_status = test_end()
     """
-    global current_test_stack
+    global current_test_stack, current_step_stack
+    
+    # Verify no steps are left open
+    if current_step_stack and current_step_stack[-1]["parent_test"] == current_test_stack[-1]:
+        raise ValueError("Cannot end test while steps are still open. Call test_step_end first.")
     
     if not current_test_stack:
         raise ValueError("test_initialization must be called before test_end")
