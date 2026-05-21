@@ -60,6 +60,8 @@ class cfs_test_group_cfe_es(Group):
         ## Send command under test
         #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
         #
+
+        result = subprocess.run(['ls', '-l'], capture_output=False, text=True)
     
     
     # FIXME: Currently don't have a good way to restart cFS from COSMOS.
