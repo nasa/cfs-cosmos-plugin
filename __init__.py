@@ -67,4 +67,4 @@ from .cosmos_test_utils.timing_utils import (
 from .cosmos_test_utils.command_utils import CommandSender
 
 # Define the version
-__version__ = '2.0.1'
+__version__ = '2.0.2'

@@ -427,8 +427,9 @@ def report_telemetry(
         print(">>>")
         
         # Calculate and display CCSDS packet rate if we have the necessary fields
-        if all(field in current_packet and field in previous_packet for field in 
-               [RATE_CALC_CCSDS_SECONDS_FIELD, RATE_CALC_CCSDS_SUBSECS_FIELD, RATE_CALC_CCSDS_SEQUENCE_FIELD]):
+        if all(field in current_packet and field in previous_packet 
+               and current_packet[field] is not None and previous_packet[field] is not None
+               for field in [RATE_CALC_CCSDS_SECONDS_FIELD, RATE_CALC_CCSDS_SUBSECS_FIELD, RATE_CALC_CCSDS_SEQUENCE_FIELD]):
             
             seq_delta = int(current_packet[RATE_CALC_CCSDS_SEQUENCE_FIELD]) - int(previous_packet[RATE_CALC_CCSDS_SEQUENCE_FIELD])
             
@@ -476,8 +477,9 @@ def report_telemetry(
         print(">>>")
         
         # Calculate and display COSMOS packet rate if we have the necessary fields
-        if all(field in current_packet and field in previous_packet for field in 
-               [RATE_CALC_COSMOS_TIMESECONDS_FIELD, RATE_CALC_COSMOS_COUNT_FIELD]):
+        if all(field in current_packet and field in previous_packet 
+               and current_packet[field] is not None and previous_packet[field] is not None
+               for field in [RATE_CALC_COSMOS_TIMESECONDS_FIELD, RATE_CALC_COSMOS_COUNT_FIELD]):
             
             count_delta = int(current_packet[RATE_CALC_COSMOS_COUNT_FIELD]) - int(previous_packet[RATE_CALC_COSMOS_COUNT_FIELD])
             
