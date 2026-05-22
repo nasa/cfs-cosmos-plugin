@@ -101,7 +101,7 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
 
         # Load ATS B table
-        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/sc_ats2-test.tbl'")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/sc_ats2_test.tbl'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
 
@@ -118,7 +118,7 @@ class cfs_test_group_cfs_sc(Group):
         prev_append_ld_count = tlm(f"<%= target_name %> SC_HK APPEND_LOAD_COUNT")
 
         # Load ATS Append table
-        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/sc_append-test.tbl'")
+        cmd(f"<%= target_name %> CFE_TBL_CMD_LOAD with LOAD_FILENAME '/cf/sc_append_test.tbl'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
 
