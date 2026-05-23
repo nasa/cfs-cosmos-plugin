@@ -29,6 +29,8 @@ class cfs_test_group_cfe_es_checkout(Group):
         #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE PROCESSOR")
         #cmd(f"<%= target_name %> CFE_ES_CMD_RESTART with RESTART_TYPE POWER_ON")
 
+        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'CS'")
+
         # CS is ensured to be running in the setup function.
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")        
         wait(7) # wait for the application to stop
@@ -40,9 +42,7 @@ class cfs_test_group_cfe_es_checkout(Group):
         wait(14) # Wait for the app to fully restart
 
         cmd(f"<%= target_name %> CFE_ES_CMD_RELOAD_APP with APPLICATION 'CS', APP_FILE_NAME 'cs'")
-        wait(14) # Wait for the app to fully restart
 
-        cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'CS'")
         cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL with FILE_NAME '/cf/apps.txt'")
         cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ALL_TASKS with FILE_NAME '/cf/cs'")
         cmd(f"<%= target_name %> CFE_ES_CMD_WRITE_SYS_LOG with FILE_NAME '/cf/logfile.txt'")
