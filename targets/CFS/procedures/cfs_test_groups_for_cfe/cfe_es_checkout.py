@@ -31,7 +31,6 @@ class cfs_test_group_cfe_es_checkout(Group):
 
         cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'CS'")
 
-        # CS is ensured to be running in the setup function.
         cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")        
         wait(7) # wait for the application to stop
         cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
@@ -77,9 +76,7 @@ class cfs_test_group_cfe_es_checkout(Group):
         - Runs when Group Setup button is pressed
         - Runs before all scripts when Group Start is pressed
         """
-        # Start CS.  Doesn't matter if it's already running - error can be ignored.
-        cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'CS', APP_ENTRY_POINT 'CS_AppMain', APP_FILE_NAME 'cs', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 65")
-        wait(5) # wait for the application to start
+        pass
 
 
     def teardown(self):
