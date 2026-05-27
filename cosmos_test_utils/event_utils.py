@@ -30,7 +30,7 @@ The background logging system ensures that:
 3. Stopping a logging session will only occur if the provided name matches the active session.
 """
 
-from openc3.script import script_create, script_run, running_script_stop, stash_set, stash_get
+from openc3.script import script_create, script_run, running_script_stop, stash_set, stash_get, script_delete
 from typing import Optional, Tuple, Union, List
 import time
 from .system_config import (
@@ -646,13 +646,18 @@ def stop_background_packet_logging(name: str = "default") -> None:
         if name in loggers:
             logger_info = loggers[name]
             script_id = logger_info['id']
+            script_name = f"{name}_pkt_log_rpt.rb"
+            
             running_script_stop(script_id)
+            print(f"Stopped background packet logging '{name}' (script ID: {script_id})")
+            
+            script_delete(script_name)
+            print(f"Deleted script file: {script_name}")
             
             # Remove from stash storage
             loggers.pop(name)
             stash_set('background_packet_loggers', loggers)
             
-            print(f"Background packet logging '{name}' stopped (script ID: {script_id})")
         else:
             print(f"Background packet logging with name '{name}' not found (may not have been started or packet already being logged)")
     except Exception as e:
@@ -674,9 +679,13 @@ def stop_all_background_packet_logging() -> None:
 
         for name, logger_info in list(loggers.items()):  # Use list() to avoid modifying dict during iteration
             script_id = logger_info['id']
-            running_script_stop(script_id)
+            script_name = f"{name}_pkt_log_rpt.rb"
             
+            running_script_stop(script_id)
             print(f"Stopped background packet logging '{name}' (script ID: {script_id})")
+            
+            script_delete(script_name)
+            print(f"Deleted script file: {script_name}")
             
             # Remove from loggers dictionary
             loggers.pop(name)
