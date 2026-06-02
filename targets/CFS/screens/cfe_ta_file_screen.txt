@@ -1,41 +1,59 @@
-SCREEN AUTO AUTO 1.0
-<% require 'cfs_target_num_color' %>
+SCREEN AUTO AUTO 1.0 
+<% require 'cfs_target_num_color' %> 
 
-VERTICAL
-    TITLE "<%= target_name %> TA Task Affinity File Dump" Courier 20 Normal true
-    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
+VERTICAL 
+TITLE "<%= target_name %> TA Task Affinity File Dump" Courier 20 Normal true 
+SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %> 
 
-    # --- File Info ---
-    LABEL "=== File Header ==="
-    LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE DESCRIPTION "File Desc:"
-    LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE FILE_CREATE_TIME "Created:"
-    
-    LABEL " " # Padding
-    
-    # --- Global Config ---
-    LABEL "=== Global Configuration ==="
-    HORIZONTAL
-        LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE CORES_AVAILABLE "Cores Available:"
-        LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE OSAL_CORES_MAX "OSAL cores Configured max:"
-        LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE MAX_AFFINITY_BITS "Max Affinity Bits:"
-    END
-    
-    LABEL " " # Padding
-    
-    # --- Task Array ---
-    LABEL "=== Task Affinity Log ==="
-    VERTICAL
-        # NOTE: Change '64' to match your OS_MAX_TASKS limit
-        <% 64.times do |i| %>
-        HORIZONTAL
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TASK_NAME_<%= i %> "[<%= i %>] Name:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_TYPE_<%= i %> "Type:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_STATUS_<%= i %> "Status:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_MASK1_<%= i %> "Mask1:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_MASK2_<%= i %> "Mask2:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_FROM_OS1_<%= i %> "OS1:"
-            LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_FROM_OS2_<%= i %> "OS2:"
-        END
-        <% end %>
-    END
+# --- File Info --- 
+LABEL "=== File Header ===" 
+LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE DESCRIPTION "File Desc:"
+LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE FILE_CREATE_TIME "Created:"
+LABEL " " 
+
+# --- Global Config --- 
+LABEL "=== Global Configuration ===" 
+HORIZONTAL 
+  LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE CORES_CONFIGURED "Cores Configured:"
+  LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_CORES_MAX "Max Affinity Bits:"
+END 
+LABEL " " 
+
+# --- Task Array --- 
+LABEL "=== Task Affinity Log ===" 
+
+# Compact table header alignment
+HORIZONTAL
+  LABEL "ID / Name"
+  LABEL "       "  # Empty space matching the first box width
+  LABEL "Mask"
+  LABEL "                           "  # Space matching the Mask 
+  LABEL "                           "  # Space matching the Mask box
+  LABEL "                           "  # Space matching the Mask box
+  LABEL "OS Mask"
+  LABEL "                                   "  # Space matching the OS Mask box
+  LABEL "                                   "  # Space matching the OS Mask box
+  LABEL "                                   "  # Space matching the OS Mask box
+  LABEL "Type"
+  LABEL "      "  # Space matching the Type box
+  LABEL "Status"
 END
+
+VERTICAL 
+  <% 64.times do |i| %> 
+    HORIZONTAL 
+      # Appending '30' forces COSMOS 7 to render a much wider value box container
+      VALUE <%= target_name %> TA_AFFINITY_FILE TASK_NAME_<%= i %> 20
+      LABEL " "
+      VALUE <%= target_name %> TA_AFFINITY_FILE TA_MASK_<%= i %> FORMATTED 30
+      LABEL " "
+      VALUE <%= target_name %> TA_AFFINITY_FILE TA_FROM_OS_<%= i %> FORMATTED 30
+      LABEL " "
+      VALUE <%= target_name %> TA_AFFINITY_FILE TA_TYPE_<%= i %> FORMATTED 10
+      LABEL " "
+      VALUE <%= target_name %> TA_AFFINITY_FILE TA_STATUS_<%= i %> FORMATTED 10
+    END 
+  <% end %> 
+END 
+
+
