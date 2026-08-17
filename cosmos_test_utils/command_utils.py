@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system”
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -33,7 +33,8 @@ class CommandSender:
         req_tracker: Optional[Any] = None,
         print_func: Optional[Callable] = print 
     ):
-        """Initialize a CommandSender.
+        """
+        Initialize a CommandSender.
         
         Args:
             req_tracker: RequirementTracker instance to use
@@ -46,7 +47,7 @@ class CommandSender:
             self.tlm = tlm
         except ImportError:
             # For testing outside of COSMOS
-            print("Warning: openc3.script not found, using mock cmd/tlm functions")
+            print("<!> CTU Warning: openc3.script not found, using mock cmd/tlm functions")
             self.cmd = lambda cmd_string, **kwargs: None  # Updated: cmd returns None
             self.tlm = lambda tlm_string: "MOCK_VALUE"
         
@@ -64,7 +65,8 @@ class CommandSender:
     
     
     def send_command(self, command_string: str, **kwargs) -> None:
-        """Send a single command and track it in command history.
+        """
+        Send a single command and track it in command history.
         
         This is a basic function for sending commands without waiting for responses.
         For commands where you need to verify the response, use send_cmd_with_response_check().
@@ -110,7 +112,7 @@ class CommandSender:
         self.command_history.append(command_record)
         
         # Log the command to our print function
-        self.print_func(f"Command sent: {command_string}")
+        self.print_func(f"<I> CTU: Command sent: {command_string}")
     
     
     def send_cmd_multiple_times(
@@ -120,7 +122,8 @@ class CommandSender:
         delay: float = 0.0,
         **kwargs
     ) -> None:
-        """Send a command multiple times.
+        """
+        Send a command multiple times.
         
         Features:
         - Multiple command execution
@@ -163,7 +166,8 @@ class CommandSender:
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
         **kwargs
     ) -> bool:
-        """Send a command and wait for a telemetry item to meet a given comparison criteria.
+        """
+        Send a command and wait for a telemetry item to meet a given comparison criteria.
         
         This function sends a command and then waits for a specific telemetry item
         to meet an expected comparison criteria. Command details and response information
@@ -246,7 +250,7 @@ class CommandSender:
         if success:
             # Get the current value (which matches the expected value)
             current_value = self.tlm(f"{target} {packet} {item}")
-            self.print_func(f"<*> Response received in {response_time:.6f} seconds")
+            self.print_func(f"<*> CTU: Response received in {response_time:.6f} seconds")
             
             # Update command record with response info
             cmd_record["response"] = {
@@ -279,7 +283,7 @@ class CommandSender:
                 }
                 
             except Exception as e:
-                self.print_func(f"<!> Error getting telemetry after timeout: {str(e)}")
+                self.print_func(f"<!> CTU: Error getting telemetry after timeout: {str(e)}")
                 
                 # Update command record with error info
                 cmd_record["response"] = {
@@ -310,7 +314,8 @@ class CommandSender:
         tlm_poll_interval: float = DEFAULT_POLL_INTERVAL,
         **kwargs
     ) -> bool:
-        """Send a command, wait for telemetry to meet certain criteria, and set requirement status based on the result.
+        """
+        Send a command, wait for telemetry to meet certain criteria, and set requirement status based on the result.
         
         Features:
         - Command history tracking
@@ -360,9 +365,9 @@ class CommandSender:
         """
         # Check if we have a requirement tracker
         if self.req_tracker is None:
-            self.print_func("Warning: No requirement tracker set. Cannot update requirement status. "
-                           "Set requirement tracker when creating CommandSender: CommandSender(req_tracker=tracker) "
-                           "or use set_req_tracker(tracker) method.")
+            self.print_func("<!> CTU Warning: No requirement tracker set. Cannot update requirement status. "
+                            "Set requirement tracker when creating CommandSender: CommandSender(req_tracker=tracker) "
+                            "or use set_req_tracker(tracker) method.")
         
         # Send command and check for response
         success = self.send_cmd_with_response_check(
@@ -381,10 +386,10 @@ class CommandSender:
         condition_desc = f"'{command_string}' -> {target} {packet} {item} {comparison} {comparison_value}"
         
         if success:
-            req_message = f"Command {condition_desc} met the specified condition in {response_time:.6f}s"
+            req_message = f"<*> CTU: Command {condition_desc} met the specified condition in {response_time:.6f}s"
         else:
             current_value = cmd_record.get("response", {}).get("value", "unknown")
-            req_message = f"Command {condition_desc} did not meet the specified condition within {tlm_timeout}s (current: {current_value})"
+            req_message = f"<!> CTU: Command {condition_desc} did not meet the specified condition within {tlm_timeout}s (current: {current_value})"
         
         # Update the requirement if tracker is available
         if self.req_tracker is not None:
@@ -394,7 +399,7 @@ class CommandSender:
                 self.req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Add prefix to message indicating no requirement tracker
-            req_message = f"<!> No requirement tracker set - requirement not logged: {req_message}"
+            req_message = f"<!> CTU: No requirement tracker set - requirement not logged: {req_message}"
             # Print result only if no requirement tracker (to avoid redundant messages)
             self.print_func(req_message)
         
@@ -479,30 +484,30 @@ class CommandSender:
         """
         # Check if we have a requirement tracker
         if self.req_tracker is None:
-            self.print_func("Warning: No requirement tracker set. Cannot update requirement status. "
-                           "Set requirement tracker when creating CommandSender: CommandSender(req_tracker=tracker) "
-                           "or use set_req_tracker(tracker) method.")
+            self.print_func("<!> CTU Warning: No requirement tracker set. Cannot update requirement status. "
+                            "Set requirement tracker when creating CommandSender: CommandSender(req_tracker=tracker) "
+                            "or use set_req_tracker(tracker) method.")
         
         # Validate timeout against timing constraints
         if min_time is not None and tlm_timeout <= min_time:
-            self.print_func(f"Warning: tlm_timeout ({tlm_timeout}s) is less than or equal to min_time ({min_time}s). "
-                           f"This may prevent meeting timing requirements.")
+            self.print_func(f"<!> CTU Warning: tlm_timeout ({tlm_timeout}s) is less than or equal to min_time ({min_time}s). "
+                            f"This may prevent meeting timing requirements.")
         
         if max_time is not None:
             if tlm_timeout == DEFAULT_WAIT_TIMEOUT and tlm_timeout <= max_time:
                 # Only automatically adjust if timeout is still at default value
                 original_timeout = tlm_timeout
                 tlm_timeout = max_time + 1.0
-                self.print_func(f"Info: tlm_timeout was at default ({original_timeout}s) and less than or equal to max_time ({max_time}s). "
-                               f"Automatically adjusted tlm_timeout to {tlm_timeout}s to allow timing window to be tested.")
+                self.print_func(f"<I> CTU Info: tlm_timeout was at default ({original_timeout}s) and less than or equal to max_time ({max_time}s). "
+                                f"Automatically adjusted tlm_timeout to {tlm_timeout}s to allow timing window to be tested.")
             elif tlm_timeout <= max_time:
                 # User explicitly set timeout but it's too small
-                self.print_func(f"Warning: tlm_timeout ({tlm_timeout}s) is less than or equal to max_time ({max_time}s). "
-                               f"This may prevent meeting timing requirements.")
+                self.print_func(f"<!> CTU Warning: tlm_timeout ({tlm_timeout}s) is less than or equal to max_time ({max_time}s). "
+                                f"This may prevent meeting timing requirements.")
         
         # Additional validation: ensure min_time <= max_time if both are specified
         if min_time is not None and max_time is not None and min_time > max_time:
-            raise ValueError(f"min_time ({min_time}s) cannot be greater than max_time ({max_time}s)")
+            raise ValueError(f"<!> CTU send_cmd_with_timing_requirement Error: min_time ({min_time}s) cannot be greater than max_time ({max_time}s)")
         
         # Send command and check for response
         success = self.send_cmd_with_response_check(
@@ -525,43 +530,43 @@ class CommandSender:
         if not success:
             # Response not received within timeout
             req_success = False
-            req_message = f"Command {condition_desc} did not meet the specified condition within timeout of {tlm_timeout} seconds"
+            req_message = f"<!> CTU: Command {condition_desc} did not meet the specified condition within timeout of {tlm_timeout} seconds"
         else:
             # Response received, check timing requirements
             if min_time is not None and max_time is not None:
                 # Both min and max specified
                 if min_time <= response_time <= max_time:
                     req_success = True
-                    req_message = f"Command {condition_desc} met the specified condition in {response_time:.6f}s (required: {min_time:.6f}s to {max_time:.6f}s)"
+                    req_message = f"<*> CTU: Command {condition_desc} met the specified condition in {response_time:.6f}s (required: {min_time:.6f}s to {max_time:.6f}s)"
                 else:
                     req_success = False
                     if response_time < min_time:
-                        req_message = f"Command {condition_desc} met the specified condition too quickly: {response_time:.6f}s (required: >= {min_time:.6f}s)"
+                        req_message = f"<!> CTU: Command {condition_desc} met the specified condition too quickly: {response_time:.6f}s (required: >= {min_time:.6f}s)"
                     else:
-                        req_message = f"Command {condition_desc} met the specified condition too slowly: {response_time:.6f}s (required: <= {max_time:.6f}s)"
+                        req_message = f"<!> CTU: Command {condition_desc} met the specified condition too slowly: {response_time:.6f}s (required: <= {max_time:.6f}s)"
             
             elif min_time is not None:
                 # Only min specified
                 if response_time >= min_time:
                     req_success = True
-                    req_message = f"Command {condition_desc} met the specified condition in {response_time:.6f}s (required: >= {min_time:.6f}s)"
+                    req_message = f"<*> CTU: Command {condition_desc} met the specified condition in {response_time:.6f}s (required: >= {min_time:.6f}s)"
                 else:
                     req_success = False
-                    req_message = f"Command {condition_desc} met the specified condition too quickly: {response_time:.6f}s (required: >= {min_time:.6f}s)"
+                    req_message = f"<!> CTU: Command {condition_desc} met the specified condition too quickly: {response_time:.6f}s (required: >= {min_time:.6f}s)"
             
             elif max_time is not None:
                 # Only max specified
                 if response_time <= max_time:
                     req_success = True
-                    req_message = f"Command {condition_desc} met the specified condition in {response_time:.6f}s (required: <= {max_time:.6f}s)"
+                    req_message = f"<*> CTU: Command {condition_desc} met the specified condition in {response_time:.6f}s (required: <= {max_time:.6f}s)"
                 else:
                     req_success = False
-                    req_message = f"Command {condition_desc} met the specified condition too slowly: {response_time:.6f}s (required: <= {max_time:.6f}s)"
+                    req_message = f"<!> CTU: Command {condition_desc} met the specified condition too slowly: {response_time:.6f}s (required: <= {max_time:.6f}s)"
             
             else:
                 # No specific timing requirements, just needed a response
                 req_success = True
-                req_message = f"Command {condition_desc} met the specified condition in {response_time:.6f}s"
+                req_message = f"<*> CTU: Command {condition_desc} met the specified condition in {response_time:.6f}s"
         
         # Update the requirement if tracker is available
         if self.req_tracker is not None:
@@ -571,7 +576,7 @@ class CommandSender:
                 self.req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Add prefix to message indicating no requirement tracker
-            req_message = f"<!> No requirement tracker set - requirement not logged: {req_message}"
+            req_message = f"<!> CTU: No requirement tracker set - requirement not logged: {req_message}"
             # Print result only if no requirement tracker (to avoid redundant messages)
             self.print_func(req_message)
         
@@ -602,7 +607,8 @@ class CommandSender:
         fail_on_first_error: bool = False,
         **kwargs
     ) -> bool:
-        """Send a command multiple times and set requirements based on each response.
+        """
+        Send a command multiple times and set requirements based on each response.
         
         This function is designed for use with integer telemetry that has a predictable
         increment after each command is received. It assumes that the telemetry value
@@ -670,9 +676,9 @@ class CommandSender:
             )
         """
         if count <= 0:
-            raise ValueError("count must be a greater than 0 integer")
+            raise ValueError("<!> CTU: count must be a greater than 0 integer")
         if cmd_delay < 0:
-            raise ValueError("cmd_delay must be non-negative")
+            raise ValueError("<!> CTU: cmd_delay must be non-negative")
         
         all_successful = True
         
@@ -695,7 +701,7 @@ class CommandSender:
             
             # Check if we should stop on failure
             if not success and fail_on_first_error:
-                self.print_func(f"<!> Stopping command sequence after failure on command {i+1} of {count}")
+                self.print_func(f"<!> CTU: Stopping command sequence after failure on command {i+1} of {count}")
                 break
                 
             # Add delay if this isn't the last command
@@ -723,7 +729,8 @@ class CommandSender:
         fail_on_first_error: bool = False,
         **kwargs
     ) -> bool:
-        """Send a command multiple times and set requirements based on response timing.
+        """
+        Send a command multiple times and set requirements based on response timing.
         
         This function is designed for use with integer telemetry that has a predictable
         increment after each command is received. It assumes that the telemetry value
@@ -798,9 +805,9 @@ class CommandSender:
             )
         """
         if count <= 0:
-            raise ValueError("count must be a greater than 0 integer")
+            raise ValueError("<!> CTU send_cmd_multiple_times_with_timing_requirement Error: count must be a greater than 0 integer")
         if cmd_delay < 0:
-            raise ValueError("cmd_delay must be non-negative")
+            raise ValueError("<!> CTU send_cmd_multiple_times_with_timing_requirement Error: cmd_delay must be non-negative")
 
         all_successful = True
         
@@ -825,7 +832,7 @@ class CommandSender:
             
             # Check if we should stop on failure
             if not success and fail_on_first_error:
-                self.print_func(f"<!> Stopping command sequence after failure on command {i+1} of {count}")
+                self.print_func(f"<!> CTU: Stopping command sequence after failure on command {i+1} of {count}")
                 break
                 
             # Add delay if this isn't the last command
@@ -836,7 +843,8 @@ class CommandSender:
     
     
     def get_command_history(self, num_commands: Optional[int] = None) -> List[Dict[str, Any]]:
-        """Get the history of commands sent.
+        """
+        Get the history of commands sent.
         
         Features:
         - Access to complete or partial command history
@@ -884,7 +892,8 @@ class CommandSender:
         max_entries: Optional[int] = None,
         print_func: Optional[Callable] = None
     ) -> None:
-        """Print the command history in a formatted, readable way.
+        """
+        Print the command history in a formatted, readable way.
         
         This method provides a clean presentation of the command history with
         configurable detail levels and filtering options.
@@ -914,7 +923,7 @@ class CommandSender:
             print_func = print
         
         if not self.command_history:
-            print_func("No commands in history.")
+            print_func("<!> CTU print_command_history: No commands in history.")
             return
         
         # Apply limits
@@ -994,7 +1003,8 @@ class CommandSender:
     
     
     def set_req_tracker(self, req_tracker: Any) -> None:
-        """Set the requirement tracker for this CommandSender instance.
+        """
+        Set the requirement tracker for this CommandSender instance.
         
         Args:
             req_tracker: RequirementTracker instance to use for requirement tracking

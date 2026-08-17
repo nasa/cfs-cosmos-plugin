@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system”
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -39,7 +39,8 @@ class TimingTracker:
     """Class for tracking multiple timing events and measurements."""
     
     def __init__(self, high_precision: bool = False):
-        """Initialize a timing tracker.
+        """
+        Initialize a timing tracker.
         
         Args:
             high_precision: If True, use high precision time.perf_counter() instead of time.time()
@@ -53,7 +54,8 @@ class TimingTracker:
     
     
     def start(self, name: str = "default") -> float:
-        """Start timing a named event.
+        """
+        Start timing a named event.
         
         Args:
             name: Name for this timing event
@@ -69,7 +71,8 @@ class TimingTracker:
     
     
     def stop(self, name: str = "default") -> float:
-        """Stop timing a named event and calculate the elapsed time.
+        """
+        Stop timing a named event and calculate the elapsed time.
         
         Args:
             name: Name for this timing event
@@ -81,7 +84,7 @@ class TimingTracker:
             ValueError: If the named timer hasn't been started
         """
         if name not in self._start_times:
-            raise ValueError(f"Timer '{name}' has not been started")
+            raise ValueError(f"<!> CTU TimingTracker.stop: Timer '{name}' has not been started")
         
         stop_time = self._time_func()
         self._stop_times[name] = stop_time
@@ -96,7 +99,8 @@ class TimingTracker:
     
     
     def elapsed(self, name: str = "default") -> float:
-        """Get the current elapsed time for a named event.
+        """
+        Get the current elapsed time for a named event.
         
         If the timer is still running, this calculates the elapsed time so far.
         If the timer has been stopped, this returns the final elapsed time.
@@ -111,7 +115,7 @@ class TimingTracker:
             ValueError: If the named timer hasn't been started
         """
         if name not in self._start_times:
-            raise ValueError(f"Timer '{name}' has not been started")
+            raise ValueError(f"<!> CTU TimingTracker.elapsed: Timer '{name}' has not been started")
         
         if name in self._running:
             # Timer is still running, calculate current elapsed time
@@ -123,7 +127,8 @@ class TimingTracker:
     
     def verify_timing(self, name: str, min_time: Optional[float] = None, 
                      max_time: Optional[float] = None) -> Tuple[bool, float, str]:
-        """Verify that a timing event meets the specified constraints.
+        """
+        Verify that a timing event meets the specified constraints.
         
         Args:
             name: Name for this timing event
@@ -146,36 +151,36 @@ class TimingTracker:
             # Both constraints specified
             if min_time <= elapsed <= max_time:
                 result = True
-                message = f"Timing '{name}' is within range: {elapsed:.6f}s (required: {min_time:.6f}s to {max_time:.6f}s)"
+                message = f"<*> CTU: Timing '{name}' is within range: {elapsed:.6f}s (required: {min_time:.6f}s to {max_time:.6f}s)"
             else:
                 result = False
                 if elapsed < min_time:
-                    message = f"Timing '{name}' too fast: {elapsed:.6f}s (minimum: {min_time:.6f}s)"
+                    message = f"<!> CTU: Timing '{name}' too fast: {elapsed:.6f}s (minimum: {min_time:.6f}s)"
                 else:
-                    message = f"Timing '{name}' too slow: {elapsed:.6f}s (maximum: {max_time:.6f}s)"
+                    message = f"<!> CTU: Timing '{name}' too slow: {elapsed:.6f}s (maximum: {max_time:.6f}s)"
                     
         elif min_time is not None:
             # Only minimum specified
             if elapsed >= min_time:
                 result = True
-                message = f"Timing '{name}' meets minimum: {elapsed:.6f}s (required: >= {min_time:.6f}s)"
+                message = f"<*> CTU: Timing '{name}' meets minimum: {elapsed:.6f}s (required: >= {min_time:.6f}s)"
             else:
                 result = False
-                message = f"Timing '{name}' too fast: {elapsed:.6f}s (minimum: {min_time:.6f}s)"
+                message = f"<!> CTU: Timing '{name}' too fast: {elapsed:.6f}s (minimum: {min_time:.6f}s)"
                 
         elif max_time is not None:
             # Only maximum specified
             if elapsed <= max_time:
                 result = True
-                message = f"Timing '{name}' meets maximum: {elapsed:.6f}s (required: <= {max_time:.6f}s)"
+                message = f"<*> CTU: Timing '{name}' meets maximum: {elapsed:.6f}s (required: <= {max_time:.6f}s)"
             else:
                 result = False
-                message = f"Timing '{name}' too slow: {elapsed:.6f}s (maximum: {max_time:.6f}s)"
+                message = f"<!> CTU: Timing '{name}' too slow: {elapsed:.6f}s (maximum: {max_time:.6f}s)"
                 
         else:
             # No constraints specified
             result = True
-            message = f"Timing '{name}' elapsed time: {elapsed:.6f}s"
+            message = f"<*> CTU: Timing '{name}' elapsed time: {elapsed:.6f}s"
             
         return result, elapsed, message
     
@@ -189,7 +194,8 @@ class TimingTracker:
         req_tracker: Optional[Any] = None,
         print_func: Optional[Callable] = None
     ) -> Tuple[bool, float, str]:
-        """Verify that a timing event meets timing requirements and update requirement status.
+        """
+        Verify that a timing event meets timing requirements and update requirement status.
         
         Args:
             requirement_ids: Comma-separated string or list of requirement IDs to update
@@ -215,7 +221,7 @@ class TimingTracker:
         
         # Check if we have a requirement tracker
         if req_tracker is None:
-            print_func("Warning: No requirement tracker provided. Cannot update requirement status. "
+            print_func("<!> CTU verify_timing_requirement Warning: No requirement tracker provided. Cannot update requirement status. "
                        "Pass a RequirementTracker instance to req_tracker parameter.")
         
         # Verify timing constraints
@@ -239,13 +245,14 @@ class TimingTracker:
                 req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
         else:
             # Print result only if no requirement tracker (to avoid redundant messages)
-            print_func(req_message)
+            print_func(f"{"<*>" if success else "<!>"} CTU: {req_message}")
         
         return success, elapsed, message
     
     
     def reset(self, name: Optional[str] = None) -> None:
-        """Reset timers.
+        """
+        Reset timers.
         
         Args:
             name: Name of the timer to reset, or None to reset all timers
@@ -269,7 +276,8 @@ class TimingTracker:
     
     
     def get_all_timings(self) -> Dict[str, Dict[str, Union[float, bool]]]:
-        """Get information about all tracked timings.
+        """
+        Get information about all tracked timings.
         
         Returns:
             Dictionary mapping timer names to dictionaries containing:
@@ -290,7 +298,8 @@ class TimingTracker:
     
     
     def report(self, print_func: Optional[Callable] = None) -> None:
-        """Generate a report of all timings.
+        """
+        Generate a report of all timings.
         
         Args:
             print_func: Function to use for printing (default: test_print)
@@ -303,7 +312,7 @@ class TimingTracker:
         all_timings = self.get_all_timings()
         
         if not all_timings:
-            print_func("No timings recorded")
+            print_func("<!> CTU TimingTracker.report: No timings recorded to report")
             return
             
         print_func("\n----- Timing Report -----")
@@ -379,10 +388,10 @@ def measure_command_response_time(
         if check_func():
             # Response received
             response_time = time.perf_counter() - start_time
-            print_func(f"Response received in {response_time:.6f} seconds")
+            print_func(f"<*> CTU: Command Response received in {response_time:.6f} seconds")
             return True, response_time
         time.sleep(poll_interval)
     
     # Timeout
-    print_func(f"Timeout after {timeout} seconds waiting for response")
+    print_func(f"<!> CTU: Timeout after {timeout} seconds waiting for command response")
     return False, timeout

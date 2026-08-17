@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system"
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -79,7 +79,7 @@ def get_tlm_point(target: str, packet: str, item: str, type: str = 'CONVERTED') 
     # Validate the type parameter
     valid_types = ['RAW', 'CONVERTED', 'FORMATTED']
     if type.upper() not in valid_types:
-        raise ValueError(f"Invalid type '{type}'. Must be one of: {', '.join(valid_types)}")
+        raise ValueError(f"<!> CTU get_tlm_point: Invalid type '{type}'. Must be one of: {', '.join(valid_types)}")
 
     # Call the COSMOS tlm function and return the result
     return tlm(f"{target} {packet} {item}", type=type.upper())
@@ -114,18 +114,18 @@ def get_telemetry_values(
         current_values = get_telemetry_values("CFS-1", "CFE_ES_HK", wait_for_new_packet=False)
     """
     if num_items is not None and num_items <= 0:
-        raise ValueError("num_items must be a positive integer or None")
+        raise ValueError("<!> CTU get_telemetry_values: num_items must be a positive integer or None")
     
     if wait_for_new_packet:
         new_packet = wait_for_sequence_count_change(target_name, packet_name)
         if not new_packet:
-            print(f" <!> Warning: Did not receive new {target_name} {packet_name} telemetry packet")
+            print(f" <!> CTU Warning: Did not receive new {target_name} {packet_name} telemetry packet")
     
     try:
         # Get all telemetry points for this packet
         all_tlm_points = get_tlm_packet(f"{target_name} {packet_name}", type='RAW')
     except Exception as e:
-        raise RuntimeError(f"Unable to retrieve telemetry packet: {str(e)}")
+        raise RuntimeError(f"<!> CTU get_telemetry_values: Unable to retrieve telemetry packet: {str(e)}")
     
     # Filter out header and derived fields if requested
     if filter_tlm:
@@ -203,7 +203,7 @@ def validate_telemetry(
     """
     # Validate expected_conditions
     if not expected_conditions or not isinstance(expected_conditions, list):
-        raise ValueError("expected_conditions must be a non-empty list")
+        raise ValueError("<!> CTU validate_telemetry: expected_conditions must be a non-empty list")
     
     # Check if this is a single condition (first element is a string - the target name)
     # vs multiple conditions (first element is a list)
@@ -224,7 +224,8 @@ def validate_telemetry(
 
 
 def _format_value(value: Any, format_type: str, width: int) -> str:
-    """Format a telemetry value according to its specified format type.
+    """
+    Format a telemetry value according to its specified format type.
     
     Args:
         value: The value to format
@@ -263,7 +264,8 @@ def _update_telemetry_values(
     target_name: str,
     packet_name: str
 ) -> None:
-    """Save current telemetry values into prev_vals, then get new telemetry into current_vals.
+    """
+    Save current telemetry values into prev_vals, then get new telemetry into current_vals.
     
     This is an internal function not meant to be called directly by users.
 
@@ -351,21 +353,31 @@ def report_telemetry(
     target_name: str,
     packet_name: str,
     level_of_detail: int = 0,
-    display_as_initial: bool = False
+    display_as_initial: bool = False,
+    silent: bool = False,
+    show_derived: bool = False
 ) -> None:
-    """Report changes in telemetry between current and previous values.
+    """
+    Report changes in telemetry between current and previous values.
     
     Args:
         target_name: COSMOS Target name
         packet_name: COSMOS Telemetry packet name
         level_of_detail: Detail level for reporting (0=changes only, other=all values)
+        display_as_initial: If True, resets the run counter so the report is treated as the first/initial report
+        silent: If True, skips the full report and only prints a short note that the
+                packet's telemetry points have been updated in memory. Useful for large
+                packets with many bitfields where the full report would be excessive.
+        show_derived: If True, includes the COSMOS Derived Points section of the header
+                      report. Defaults to False to reduce log noise.
     
     This displays a formatted report showing:
     - Header fields with format specifications from COMMON_PACKET_FIELDS
-    - Derived fields with format specifications from DERIVED_PACKET_FIELDS
+    - Derived fields with format specifications from DERIVED_PACKET_FIELDS (only if show_derived=True)
     - Packet rate calculations (CCSDS and COSMOS)
     - Changed telemetry values (or all values if level_of_detail > 0)
-    - Change indicators (<---) for values that have changed
+    - Change indicators (<---) for telemetry values that have changed (header/derived sections
+      no longer show change indicators to avoid confusion)
     - Warnings when no new packet received or no changes detected
     """
     global current_vals
@@ -382,6 +394,11 @@ def report_telemetry(
         current_vals[target_name][packet_name]["Num_Updates_Run"] = 1
     
     is_first_run = (current_packet.get('Num_Updates_Run') == 1)
+    
+    # If silent, just note that the packet was recorded/updated and return
+    if silent:
+        print(f">>> {target_name} {packet_name} telemetry recorded (values updated in memory, report suppressed)")
+        return
     
     # Get the field widths
     header_field_width = current_packet.get("Header_Field_Width", 25)
@@ -409,7 +426,7 @@ def report_telemetry(
                 formatted_value = _format_value(current_packet[field_name], format_type, header_value_width)
                 print(f">>>   {field_name:<{header_field_width}} : {formatted_value}")
     else:
-        # Changes report - show old and new with change indicators
+        # Changes report - show old and new (no change indicators for header)
         print(">>> Packet Header:")
         print(f">>>   {'Old':>{header_field_width + header_value_width + 3}} {'New':>{header_value_width + 4}}")
         
@@ -418,11 +435,7 @@ def report_telemetry(
                 old_value = _format_value(previous_packet[field_name], format_type, header_value_width)
                 new_value = _format_value(current_packet[field_name], format_type, header_value_width)
                 
-                # Check if value changed
-                changed = (previous_packet[field_name] != current_packet[field_name])
-                change_marker = " <---" if changed else ""
-                
-                print(f">>>   {field_name:<{header_field_width}} : {old_value} --> {new_value}{change_marker}")
+                print(f">>>   {field_name:<{header_field_width}} : {old_value} --> {new_value}")
         
         print(">>>")
         
@@ -450,51 +463,48 @@ def report_telemetry(
     print(">>>")
     
     # ====================================================================================
-    # DERIVED FIELDS SECTION
+    # DERIVED FIELDS SECTION (only shown if show_derived=True)
     # ====================================================================================
-    if is_first_run:
-        print(">>> COSMOS Derived Points:")
-        for field_name, format_type in DERIVED_PACKET_FIELDS:
-            if field_name in current_packet:
-                formatted_value = _format_value(current_packet[field_name], format_type, derived_value_width)
-                print(f">>>   {field_name:<{header_field_width}} : {formatted_value}")
-    else:
-        # Changes report - show old and new with change indicators
-        print(">>> COSMOS Derived Points:")
-        print(f">>>   {'Old':>{header_field_width + derived_value_width + 3}} {'New':>{derived_value_width + 4}}")
-        
-        for field_name, format_type in DERIVED_PACKET_FIELDS:
-            if field_name in current_packet and field_name in previous_packet:
-                old_value = _format_value(previous_packet[field_name], format_type, derived_value_width)
-                new_value = _format_value(current_packet[field_name], format_type, derived_value_width)
-                
-                # Check if value changed
-                changed = (previous_packet[field_name] != current_packet[field_name])
-                change_marker = " <---" if changed else ""
-                
-                print(f">>>   {field_name:<{header_field_width}} : {old_value} --> {new_value}{change_marker}")
-        
-        print(">>>")
-        
-        # Calculate and display COSMOS packet rate if we have the necessary fields
-        if all(field in current_packet and field in previous_packet 
-               and current_packet[field] is not None and previous_packet[field] is not None
-               for field in [RATE_CALC_COSMOS_TIMESECONDS_FIELD, RATE_CALC_COSMOS_COUNT_FIELD]):
+    if show_derived:
+        if is_first_run:
+            print(">>> COSMOS Derived Points:")
+            for field_name, format_type in DERIVED_PACKET_FIELDS:
+                if field_name in current_packet:
+                    formatted_value = _format_value(current_packet[field_name], format_type, derived_value_width)
+                    print(f">>>   {field_name:<{header_field_width}} : {formatted_value}")
+        else:
+            # Changes report - show old and new (no change indicators for derived section)
+            print(">>> COSMOS Derived Points:")
+            print(f">>>   {'Old':>{header_field_width + derived_value_width + 3}} {'New':>{derived_value_width + 4}}")
             
-            count_delta = int(current_packet[RATE_CALC_COSMOS_COUNT_FIELD]) - int(previous_packet[RATE_CALC_COSMOS_COUNT_FIELD])
+            for field_name, format_type in DERIVED_PACKET_FIELDS:
+                if field_name in current_packet and field_name in previous_packet:
+                    old_value = _format_value(previous_packet[field_name], format_type, derived_value_width)
+                    new_value = _format_value(current_packet[field_name], format_type, derived_value_width)
+                    
+                    print(f">>>   {field_name:<{header_field_width}} : {old_value} --> {new_value}")
             
-            if count_delta > 0:
-                time_delta = float(current_packet[RATE_CALC_COSMOS_TIMESECONDS_FIELD]) - float(previous_packet[RATE_CALC_COSMOS_TIMESECONDS_FIELD])
-                rate = time_delta / count_delta
-                print(f">>>  Calculated Packet Rate: 1 every {rate} seconds")
-            elif count_delta == 0:
-                print(f">>>  <!> No new Packet was received")
-        
-        # Check if PACKET_TIMEFORMATTED and RECEIVED_TIMEFORMATTED are the same (indicates misconfiguration)
-        if DERIVED_PACKET_TIMEFORMATTED_FIELD in current_packet and DERIVED_RECEIVED_TIMEFORMATTED_FIELD in current_packet:
-            if str(current_packet[DERIVED_PACKET_TIMEFORMATTED_FIELD]) == str(current_packet[DERIVED_RECEIVED_TIMEFORMATTED_FIELD]):
-                print(f">>>  <!> {DERIVED_PACKET_TIMEFORMATTED_FIELD} needs to be fixed to be calculated from the header time-stamp,")
-                print(f">>>      not mirror {DERIVED_RECEIVED_TIMEFORMATTED_FIELD}")
+            print(">>>")
+            
+            # Calculate and display COSMOS packet rate if we have the necessary fields
+            if all(field in current_packet and field in previous_packet 
+                   and current_packet[field] is not None and previous_packet[field] is not None
+                   for field in [RATE_CALC_COSMOS_TIMESECONDS_FIELD, RATE_CALC_COSMOS_COUNT_FIELD]):
+                
+                count_delta = int(current_packet[RATE_CALC_COSMOS_COUNT_FIELD]) - int(previous_packet[RATE_CALC_COSMOS_COUNT_FIELD])
+                
+                if count_delta > 0:
+                    time_delta = float(current_packet[RATE_CALC_COSMOS_TIMESECONDS_FIELD]) - float(previous_packet[RATE_CALC_COSMOS_TIMESECONDS_FIELD])
+                    rate = time_delta / count_delta
+                    print(f">>>  Calculated Packet Rate: 1 every {rate} seconds")
+                elif count_delta == 0:
+                    print(f">>>  <!> No new Packet was received")
+            
+            # Check if PACKET_TIMEFORMATTED and RECEIVED_TIMEFORMATTED are the same (indicates misconfiguration)
+            if DERIVED_PACKET_TIMEFORMATTED_FIELD in current_packet and DERIVED_RECEIVED_TIMEFORMATTED_FIELD in current_packet:
+                if str(current_packet[DERIVED_PACKET_TIMEFORMATTED_FIELD]) == str(current_packet[DERIVED_RECEIVED_TIMEFORMATTED_FIELD]):
+                    print(f">>>  <!> {DERIVED_PACKET_TIMEFORMATTED_FIELD} needs to be fixed to be calculated from the header time-stamp,")
+                    print(f">>>      not mirror {DERIVED_RECEIVED_TIMEFORMATTED_FIELD}")
     
     # ====================================================================================
     # TELEMETRY VALUES SECTION
@@ -567,7 +577,8 @@ def report_all_telemetry(
     level_of_detail: int = 0,
     exclude_packets: Optional[List[str]] = None
 ) -> None:
-    """Report changes for all telemetry packets from a specific target.
+    """
+    Report changes for all telemetry packets from a specific target.
     
     This function:
     1. Gets a list of all telemetry packet names for the specified target
@@ -616,7 +627,8 @@ def report_all_targets_telemetry(
     exclude_targets: Optional[List[str]] = None,
     exclude_packets: Optional[List[str]] = None
 ) -> None:
-    """Report changes for all telemetry packets from all targets.
+    """
+    Report changes for all telemetry packets from all targets.
     
     This function:
     1. Gets a list of all target names defined in the system

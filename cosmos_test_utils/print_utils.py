@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system”
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -24,13 +24,12 @@ from typing import Optional
 from .event_utils import print_events_to_log
 
 
-def test_print(
-    text_to_print: str,
-    event_log_id: Optional[int] = None,
-    use_group_print_for_events: bool = False  # Default to regular print for events
-) -> None:
-    
-    """Print text to the test log, after logging any events.
+def test_print(text_to_print: str,
+               event_log_id: Optional[int] = None,
+               use_group_print_for_events: bool = False  # Default to regular print for events
+               ) -> None:
+    """
+    Print text to the test log, after logging any events.
     
     This function:
     1. Prints all received event messages since last call
@@ -62,7 +61,7 @@ def test_print(
     except RuntimeError as e:
         # Add context to the original error message
         enhanced_message = (
-            f"test_print() failed: {str(e)}\n\n"
+            f"<!> CTU: test_print() failed: {str(e)}\n\n"
             f"Note: This error occurred because test_print() automatically tries to print "
             f"events before printing your message. If you don't need event logging, "
             f"you can use regular Group.print() or print() instead of test_print()."
@@ -81,7 +80,8 @@ def print_command_history(
     command_sender,
     detail_level: int = 1
 ) -> None:
-    """Print a command history in a formatted, readable way.
+    """
+    Print a command history in a formatted, readable way.
     
     This function delegates to the CommandSender's print_command_history method.
     It provides a functional interface to the command history printing capability.

@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system"
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -88,10 +88,10 @@ def set_event_search_point(target_names: Union[str, List[str]]) -> str:
         targets = [target_names]
     elif isinstance(target_names, list):
         if not all(isinstance(target, str) for target in target_names):
-            raise ValueError("All items in the target list must be strings.")
+            raise ValueError("<!> CTU set_event_search_point: All items in the target list must be strings.")
         targets = target_names
     else:
-        raise ValueError("Invalid target_name type. Expected str or List[str]")
+        raise ValueError("<!> CTU set_event_search_point: Invalid target_name type. Expected str or List[str]")
     
     # Reset the stored packets when setting a new search point
     _event_packets = []
@@ -102,7 +102,7 @@ def set_event_search_point(target_names: Union[str, List[str]]) -> str:
     # Subscribe to event packets
     _event_search_id = subscribe_packets(subscription_list)
     
-    print(f" --> Event search point set for {", ".join(targets)}")
+    print(f"--> <*> CTU: Event search point set for {", ".join(targets)}")
     
     return _event_search_id
 
@@ -114,100 +114,250 @@ def find_events(
     event_type: str,
     partial_message_text: str,
     expected_num_found: int = 1,
-    subscription_id: Optional[str] = None
+    subscription_id: Optional[str] = None,
+    at_least: bool = False
 ) -> Union[Tuple[bool, int], Tuple[bool, int, str]]:
-    """Find specific events in the event message stream.
+    """
+    Find specific events in the event message stream.
     
-    Before using this function with the default subscription_id=None,
-    you must call set_event_search_point() to set up the event subscription.
+    Before using this function with the default ``subscription_id=None``,
+    call ``set_event_search_point()`` to initialize the module-level event
+    subscription.
+    
+    By default, this function succeeds only when the number of matching
+    events is exactly equal to ``expected_num_found``. Set ``at_least=True``
+    to succeed when the number of matching events is equal to or greater
+    than ``expected_num_found``.
+    
+    Setting ``expected_num_found=0`` and ``at_least=True`` creates a
+    count-only search. The search always succeeds, and the returned count
+    indicates how many matching events were found.
     
     Args:
-        target: Target name to filter by
-        app_name: Application name to filter by
-        event_id: Event ID to filter by
-        event_type: Event type ('DEBUG', 'INFO', 'ERROR', 'CRIT')
-        partial_message_text: Text to search for in the event message
-        expected_num_found: Number of matching events expected (default: 1)
-        subscription_id: Optional specific subscription ID to use
-                        (default: None, which uses the module-level ID)
-    
+        target:
+            Target name to filter by.
+        app_name:
+            Application name to filter by.
+        event_id:
+            Event ID to filter by.
+        event_type:
+            Event type to filter by, such as ``'DEBUG'``, ``'INFO'``,
+            ``'ERROR'``, or ``'CRIT'``.
+        partial_message_text:
+            Text that must be present in the event message.
+        expected_num_found:
+            Number of matching events expected. The default is 1. Zero is
+            valid. When zero is used with ``at_least=True``, the function
+            performs a count-only search that always succeeds.
+        subscription_id:
+            Optional subscription ID to use. When omitted, the function
+            uses the module-level subscription initialized by
+            ``set_event_search_point()``.
+        at_least:
+            Controls how the number of matching events is evaluated.
+            
+            When False, which is the default, the number found must exactly
+            equal ``expected_num_found``.
+            
+            When True, the function succeeds if the number found is equal
+            to or greater than ``expected_num_found``. If additional events
+            are found, their count is included in the result message.
+        
+            When True with ``expected_num_found=0``, the function always
+            succeeds and returns the total number of matching events found.
+            
     Returns:
-        If subscription_id is None:
-            Tuple containing:
-              - bool: True if the expected number of events were found
-              - int: Number of events found
-        If subscription_id is provided:
-            Tuple containing:
-              - bool: True if the expected number of events were found
-              - int: Number of events found
-              - int: Updated subscription ID to use in future calls
+        If ``subscription_id`` is None:
+            A tuple containing:
+            - bool: True when the event-count requirement was satisfied.
+            - int: Number of matching events found.
+        
+        If ``subscription_id`` is provided:
+            A tuple containing:
+            - bool: True when the event-count requirement was satisfied.
+            - int: Number of matching events found.
+            - str: Updated subscription ID to use in future calls.
     
     Raises:
-        RuntimeError: If subscription_id=None and set_event_search_point() has not been called
+        ValueError:
+            If ``expected_num_found`` is negative.
+        RuntimeError:
+            If ``subscription_id`` is None and
+            ``set_event_search_point()`` has not been called.
+    
+    Examples:
+        Require exactly one matching event:
+        
+            find_events(
+                target="TARGET",
+                app_name="APP",
+                event_id=100,
+                event_type="INFO",
+                partial_message_text="Operation completed",
+                expected_num_found=1
+            )
+        
+        Require one or more matching events:
+        
+            find_events(
+                target="TARGET",
+                app_name="APP",
+                event_id=100,
+                event_type="INFO",
+                partial_message_text="Operation completed",
+                expected_num_found=1,
+                at_least=True
+            )
+        
+        Count matching events without requiring any to be present:
+        
+            success, num_found = find_events(
+                target="TARGET",
+                app_name="APP",
+                event_id=100,
+                event_type="INFO",
+                partial_message_text="Operation completed",
+                expected_num_found=0,
+                at_least=True
+            )
+            
+            # success is always True, and num_found contains the number of
+            # matching events collected during the event search period.
     """
     global _event_search_id, _event_packets
     
-    # Determine which subscription ID to use
+    # A negative expected count cannot be satisfied and generally indicates
+    # a caller error. Zero remains valid, allowing callers to verify that no
+    # matching events were received or return the amount found in at_least = True.
+    if expected_num_found < 0:
+        raise ValueError(
+            "expected_num_found must be greater than or equal to 0"
+        )
+    
+    # Determine which subscription ID should be used for this search.
     if subscription_id is None:
-        # Use the module-level ID
+        # Use the module-level subscription ID. It must first be initialized
+        # by set_event_search_point().
         if _event_search_id is None:
             raise RuntimeError(
-                "Event search subscription not initialized in cosmos_test_utils.event_utils. "
-                "You must call set_event_search_point() before using find_events() "
-                "to set up event packet subscriptions. "
+                "<!> CTU find_events: Event search subscription not "
+                "initialized in cosmos_test_utils.event_utils. "
+                "You must call set_event_search_point() before using "
+                "find_events() to set up event packet subscriptions. "
                 "Add this to your script:\n\n"
                 "    from cosmos_test_utils import set_event_search_point\n"
-                "    set_event_search_point()  # Call this to start event searching\n\n"
-                "Alternatively, you can provide a specific subscription_id parameter to this function from a separate COSMOS subscribe_packets() call."
+                "    set_event_search_point()  # Start event searching\n\n"
+                "Alternatively, provide a specific subscription_id from "
+                "a separate COSMOS subscribe_packets() call."
             )
+        
         search_id = _event_search_id
     else:
-        # Use the user-provided ID
+        # Use the subscription ID supplied by the caller.
         search_id = subscription_id
     
     # Import and use the COSMOS get_packets function
     from openc3.script import get_packets
-        
+    
     num_found = 0
     num_searched = 0
     
-    # Print search details
-    print(f"Searching for {expected_num_found} event(s) with details:")
+    # Describe whether the search expects an exact count or a minimum count.
+    search_expectation_text = "at least" if at_least else "exactly"
+    expected_event_word = "event" if expected_num_found == 1 else "events"
+    
+    print(
+        f"<I> CTU: Searching for {search_expectation_text} "
+        f"{expected_num_found} {expected_event_word} with details:"
+        )
     print(f"  Target: {target}")
     print(f"  App: {app_name}")
     print(f"  ID: {event_id}")
     print(f"  Type: {event_type}")
     print(f"  Partial text: '{partial_message_text}'")
     
-    # Get all packets since the last time this method was called
-    # Block time is configured in system_config.py
+    # Get all available packets since the previous read for this
+    # subscription. The blocking timeout is configured in system_config.py.
     search_id, new_packets = get_packets(search_id, block=EVENT_BLOCK_TIMEOUT)
     
     # Append new packets to the stored packets
     _event_packets.extend(new_packets)
     
-    # If we're using the module-level ID, update it
+    # Keep the module-level subscription ID current when the caller did not
+    # provide a separate subscription ID.
     if subscription_id is None:
         _event_search_id = search_id
     
+    # Search all retained event packets for fields matching every criterion.
     for packet in _event_packets:
         num_searched += 1
-        if (packet['target_name'] == target and
-            packet[EVENT_APP_FIELD] == app_name and
-            packet[EVENT_ID_FIELD] == event_id and
-            packet[EVENT_TYPE_FIELD] == EVENT_TXT_TO_TYPE[event_type] and
-            partial_message_text in packet[EVENT_MESSAGE_FIELD]):
+        
+        if (
+            packet["target_name"] == target
+            and packet[EVENT_APP_FIELD] == app_name
+            and packet[EVENT_ID_FIELD] == event_id
+            and packet[EVENT_TYPE_FIELD] == EVENT_TXT_TO_TYPE[event_type]
+            and partial_message_text in packet[EVENT_MESSAGE_FIELD]
+            ):
             num_found += 1
     
-    print(f"{'<*>' if num_found == expected_num_found else '<!>'} "
-          f"Event message(s) {'found' if num_found == expected_num_found else '-NOT- found'}. "
-          f"Searched {num_searched} and found {num_found} of target ({expected_num_found})")
-    
-    # Return the updated subscription ID along with results if user provided one
-    if subscription_id is not None:
-        return (num_found == expected_num_found, num_found, search_id)
+    # Determine success according to the requested count policy.
+    if at_least:
+        requirement_satisfied = num_found >= expected_num_found
     else:
-        return (num_found == expected_num_found, num_found)
+        requirement_satisfied = num_found == expected_num_found
+    
+    # Describe the expected count consistently in the result message.
+    result_expectation_text = (
+        f"expected at least: {expected_num_found}"
+        if at_least
+        else f"expected: {expected_num_found}"
+    )
+    
+    # Produce a result message that distinguishes an exact result, too few
+    # matches, too many matches, and additional matches found.
+    if num_found < expected_num_found:
+        # Too few: fails in both modes
+        result_message = (
+            "<!> CTU: Found fewer Event Messages than expected. "
+            f"Searched {num_searched} and found {num_found}; "
+            f"{result_expectation_text}."
+        )
+    elif num_found > expected_num_found and not at_least:
+        # Too many: exact mode fails
+        result_message = (
+            "<!> CTU: Found more Event Messages than expected. "
+            f"Searched {num_searched} and found {num_found}; "
+            f"{result_expectation_text}."
+        )
+    elif num_found > expected_num_found:
+        # Too many: at-least mode passes
+        additional_found = num_found - expected_num_found
+        result_message = (
+            "<*> CTU: Found at least the expected number of Event Messages. "
+            f"Searched {num_searched} and found {num_found}; "
+            f"{result_expectation_text}. "
+            f"Found {additional_found} additional "
+            f"{'message' if additional_found == 1 else 'messages'}."
+        )
+    else:
+        # Exact count: passes in both modes
+        result_message = (
+            f"<*> CTU: Found the "
+            f"{'minimum ' if at_least else ''}"
+            f"expected number of Event Messages. "
+            f"Searched {num_searched} and found {num_found}; "
+            f"{result_expectation_text}."
+        )
+    
+    print(result_message)
+    
+    # A caller-provided subscription ID causes the updated ID to
+    # be included as the third tuple element.
+    if subscription_id is not None:
+        return requirement_satisfied, num_found, search_id
+    
+    return requirement_satisfied, num_found
 
 
 def capture_events_for_script_logging(target_names: Union[str, List[str]]) -> str:
@@ -246,18 +396,18 @@ def capture_events_for_script_logging(target_names: Union[str, List[str]]) -> st
         targets = [target_names]
     elif isinstance(target_names, list):
         if not all(isinstance(target, str) for target in target_names):
-            raise ValueError("All items in the target list must be strings.")
+            raise ValueError("<!> CTU capture_events_for_script_logging: All items in the target list must be strings.")
         targets = target_names
     else:
-        raise ValueError("Invalid target_name type. Expected str or List[str]")
+        raise ValueError("<!> CTU capture_events_for_script_logging: Invalid target_name type. Expected str or List[str]")
     
     # Prepare subscription list
     subscription_list = [[target, EVENT_PACKET_NAME] for target in targets]
     
     # Check if there's an existing subscription
     if _event_logging_id is not None:
-        print(" <!> Warning: A previous call to capture_events_for_script_logging was made. "
-              "This new subscription may overwrite the previous one.")
+        print("<I> CTU: A previous call to capture_events_for_script_logging was made. "
+              "This new call will reset the capture point.")
     
     # Subscribe to event packets
     _event_logging_id = subscribe_packets(subscription_list)
@@ -269,7 +419,8 @@ def print_events_to_log(
     log_id: Optional[int] = None,
     use_group_print: bool = False
 ) -> Optional[int]:
-    """Print all received event messages to the test log since the last call.
+    """
+    Print all received event messages to the test log since the last call.
     
     Before using this function with the default log_id=None,
     you must call capture_events_for_script_logging() to set up the event subscription.
@@ -292,7 +443,7 @@ def print_events_to_log(
         # Use the module-level ID
         if _event_logging_id is None:
             raise RuntimeError(
-                "Event logging subscription not initialized in cosmos_test_utils.event_utils. "
+                "<!> CTU print_events_to_log: Event logging subscription not initialized in cosmos_test_utils.event_utils. "
                 "You must call capture_events_for_script_logging() before using print_events_to_log() "
                 "or other functions that depend on event logging (like test_print). "
                 "Add this to your script:\n\n"
@@ -392,11 +543,11 @@ def _normalize_input(input_data):
                     normalized.append([item[0], EVENT_PACKET_NAME])
                 elif len(item) >= 2:
                     if len(item) > 2:
-                        print(f" <!> Warning: More than 2 items in pair {item}. Ignoring excess items.")
+                        print(f" <!> CTU _normalize_input Warning: More than 2 items in pair {item}. Ignoring excess items.")
                     normalized.append([item[0], item[1]])
         return normalized
     else:
-        raise ValueError("Invalid input format")
+        raise ValueError("<!> CTU _normalize_input Error: Invalid input format")
 
 
 def start_background_packet_logging(what_to_log, name: str = "default") -> None:
@@ -430,10 +581,10 @@ def start_background_packet_logging(what_to_log, name: str = "default") -> None:
     """
     # Validate that what_to_log is provided
     if what_to_log is None:
-        raise ValueError("what_to_log is required and cannot be None. Please specify at least one target.")
+        raise ValueError("<!> CTU start_background_packet_logging Error: what_to_log is required and cannot be None. Please specify at least one target.")
     
     if isinstance(what_to_log, list) and len(what_to_log) == 0:
-        raise ValueError("what_to_log cannot be an empty list. Please specify at least one target.")
+        raise ValueError("<!> CTU start_background_packet_logging Error: what_to_log cannot be an empty list. Please specify at least one target.")
     
     normalized_data = _normalize_input(what_to_log)
     
@@ -442,16 +593,16 @@ def start_background_packet_logging(what_to_log, name: str = "default") -> None:
     
     # Check if logger with this name already exists
     if is_background_packet_logging_running(name):
-        print(f"Background packet logging '{name}' is already running. Stopping and restarting...")
+        print(f"<I> CTU: Background packet logging '{name}' is already running. Stopping and restarting...")
         stop_background_packet_logging(name)
     
     # Check if any packets are already being logged
     for target, packet in normalized_data:
         if _is_packet_already_logged(target, packet):
-            print(f"Packet {target} {packet} is already being logged. Cannot start new logger.")
+            print(f"<I> CTU: Packet {target} {packet} is already being logged. Cannot start new logger.")
             return None
 
-    print(f"Starting background packet logging '{name}' for: {normalized_data}")
+    print(f"<*> CTU: Starting background packet logging '{name}' for: {normalized_data}")
     
     try:
         # Set up the synchronization flag - initialize to "starting"
@@ -607,7 +758,7 @@ def start_background_packet_logging(what_to_log, name: str = "default") -> None:
         stash_set('background_packet_loggers', loggers)
         
         # Wait for the script to signal it's ready using unique key
-        print("Waiting for packet logger to initialize...")
+        print("<I> CTU: Waiting for packet logger to initialize...")
         max_wait_time = LOGGER_INIT_WAIT_TIME
         wait_start = time.time()
         
@@ -621,12 +772,12 @@ def start_background_packet_logging(what_to_log, name: str = "default") -> None:
             time.sleep(0.1)
         else:
             # We timed out waiting for the script to be ready
-            print("Warning: Timeout waiting for packet logger to initialize fully")
+            print("<!> CTU Warning: Timeout waiting for packet logger to initialize fully")
         
-        print(f"Background packet logging '{name}' started (script ID: {script_id})")
+        print(f"<*> CTU: Background packet logging '{name}' started (script ID: {script_id})")
         
     except Exception as e:
-        print(f"Error starting background packet logging: {str(e)}")
+        print(f"<!> CTU: Error starting background packet logging: {str(e)}")
         raise
 
 
@@ -649,19 +800,19 @@ def stop_background_packet_logging(name: str = "default") -> None:
             script_name = f"{name}_pkt_log_rpt.rb"
             
             running_script_stop(script_id)
-            print(f"Stopped background packet logging '{name}' (script ID: {script_id})")
+            print(f"<*> CTU: Stopped background packet logging '{name}' (script ID: {script_id})")
             
             script_delete(script_name)
-            print(f"Deleted script file: {script_name}")
+            print(f"<I> CTU: Deleted script file: {script_name}")
             
             # Remove from stash storage
             loggers.pop(name)
             stash_set('background_packet_loggers', loggers)
             
         else:
-            print(f"Background packet logging with name '{name}' not found (may not have been started or packet already being logged)")
+            print(f"<I> CTU: Background packet logging with name '{name}' not found (may not have been started or packet already being logged)")
     except Exception as e:
-        print(f"Error stopping background packet logging: {str(e)}")
+        print(f"<!> CTU: Error stopping background packet logging: {str(e)}")
 
 
 def stop_all_background_packet_logging() -> None:
@@ -674,7 +825,7 @@ def stop_all_background_packet_logging() -> None:
     try:
         loggers = stash_get('background_packet_loggers') or {}
         if not loggers:
-            print("No active background packet loggers found.")
+            print("<I> CTU: No active background packet loggers found.")
             return
 
         for name, logger_info in list(loggers.items()):  # Use list() to avoid modifying dict during iteration
@@ -682,10 +833,10 @@ def stop_all_background_packet_logging() -> None:
             script_name = f"{name}_pkt_log_rpt.rb"
             
             running_script_stop(script_id)
-            print(f"Stopped background packet logging '{name}' (script ID: {script_id})")
+            print(f"<*> CTU: Stopped background packet logging '{name}' (script ID: {script_id})")
             
             script_delete(script_name)
-            print(f"Deleted script file: {script_name}")
+            print(f"<I> CTU: Deleted script file: {script_name}")
             
             # Remove from loggers dictionary
             loggers.pop(name)
@@ -693,6 +844,6 @@ def stop_all_background_packet_logging() -> None:
         # Update stash with empty loggers dictionary
         stash_set('background_packet_loggers', {})
         
-        print("All background packet loggers have been stopped.")
+        print("<*> CTU: All background packet loggers have been stopped.")
     except Exception as e:
-        print(f"Error stopping all background packet logging: {str(e)}")
+        print(f"<!> CTU: Error stopping all background packet logging: {str(e)}")

@@ -1,6 +1,6 @@
 # NASA Docket No. GSC-19606-1, and identified as Test Utilities Python
 # package to facilitate testing software with the open source COSMOS
-# ground system"
+# ground system
 #
 # Copyright (c) 2025 United States Government as represented by the
 # Administrator of the National Aeronautics and Space Administration.
@@ -35,7 +35,13 @@ current_test_stack: List[Dict] = []
 current_step_stack: List[Dict] = []
 
 
-def test_initialization(test_target_list: List[str], packets_to_report: Optional[List[List[str]]] = None, override_test_name: Optional[str] = None, override_type: Optional[str] = None):
+def test_initialization(
+    test_target_list: List[str],
+    packets_to_report: Optional[List[List[str]]] = None,
+    override_test_name: Optional[str] = None,
+    override_type: Optional[str] = None,
+    show_initial_telemetry: bool = False
+    ):
     """
     Initialize a new test with common startup steps.
     
@@ -58,6 +64,10 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
         override_type (Optional[str]): Override the test type label (e.g., "Suite", "Integration", "Custom").
                                       If not provided, uses "Group" for setup() calls or "Test" otherwise.
                                       Defaults to None.
+        show_initial_telemetry (bool): If True, the initial telemetry report(s) for packets_to_report
+                                       are shown in full detail. If False (default), the initial report
+                                       is recorded silently (only a short note is logged) to reduce
+                                       log noise for large/bitfield-heavy packets. Defaults to False.
     
     Raises:
         ValueError: If test_target_list is empty.
@@ -66,7 +76,7 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
         - Test name is auto-determined: class name for setup(), function name otherwise
         - Test type is auto-determined: "Group" for setup(), "Test" otherwise
         - Creates a new RequirementTracker for this test level.
-        - Sets initial status to "U" (Untested) in its own tracker and all parent trackers.
+        - Sets initial status to UNTESTED in its own tracker and all parent trackers.
         - **Can be called within a test step to create a nested test.**
         - Initializes background packet logging with a unique identifier (test_name + random suffix)
           to prevent conflicts when the same test runs with different targets (parallel execution on different targets).
@@ -79,28 +89,27 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
         test_initialization(["SPACECRAFT"], override_test_name="Full Mission Suite", override_type="Suite")
     """
     if not test_target_list:
-        raise ValueError("test_target_list must contain at least one target")
+        raise ValueError("<!> CTU test_initialization: test_target_list must contain at least one target")
     
     global current_test_stack, current_step_stack
     
     # Determine test name and type
-    if override_test_name:
-        test_name = override_test_name
-        # If override_type is provided, use it; otherwise default to "Test"
-        test_type = override_type if override_type else "Test"
+    # First, auto-detect based on caller context
+    caller_frame = inspect.currentframe().f_back
+    caller_function_name = caller_frame.f_code.co_name if caller_frame else "unknown"
+    
+    if caller_function_name == 'setup' and 'self' in (caller_frame.f_locals if caller_frame else {}):
+        # Called from setup() - defaults
+        auto_test_name = caller_frame.f_locals['self'].__class__.__name__
+        auto_test_type = "Group"
     else:
-        # Get caller context to auto-determine test name
-        caller_frame = inspect.currentframe().f_back
-        caller_function_name = caller_frame.f_code.co_name if caller_frame else "unknown"
-        
-        if caller_function_name == 'setup' and 'self' in (caller_frame.f_locals if caller_frame else {}):
-            # Use class name (Group) for calls from setup(), NOTE: This may be the "suite" as well, use the override for type in that case
-            test_name = caller_frame.f_locals['self'].__class__.__name__
-            test_type = override_type if override_type else "Group"
-        else:
-            # Use function name for calls from individual tests
-            test_name = caller_function_name
-            test_type = override_type if override_type else "Test"
+        # Called from regular function - defaults
+        auto_test_name = caller_function_name
+        auto_test_type = "Test"
+    
+    # Now apply overrides
+    test_name = override_test_name if override_test_name else auto_test_name
+    test_type = override_type if override_type else auto_test_type    
     
     # Create unique logging identifier using short random string
     random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=UNIQUE_LOG_IDENTIFIER_LENGTH))
@@ -108,11 +117,12 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
     
     new_test = {
         "name": test_name,
-        "status": "U",
+        "type": test_type,
+        "status": "UNTESTED",
         "targets": test_target_list.copy(),  # Copy the list
         "packets_to_report": [pair.copy() for pair in (packets_to_report or [])],  # Deep copy
         "children": [],  # NEW empty list for each test
-        "tracker": RequirementTracker(),  # NEW tracker for each test
+        "tracker": RequirementTracker(label="Test"),  # NEW tracker for each test
         "parent": None,
         "unique_log_name": unique_log_name  # Store unique identifier for logging
     }
@@ -137,7 +147,7 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
         # Initialize test status in all parent trackers
         temp_parent = parent
         while temp_parent:
-            temp_parent["tracker"].set_requirement(test_name, "U", f"Subtest {test_name} initialized")
+            temp_parent["tracker"].set_requirement(test_name, "U", f"Subtest {test_name} initialized", silent=True)
             temp_parent = temp_parent.get("parent")
     
     current_test_stack.append(new_test)
@@ -168,10 +178,16 @@ def test_initialization(test_target_list: List[str], packets_to_report: Optional
     # Report telemetry for specified packets
     if packets_to_report:
         for target, packet in packets_to_report:
-            report_telemetry(target, packet, 1, True)
+            report_telemetry(
+                target,
+                packet,
+                level_of_detail=1,
+                display_as_initial=True,
+                silent=not show_initial_telemetry
+                )
     
     # This print line is just for the larger cosmos log, not the summary
-    print(f" --> Test {test_name} has been initialized.")
+    print(f" --> <*> CTU: {test_type} {test_name} has been initialized.")
 
 
 def test_step_start(step_name: str, track_step_status: bool = False) -> int:
@@ -210,7 +226,7 @@ def test_step_start(step_name: str, track_step_status: bool = False) -> int:
     global current_test_stack, current_step_stack
     
     if not current_test_stack:
-        raise ValueError("test_initialization must be called before test_step_start")
+        raise ValueError("<!> CTU test_step_start: test_initialization must be called before test_step_start")
     
     current_test = current_test_stack[-1]
     
@@ -227,7 +243,7 @@ def test_step_start(step_name: str, track_step_status: bool = False) -> int:
     
     new_step = {
         "name": step_name,
-        "status": "U",
+        "status": "UNTESTED",
         "step_num": step_num,
         "track_step_status": track_step_status,
         "children": [],  # Steps can have children
@@ -252,7 +268,7 @@ def test_step_start(step_name: str, track_step_status: bool = False) -> int:
         # Propagate step initialization to parent trackers
         parent = current_test.get("parent")
         while parent:
-            parent["tracker"].set_requirement(step_id, "U", f"Substep from {current_test['name']}: {step_name}")
+            parent["tracker"].set_requirement(step_id, "U", f"Substep from {current_test['name']}: {step_name}", silent=True)
             parent = parent.get("parent")
     
     # Print any events from before this call
@@ -294,7 +310,7 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
         result_text (Optional[str]): Additional text to describe the result. Defaults to None.
     
     Returns:
-        str: The final status ("P" for Pass or "F" for Fail).
+        str: The final status ("PASS" or "FAIL").
     
     Raises:
         ValueError: If test_step_start has not been called before this function,
@@ -310,8 +326,8 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
           * If no children: step_result must be provided (P or F)
           * If children exist and step_result is None: status determined solely from children
           * If children exist and step_result is provided: combined logic applies
-            - Fails ("F") if: step_result is "F" OR any child is "F" or "U"
-            - Passes ("P") only if: step_result is "P" AND all children are "P"
+            - Fails ("FAIL") if: step_result is "F" OR any child is "FAIL" or "UNTESTED"
+            - Passes ("PASS") only if: step_result is "P" AND all children are "PASS"
         - The status set here contributes to determining the overall status of the parent test/step.
         - If step status tracking was enabled in test_step_start, it updates the status
           in the current test's tracker.
@@ -329,7 +345,7 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
     global current_test_stack, current_step_stack
     
     if not current_step_stack:
-        raise ValueError("test_step_start must be called before test_step_end")
+        raise ValueError("<!> CTU test_step_end: test_step_start must be called before test_step_end")
     
     # Pop the current step from the stack
     current_step = current_step_stack.pop()
@@ -337,19 +353,17 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
     
     # Validate step_result based on whether children exist
     if not current_step["children"] and step_result is None:
-        raise ValueError(
-            f"step_result is required for step '{current_step['name']}' because it has no substeps or subtests. "
-            "Provide 'P'/'Pass' or 'F'/'Fail' to indicate the step's status."
-        )
+        raise ValueError(f"<!> CTU test_step_end: step_result is required for step '{current_step['name']}' because it has no substeps or subtests. "
+                         "Provide 'P'/'Pass' or 'F'/'Fail' to indicate the step's status.")
     
     # Determine final status
     if current_step["children"]:
         # Step has children - determine status from children
-        child_statuses = [child.get("status", "U") for child in current_step["children"]]
+        child_statuses = [child.get("status", "UNTESTED") for child in current_step["children"]]
         
-        if any(status in ["F", "U"] for status in child_statuses):
+        if any(status in ["FAIL", "UNTESTED"] for status in child_statuses):
             # At least one child failed or is untested
-            final_status = "F"
+            final_status = "FAIL"
             
             if step_result and step_result.upper() in ["P", "PASS"]:
                 # Input was Pass but children caused failure
@@ -362,13 +376,13 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
             # All children passed
             if step_result:
                 # Use provided result (but children all passed, so only fails if input is F)
-                final_status = "P" if step_result.upper() in ["P", "PASS"] else "F"
+                final_status = "PASS" if step_result.upper() in ["P", "PASS"] else "FAIL"
             else:
                 # No result provided, all children passed
-                final_status = "P"
+                final_status = "PASS"
     else:
         # No children - use provided result (already validated as not None)
-        final_status = "P" if step_result.upper() in ["P", "PASS"] else "F"
+        final_status = "PASS" if step_result.upper() in ["P", "PASS"] else "FAIL"
     
     current_step["status"] = final_status
     
@@ -386,7 +400,7 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
         # Propagate step status to parent trackers
         parent = current_test.get("parent")
         while parent:
-            parent["tracker"].set_requirement(step_id, final_status, f"Substep from {current_test['name']}: {result_text or current_step['name']}")
+            parent["tracker"].set_requirement(step_id, final_status, f"Substep from {current_test['name']}: {result_text or current_step['name']}", silent=True)
             parent = parent.get("parent")
     
     # print any events left over from the step into the COSMOS log
@@ -401,7 +415,7 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
                 child_name = f"Substep {child['step_num']}: {child['name']}"
             else:
                 child_name = f"Subtest: {child['name']}"
-            Group.print(f"|     {child_name}: {child.get('status', 'U')}")
+            Group.print(f"|     {child_name}: {child.get('status', 'UNTESTED')}")
     
     # Format step number with nesting indicator
     if current_step["parent_step"]:
@@ -412,7 +426,8 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
     # Report the status for the log
     Group.print(     "|------------------------------------------------------------------------------")
     Group.print(     "| Step Status:")
-    Group.print(    f"|     Step Number: {step_display}, P/F Status: {final_status}")
+    Group.print(    f"|     Step Number: {step_display}")
+    Group.print(    f"|     P/F Status: {final_status}")
     if result_text:
         Group.print(f"|     Result: {result_text}")
     Group.print(     "|------------------------------------------------------------------------------")
@@ -421,7 +436,7 @@ def test_step_end(step_result: Optional[str] = None, result_text: Optional[str] 
     return final_status
 
 
-def test_end() -> str:
+def test_end(show_full_final_telemetry: bool = False) -> str:
     """
     End the current test, report its overall status, and perform common wrap-up steps.
     
@@ -429,8 +444,15 @@ def test_end() -> str:
     updating the requirement tracker, stopping background logging, and generating reports.
     It marks the completion of a test hierarchy level and propagates the status to parent tests.
     
+    Args:
+        show_full_final_telemetry (bool): If True, the final telemetry report(s) for the
+                                          packets specified at test_initialization show all
+                                          values. If False (default), only changes since the
+                                          last report are shown, to reduce log noise. Defaults
+                                          to False.
+    
     Returns:
-        str: The overall status of the test ("P" for Pass or "F" for Fail).
+        str: The overall status of the test ("PASS" or "FAIL").
     
     Raises:
         ValueError: If test_initialization has not been called before this function.
@@ -453,49 +475,51 @@ def test_end() -> str:
     
     # Verify no steps are left open
     if current_step_stack and current_step_stack[-1]["parent_test"] == current_test_stack[-1]:
-        raise ValueError("Cannot end test while steps are still open. Call test_step_end first.")
+        raise ValueError("<!> CTU test_end: Cannot end test while steps are still open. Call test_step_end first.")
     
     if not current_test_stack:
-        raise ValueError("test_initialization must be called before test_end")
+        raise ValueError("<!> CTU test_end: test_initialization must be called before test_end")
     
     current_test = current_test_stack.pop()
     test_name = current_test["name"]
+    test_type = current_test["type"]
     unique_log_name = current_test["unique_log_name"]
     
     # Check for incomplete subtests (tests without step_num)
     incomplete_subtests = [child["name"] for child in current_test["children"] 
-                           if "step_num" not in child and child.get("status") == "U"]
+                           if "step_num" not in child and child.get("status") == "UNTESTED"]
     
     # Check for incomplete steps (steps with step_num)
     incomplete_steps = [f"Step {child['step_num']}: {child['name']}" 
                        for child in current_test["children"] 
-                       if "step_num" in child and child.get("status") == "U"]
+                       if "step_num" in child and child.get("status") == "UNTESTED"]
     
     if incomplete_subtests:
-        warning_msg = f" <!> Warning: The following subtests were not completed: {', '.join(incomplete_subtests)}"
+        warning_msg = f" <!> CTU Warning: The following subtests were not completed: {', '.join(incomplete_subtests)}"
         Group.print(warning_msg)
      
     if incomplete_steps:
-        warning_msg = f" <!> Warning: The following steps were not completed: {', '.join(incomplete_steps)}"
+        warning_msg = f" <!> CTU Warning: The following steps were not completed: {', '.join(incomplete_steps)}"
         Group.print(warning_msg)
      
     # Print any events left over from the test
     print_events_to_log()
     
     print("\n|******************************************************************************")
-    print( f"|  Test Wrap-up for: {test_name}")
+    print( f"|  Wrap-up for {test_type}: {test_name}")
     print(  "|******************************************************************************")
     
     wrapup_step_num = 1
     
     if current_test["packets_to_report"]:
         print("\n|******************************************************************************")
-        print( f"|  Wrap-up Step {wrapup_step_num}: Final Telemetry Packet Report(s) of those specified in test_initialization")
+        print( f"|  Wrap-up Step {wrapup_step_num}: Final Telemetry Packet Report(s) of packets")
         print(  "|******************************************************************************")
     
         # Report on the packets specified during test initialization
+        final_level_of_detail = 1 if show_full_final_telemetry else 0
         for target, packet in current_test["packets_to_report"]:
-            report_telemetry(target, packet, 1)
+            report_telemetry(target, packet, level_of_detail=final_level_of_detail)
             
         wrapup_step_num += 1
     
@@ -509,39 +533,42 @@ def test_end() -> str:
     
     
     print("\n|******************************************************************************")
-    print( f"|  Wrap-up Step {wrapup_step_num}: Requirement report for {test_name}")
+    print( f"|  Wrap-up Step {wrapup_step_num}: Results report for {test_name}")
     print(  "|******************************************************************************")
     
-    Group.print("\nTest components contributing to the status:")
+    Group.print("\nComponents contributing to the final status:")
+    
+    num_children = len(current_test["children"])
+    step_num_width = len(str(num_children)) if num_children else 1
     
     for child in current_test["children"]:
         if "step_num" in child:
-            child_string = f"Step {child['step_num']}: {child['name']}"
+            child_string = f"Step {str(child['step_num']).rjust(step_num_width)}: {child['name']}"
         else:
-            child_string = child['name']  # Sub-tests are just represented by their name
-        child_status = child.get("status", "U")  # Default to 'U' if status is not set
+            child_string = child['name']  # Subtests are just represented by their name
+        child_status = child.get("status", "UNTESTED")  # Default to 'UNTESTED' if status is not set
         Group.print(f"  {child_string}: {child_status}")
     
     # DETERMINE OVERALL TEST STATUS
-    overall_status = "F"  # Default to Fail
+    overall_status = "FAIL"  # Default to Fail
     
     # Check for no children and print warning if applicable
     if not current_test["children"]:
-        warning_msg = f" <!> Warning: Test '{test_name}' had no steps or sub-tests and is marked as Failed due to this."
+        warning_msg = f" <!> CTU Warning: {test_type} '{test_name}' had no steps or subtests and is marked as Failed due to this."
         Group.print(warning_msg)
-    elif all(child.get("status", "F") == "P" for child in current_test["children"]):
-        # Change to Pass only if all children passed (no "U" or "F" statuses)
-        overall_status = "P"
+    elif all(child.get("status", "FAIL") == "PASS" for child in current_test["children"]):
+        # Change to Pass only if all children passed (no "UNTESTED" or "FAIL" statuses)
+        overall_status = "PASS"
     
     current_test["status"] = overall_status
     
     # Update status in current test's tracker
-    current_test["tracker"].set_requirement(test_name, overall_status, f"Test {test_name} completed")
+    current_test["tracker"].set_requirement(test_name, overall_status, f"{test_type} {test_name} completed")
     
     # Propagate status to parent trackers
     parent = current_test["parent"]
     while parent:
-        parent["tracker"].set_requirement(test_name, overall_status, f"Subtest {test_name} completed")
+        parent["tracker"].set_requirement(test_name, overall_status, f"Subtest {test_name} completed", silent=True)
         parent = parent["parent"]
     
     # Generate and print the requirement report for the current test
@@ -549,7 +576,8 @@ def test_end() -> str:
     Group.print(report)
      
     Group.print("\n|------------------------------------------------------------------------------")
-    Group.print( f"|  END OF TEST: {test_name} - Test Status: {overall_status}")
+    Group.print( f"|  END OF {test_type.upper()}: {test_name}")
+    Group.print( f"|  {test_type} P/F Status: {overall_status}")
     Group.print(  "|------------------------------------------------------------------------------")
     
-    return overall_status    
+    return overall_status

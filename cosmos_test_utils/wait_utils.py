@@ -103,7 +103,7 @@ def wait_for_telemetry_value(
     # Validate the comparison operator
     if comparison not in COMPARISON_OPERATORS:
         valid_ops = ", ".join(COMPARISON_OPERATORS.keys())
-        raise ValueError(f"Invalid comparison operator '{comparison}'. Must be one of: {valid_ops}")
+        raise ValueError(f"<!> CTU wait_for_telemetry_value: Invalid comparison operator '{comparison}'. Must be one of: {valid_ops}")
     
     # Function to perform the comparison
     compare = COMPARISON_OPERATORS[comparison]
@@ -130,10 +130,10 @@ def wait_for_telemetry_value(
                     
                     # Update requirement if tracking
                     if requirement_ids is not None and req_tracker is not None:
-                        req_message = f"Telemetry condition met: {target} {packet} {item} {comparison} {comparison_value} in {response_time:.6f}s"
+                        req_message = f"<*> CTU: Telemetry condition met: {target} {packet} {item} {comparison} {comparison_value} in {response_time:.6f}s"
                         req_tracker.set_multiple_requirements(requirement_ids, "P", req_message)
                     elif requirement_ids is not None:
-                        print_func("Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
+                        print_func("<!> CTU Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
                     
                     # Return based on return_timing flag
                     if return_timing:
@@ -143,14 +143,14 @@ def wait_for_telemetry_value(
                 
         except Exception as e:
             # Handle errors that might occur when getting telemetry
-            print_func(f"Error getting telemetry {target} {packet} {item}: {str(e)}")
+            print_func(f"<!> CTU: Error getting telemetry {target} {packet} {item}: {str(e)}")
             
         # Wait before checking again
         time.sleep(poll_interval)
     
     # If we get here, we timed out
     timeout_message = (
-        f"Timeout waiting for {target} {packet} {item} {comparison} {comparison_value}. "
+        f"<!> CTU: Timeout waiting for {target} {packet} {item} {comparison} {comparison_value}. "
         f"Current value is {current_value}."
     )
     
@@ -161,7 +161,7 @@ def wait_for_telemetry_value(
     if requirement_ids is not None and req_tracker is not None:
         req_tracker.set_multiple_requirements(requirement_ids, "F", timeout_message)
     elif requirement_ids is not None:
-        print_func("Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
+        print_func("<!> CTU Warning: requirement_ids provided but no req_tracker. Cannot update requirement status.")
     
     # Return based on return_timing flag (timeout case)
     if return_timing:
@@ -209,7 +209,7 @@ def wait_for_telemetry_expression(
         result = wait(expression, timeout, poll_interval)
         return result
     except Exception as e:
-        print_func(f"Error waiting for expression '{expression}': {str(e)}")
+        print_func(f"<!> CTU: Error waiting for expression '{expression}': {str(e)}")
         return False
 
 
@@ -251,7 +251,7 @@ def wait_for_telemetry_change(
     try:
         initial_value = tlm(f"{target} {packet} {item}")
     except Exception as e:
-        print_func(f"Error getting initial telemetry value for {target} {packet} {item}: {str(e)}")
+        print_func(f"<!> CTU: Error getting initial telemetry value for {target} {packet} {item}: {str(e)}")
         return False
     
     # Track start time
@@ -271,19 +271,19 @@ def wait_for_telemetry_change(
             if current_value is not None:
                 # Check if the value has changed
                 if current_value != initial_value:
-                    print_func(f"{target} {packet} {item} changed from {initial_value} to {current_value}")
+                    print_func(f"<*> CTU: {target} {packet} {item} changed from {initial_value} to {current_value}")
                     return True
                 
         except Exception as e:
             # Handle errors that might occur when getting telemetry
-            print_func(f"Error getting telemetry {target} {packet} {item}: {str(e)}")
+            print_func(f"<!> CTU: Error getting telemetry {target} {packet} {item}: {str(e)}")
             
         # Wait before checking again
         time.sleep(poll_interval)
     
     # If we get here, we timed out
     print_func(
-        f"Timeout waiting for {target} {packet} {item} to change from {initial_value}. "
+        f"<!> CTU: Timeout waiting for {target} {packet} {item} to change from {initial_value}. "
         f"Value did not change within {timeout} seconds."
     )
     return False
@@ -330,7 +330,7 @@ def wait_for_sequence_count_change(
     try:
         initial_count = tlm(f"{target} {packet} {sequence_item}")
     except Exception as e:
-        print_func(f"Error getting initial sequence count for {target} {packet}: {str(e)}")
+        print_func(f"<!> CTU wait_for_sequence_count_change: Error getting initial sequence count for {target} {packet}: {str(e)}")
         return False
     
     # Calculate the target sequence count
@@ -357,7 +357,7 @@ def wait_for_sequence_count_change(
             if current_count is not None:
                 # If initial was None, any non-None value is success
                 if initial_count is None:
-                    print_func(f"{target} {packet} sequence count increased from None to {current_count}")
+                    print_func(f"<*> CTU: {target} {packet} sequence count changed from None to {current_count}")
                     return True
                 
                 # Check if we've reached or passed the target count
@@ -365,17 +365,17 @@ def wait_for_sequence_count_change(
                 if initial_count <= target_count:
                     # No rollover case
                     if current_count >= target_count:
-                        print_func(f"{target} {packet} sequence count increased from {initial_count} to {current_count}")
+                        print_func(f"<*> CTU: {target} {packet} sequence count increased from {initial_count} to {current_count}")
                         return True
                 else:
                     # Rollover case
                     if current_count >= target_count and current_count < initial_count:
-                        print_func(f"{target} {packet} sequence count increased from {initial_count} to {current_count} (with rollover)")
+                        print_func(f"<*> CTU: {target} {packet} sequence count increased from {initial_count} to {current_count} (with rollover)")
                         return True
                 
         except Exception as e:
             # Handle errors that might occur when getting telemetry
-            print_func(f"Error getting sequence count for {target} {packet}: {str(e)}")
+            print_func(f"<!> CTU: Error getting sequence count for {target} {packet}: {str(e)}")
             
         # Wait before checking again
         time.sleep(poll_interval)
@@ -383,12 +383,12 @@ def wait_for_sequence_count_change(
     # If we get here, we timed out
     if current_count is None:
         print_func(
-            f"Timeout waiting for {target} {packet} sequence count to reach >= {target_count}. "
+            f"<!> CTU: Timeout waiting for {target} {packet} sequence count to reach >= {target_count}. "
             f"Current count is None, initial was {initial_count}."
         )
     else:
         print_func(
-            f"Timeout waiting for {target} {packet} sequence count to reach >= {target_count}. "
+            f"<!> CTU: Timeout waiting for {target} {packet} sequence count to reach >= {target_count}. "
             f"Current count is {current_count}, initial was {initial_count}."
         )
         
@@ -454,7 +454,7 @@ def wait_check_telemetry(
     try:
         current_value = tlm(f"{target} {packet} {item}")
     except Exception as e:
-        print_func(f"Error getting final telemetry value: {str(e)}")
+        print_func(f"<!> CTU wait_check_telemetry: Error getting final telemetry value: {str(e)}")
         current_value = None
     
     return (result, current_value) # type: ignore
@@ -518,16 +518,16 @@ def wait_for_telemetry_in_range(
                 # Check if the value is in range
                 if inclusive:
                     if min_value <= current_value <= max_value:
-                        print_func(f"{target} {packet} {item}: value {current_value} is within range [{min_value}, {max_value}]")
+                        print_func(f"<*> CTU: {target} {packet} {item}: value {current_value} is within range [{min_value}, {max_value}]")
                         return True
                 else:
                     if min_value < current_value < max_value:
-                        print_func(f"{target} {packet} {item}: value {current_value} is within range ({min_value}, {max_value})")
+                        print_func(f"<*> CTU: {target} {packet} {item}: value {current_value} is within range ({min_value}, {max_value})")
                         return True
                 
         except Exception as e:
             # Handle errors that might occur when getting telemetry
-            print_func(f"Error getting telemetry {target} {packet} {item}: {str(e)}")
+            print_func(f"<!> CTU: Error getting telemetry {target} {packet} {item}: {str(e)}")
             
         # Wait before checking again
         time.sleep(poll_interval)
@@ -535,7 +535,7 @@ def wait_for_telemetry_in_range(
     # If we get here, we timed out
     range_type = "[]" if inclusive else "()"
     print_func(
-        f"Timeout waiting for {target} {packet} {item} to be within range {min_value} {range_type[0]} "
+        f"<!> CTU: Timeout waiting for {target} {packet} {item} to be within range {min_value} {range_type[0]} "
         f"value {range_type[1]} {max_value}. Current value is {current_value}."
     )
         
@@ -624,7 +624,7 @@ def wait_for_telemetry_in_timing_range(
     # Validate the comparison operator
     if comparison not in COMPARISON_OPERATORS:
         valid_ops = ", ".join(COMPARISON_OPERATORS.keys())
-        raise ValueError(f"Invalid comparison operator '{comparison}'. Must be one of: {valid_ops}")
+        raise ValueError(f"<!> CTU wait_for_telemetry_in_timing_range: Invalid comparison operator '{comparison}'. Must be one of: {valid_ops}")
     
     # Function to perform the comparison
     compare = COMPARISON_OPERATORS[comparison]
@@ -694,13 +694,13 @@ def wait_for_telemetry_in_timing_range(
                         else:
                             req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
                     else:
-                        print_func(req_message)
+                        print_func(f"{"<*>" if success else "<!>"} CTU: {req_message}")
                     
                     return success, response_time
                 
         except Exception as e:
             # Handle errors that might occur when getting telemetry
-            print_func(f"Error getting telemetry {target} {packet} {item}: {str(e)}")
+            print_func(f"<!> CTU: Error getting telemetry {target} {packet} {item}: {str(e)}")
             
         # Wait before checking again
         time.sleep(poll_interval)
@@ -712,7 +712,7 @@ def wait_for_telemetry_in_timing_range(
     if requirement_ids is not None and req_tracker is not None:
         req_tracker.set_multiple_requirements(requirement_ids, "F", req_message)
     else:
-        print_func(req_message)        
+        print_func(f"<!> CTU: {req_message}")        
     
     return False, timeout
 
@@ -797,7 +797,7 @@ def wait_multiple_telemetry(
     if timeout is None:
         timeout = DEFAULT_WAIT_TIMEOUT
     elif timeout < 0:
-        raise ValueError("Timeout must be a non-negative number")
+        raise ValueError("<!> CTU wait_multiple_telemetry: Timeout must be a non-negative number")
     
     if print_func is None:
         from .print_utils import test_print
@@ -810,11 +810,11 @@ def wait_multiple_telemetry(
     formatted_conditions = []
     for i, condition in enumerate(conditions):
         if len(condition) < 4 or len(condition) > 5:
-            raise ValueError(f"Condition {i} has invalid number of elements. Expected 4 or 5, got {len(condition)}")
+            raise ValueError(f"<!> CTU wait_multiple_telemetry: Condition {i} has invalid number of elements. Expected 4 or 5, got {len(condition)}")
         
         # Check that target, packet, and item are strings
         if not all(isinstance(elem, str) for elem in condition[:3]):
-            raise ValueError(f"Condition {i}: target, packet, and item must be strings")
+            raise ValueError(f"<!> CTU wait_multiple_telemetry: Condition {i}: target, packet, and item must be strings")
         
         formatted_condition = {
             'target': condition[0],
@@ -826,7 +826,7 @@ def wait_multiple_telemetry(
         
         if formatted_condition['comparison'] not in COMPARISON_OPERATORS:
             valid_ops = ", ".join(COMPARISON_OPERATORS.keys())
-            raise ValueError(f"Invalid comparison operator '{formatted_condition['comparison']}' in condition {i}. Must be one of: {valid_ops}")
+            raise ValueError(f"<!> CTU wait_multiple_telemetry: Invalid comparison operator '{formatted_condition['comparison']}' in condition {i}. Must be one of: {valid_ops}")
             
         # Add the comparison function
         formatted_condition['compare_func'] = COMPARISON_OPERATORS[formatted_condition['comparison']]
@@ -876,14 +876,14 @@ def wait_multiple_telemetry(
                         if result:
                             # Condition newly met (from None/False to True)
                             print_func(
-                                f" <*> Condition met: {condition['target']} {condition['packet']} {condition['item']} "
+                                f"<*> CTU: Condition met: {condition['target']} {condition['packet']} {condition['item']} "
                                 f"{condition['comparison']} {condition['value']} (current: {current_value})"
                             )
                         else:
                             # Condition newly failed (from None/True to False)
                             if previous_results[name] is not None:  # Only print if it was previously met
                                 print_func(
-                                    f" <!> Condition no longer met: Expecting {condition['target']} {condition['packet']} {condition['item']} "
+                                    f"<!> CTU: Condition no longer met: Expecting {condition['target']} {condition['packet']} {condition['item']} "
                                     f"{condition['comparison']} {condition['value']} (current: {current_value})"
                                 )
                     
@@ -904,7 +904,7 @@ def wait_multiple_telemetry(
                 # Handle errors that might occur when getting telemetry
                 # Only print error if it's a new error (state change)
                 if previous_results[name] != False:
-                    print_func(f" <!> Error checking condition {name}: {str(e)}")
+                    print_func(f"<!> CTU: Error checking condition {name}: {str(e)}")
                 previous_results[name] = False
                 results[name] = False
                 all_met = False
@@ -919,12 +919,12 @@ def wait_multiple_telemetry(
         time.sleep(poll_interval)
     
     # If we get here, we timed out
-    print_func(f" <!> Timeout waiting for {'all' if require_all else 'any'} telemetry conditions to be met")
+    print_func(f"<!> CTU: Timeout waiting for {'all' if require_all else 'any'} telemetry conditions to be met")
     for condition in formatted_conditions:
         name = condition['name']
         current_value = last_values[name]
         print_func(
-            f"Expected Condition: {condition['target']} {condition['packet']} {condition['item']} "
+            f"{'<*>' if results[name] else '<!>'} CTU: Expected Condition: {condition['target']} {condition['packet']} {condition['item']} "
             f"{condition['comparison']} {condition['value']} (current: {current_value}) = {results[name]}"
         )
     
