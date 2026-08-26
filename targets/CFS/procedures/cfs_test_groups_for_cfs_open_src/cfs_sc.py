@@ -258,14 +258,15 @@ class cfs_test_group_cfs_sc(Group):
         ##############################
 
         # Check RTS_W0_DIS_STATUS, bit 0, equals 0 (enabled)
-        check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x0001 == 0x0000")
+        check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x0001 == 0x0000", globals())
 
         cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS with RTS_NUM 1")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
 
         # Check RTS_W0_DIS_STATUS, bit 0, equals 1 (disabled)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x0001 == 0x0001", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x0001 == 0x0001",
+                                      20, 0.25, globals())
 
         # NOTE: expected event message text: "Disabled RTS 001"
 
@@ -278,7 +279,8 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         
         # Check RTS_W0_DIS_STATUS, bit 0, equals 0 (enabled)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x0001 == 0x0000", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x0001 == 0x0000",
+                                      20, 0.25, globals())
         
         # NOTE: expected event message text: "Enabled RTS 001"
 
@@ -287,7 +289,7 @@ class cfs_test_group_cfs_sc(Group):
         ########################
 
         # Check RTS_W0_EXE_STATUS, bit 0, equals 0 (idle)
-        check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS & 0x0001 == 0x0000")
+        check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x0001 == 0x0000", globals())
 
         check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 0")
 
@@ -299,7 +301,8 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER >= {exp_cmd_count}", 20)
 
         # Check RTS_W0_EXE_STATUS, bit 0, equals 1 (executing)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS & 0x0001 == 0x0001", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x0001 == 0x0001",
+                                      20, 0.25, globals())
         
         wait_check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 1", 20)
 
@@ -321,7 +324,8 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER >= {exp_cmd_count}", 20)
         
         # Check RTS_W0_EXE_STATUS, bit 0, equals 0 (idle)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS & 0x0001 == 0x0000", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x0001 == 0x0000",
+                              20, 0.25, globals())
 
         wait_check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 0", 20)
 
@@ -351,15 +355,16 @@ class cfs_test_group_cfs_sc(Group):
         ##############################################
 
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 0 (enabled)
-        check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x000E == 0x0000")
+        check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x0000", globals())
         
         cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS_GRP with FIRST_RTS_NUM 2, LAST_RTS_NUM 4")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 1 (disabled)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x000E == 0x000E", 20)
-
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x000E",
+                                      20, 0.25, globals())
+        
         # NOTE: expected event message text: "Disable RTS group: FirstID=2, LastID=4, Modified=3"
 
         #############################################
@@ -371,7 +376,8 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 0 (enabled)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_DIS_STATUS & 0x000E == 0x0000", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x0000",
+                                      20, 0.25, globals())
 
         # NOTE: expected event message text: "Enable RTS group: FirstID=2, LastID=4, Modified=3"
 
@@ -380,7 +386,7 @@ class cfs_test_group_cfs_sc(Group):
         ##############################################
 
         # Check RTS_W0_EXE_STATUS, bit 2-4, equal 0 (idle)
-        check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS & 0x000E == 0x0000")
+        check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x000E == 0x0000", globals())
 
         cmd(f"<%= target_name %> SC_CMD_START_RTS_GRP with FIRST_RTS_NUM 2, LAST_RTS_NUM 4")
         exp_cmd_count = exp_cmd_count + 1
@@ -410,7 +416,8 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER >= {exp_cmd_count}", 20)
 
         # Check RTS_W0_EXE_STATUS, bit 2-4, equal 0 (idle)
-        wait_check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS & 0x000E == 0x0000", 20)
+        wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x000E == 0x0000",
+                                      20, 0.25, globals())
 
         wait_check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 0", 20)
 
@@ -425,7 +432,7 @@ class cfs_test_group_cfs_sc(Group):
         # NOTE: Current initial version is simplified to only increment COMMAND_COUNTER and COMMAND_ERROR_COUNTER before reset.
 
         # Cause COMMAND_COUNTER to increment
-        cmd("<%= target_name %> DS_CMD_NOOP")
+        cmd("<%= target_name %> SC_CMD_NOOP")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER > 0", 20)
         
         # Cause COMMAND_ERROR_COUNTER to increment
