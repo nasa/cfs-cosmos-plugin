@@ -13,11 +13,20 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/nasa/cfs'
   s.platform = Gem::Platform::RUBY
 
+  s.metadata = {
+    "source_code_uri" => "https://github.com/nasa/cfs-cosmos-plugin",
+    "openc3_store_title" => "NASA cFS Integration",
+    "openc3_store_description" => "This NASA OpenC3 COSMOS plugin is used to control and test the core Flight System (cFS) bundle developed and maintained by NASA's Goddard Space Flight Center.",
+    "openc3_store_image" => "public/store_img.png",
+    "openc3_store_keywords" => "nasa, core, flight software, cfs, cfe, fsw",
+    "openc3_cosmos_minimum_version" => "5.13.0"
+  }
+
   if ENV['VERSION']
     s.version = ENV['VERSION'].dup
   else
     time = Time.now.strftime("%Y%m%d%H%M%S")
     s.version = '7.0.0' + ".#{time}"
   end
-  s.files = Dir.glob("{targets,lib,tools,microservices}/**/*") + %w(Rakefile README.md LICENSE.txt plugin.txt requirements.txt)
+  s.files = Dir.glob("{targets,lib,public,tools,microservices}/**/*") + %w(Rakefile README.md LICENSE.txt plugin.txt requirements.txt)
 end
