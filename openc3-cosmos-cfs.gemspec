@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
   s.metadata = {
     "source_code_uri" => "https://github.com/nasa/cfs-cosmos-plugin",
     "openc3_store_title" => "NASA cFS Integration",
-    "openc3_store_description" => "This NASA OpenC3 COSMOS plugin is used to control and test the core Flight System (cFS) Flight Software (FSW).",
+    "openc3_store_description" => "This NASA OpenC3 COSMOS plugin is used to control and test the core Flight System (cFS) bundle developed and maintained by NASA's Goddard Space Flight Center.",
     "openc3_store_image" => "public/store_img.png",
-    "openc3_store_keywords" => "nasa, core, flight software, cfs, fsw",
+    "openc3_store_keywords" => "nasa, core, flight software, cfs, cfe, fsw",
     "openc3_cosmos_minimum_version" => "5.13.0"
   }
 
