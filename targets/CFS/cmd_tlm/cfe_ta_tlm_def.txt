@@ -1,13 +1,25 @@
-<% os_max_cpus = 64 %>
+<% os_max_cpus = cfs_globals_get_max_os_cpus() %>
 <% mask_bits = ((os_max_cpus + 7) / 8) * 8 %>
 
-<%= cfs_tlm_hdr(target_name, 'TA_HK', "TA Housekeeping Tlm Packet") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TA_HK', "CFE_TA Housekeeping Tlm Packet") %>
     APPEND_ITEM COMMAND_COUNTER          8 UINT "Count of valid commands received"
     APPEND_ITEM COMMAND_ERROR_COUNTER    8 UINT "Count of invalid commands received"
     APPEND_ITEM STARTUP_COUNTER          8 UINT "Count of successful startup affinity configs"
     APPEND_ITEM STARTUP_ERROR_COUNTER    8 UINT "Count of invalid startup affinity configs"
     
-<%= cfs_file_hdr(target_name, 'TA_AFFINITY_FILE', "TA Task Affinity Data File") %>
+<%= cfs_tlm_hdr(target_name, 'CFE_TA_AFFINITY_TLM', "CFE_TA Task Affinity Tlm Packet") %>
+    APPEND_ITEM CORES_CONFIGURED   16 UINT "Cores Configured"
+    APPEND_ITEM TA_CORES_MAX       16 UINT "Max Affinity Bits"
+
+    # --- Array of CFE_TA_CpuTaskAffinity_t Structures ---
+<% 64.times do |i| %>
+        APPEND_ITEM TASK_NAME_<%= i %> 160 STRING "Task Name"
+
+        APPEND_ITEM AFFINITY_MASK_<%= i %>    <%= mask_bits %> UINT "Affinity Mask"
+            FORMAT_STRING "0x%0<%= mask_bits / 4 %>X"
+<% end %>
+
+<%= cfs_file_hdr(target_name, 'CFE_TA_AFFINITY_FILE', "CFE_TA Task Affinity Data File") %>
     
     # --- File Payload Header ---
     APPEND_ITEM CORES_CONFIGURED   16 UINT "Cores Configured"
