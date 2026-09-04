@@ -15,6 +15,10 @@ VARIABLE cfs_mem_addr_size 64
 VARIABLE cfs_endianness LITTLE_ENDIAN
 <% cfs_globals_set_endianness(cfs_endianness) %>
 
+# To set the maximum OSAL cpus, uncomment the lines below
+VARIABLE cfs_max_os_cpus 64
+<% cfs_globals_set_max_os_cpus(cfs_max_os_cpus) %>
+
 # This should map to the IP address that GSW sends commands to (and listens to telemetry on)
 VARIABLE cfs_1_intf_ip 172.17.0.1
 VARIABLE cfs_2_intf_ip 172.17.0.1

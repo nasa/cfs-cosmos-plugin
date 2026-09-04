@@ -2,20 +2,20 @@ SCREEN AUTO AUTO 1.0
 <% require 'cfs_target_num_color' %> 
 
 VERTICAL 
-TITLE "<%= target_name %> TA Task Affinity File Dump" Courier 20 Normal true 
+TITLE "<%= target_name %> CFE_TA Task Affinity File Dump" Courier 20 Normal true 
 SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %> 
 
 # --- File Info --- 
 LABEL "=== File Header ===" 
-LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE DESCRIPTION "File Desc:"
-LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE FILE_CREATE_TIME "Created:"
+LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_FILE DESCRIPTION "File Desc:"
+LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_FILE FILE_CREATE_TIME "Created:"
 LABEL " " 
 
 # --- Global Config --- 
 LABEL "=== Global Configuration ===" 
 HORIZONTAL 
-  LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE CORES_CONFIGURED "Cores Configured:"
-  LABELVALUEDESC <%= target_name %> TA_AFFINITY_FILE TA_CORES_MAX "Max Affinity Bits:"
+  LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_FILE CORES_CONFIGURED "Cores Configured:"
+  LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_FILE TA_CORES_MAX "Max Affinity Bits:"
 END 
 LABEL " " 
 
@@ -43,15 +43,15 @@ VERTICAL
   <% 64.times do |i| %> 
     HORIZONTAL 
       # Appending '30' forces COSMOS 7 to render a much wider value box container
-      VALUE <%= target_name %> TA_AFFINITY_FILE TASK_NAME_<%= i %> 20
+      VALUE <%= target_name %> CFE_TA_AFFINITY_FILE TASK_NAME_<%= i %> 20
       LABEL " "
-      VALUE <%= target_name %> TA_AFFINITY_FILE TA_MASK_<%= i %> FORMATTED 30
+      VALUE <%= target_name %> CFE_TA_AFFINITY_FILE TA_MASK_<%= i %> FORMATTED 30
       LABEL " "
-      VALUE <%= target_name %> TA_AFFINITY_FILE TA_FROM_OS_<%= i %> FORMATTED 30
+      VALUE <%= target_name %> CFE_TA_AFFINITY_FILE TA_FROM_OS_<%= i %> FORMATTED 30
       LABEL " "
-      VALUE <%= target_name %> TA_AFFINITY_FILE TA_TYPE_<%= i %> FORMATTED 10
+      VALUE <%= target_name %> CFE_TA_AFFINITY_FILE TA_TYPE_<%= i %> FORMATTED 10
       LABEL " "
-      VALUE <%= target_name %> TA_AFFINITY_FILE TA_STATUS_<%= i %> FORMATTED 10
+      VALUE <%= target_name %> CFE_TA_AFFINITY_FILE TA_STATUS_<%= i %> FORMATTED 10
     END 
   <% end %> 
 END 

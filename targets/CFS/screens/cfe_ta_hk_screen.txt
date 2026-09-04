@@ -1,0 +1,48 @@
+SCREEN AUTO AUTO 1.0 
+<% require 'cfs_target_num_color' %> 
+
+VERTICAL
+  TITLE "<%= target_name %> CFE_TA Housekeeping" Courier 20 Normal true
+    SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %>
+
+  LABELVALUEDESC <%= target_name %>  CFE_TA_HK COMMAND_COUNTER "Command Count:"
+  LABELVALUEDESC <%= target_name %>  CFE_TA_HK COMMAND_ERROR_COUNTER "Command Error Count:"
+  LABELVALUEDESC <%= target_name %>  CFE_TA_HK STARTUP_COUNTER "Startup Affinity Configs Valid Count:"
+  LABELVALUEDESC <%= target_name %>  CFE_TA_HK STARTUP_ERROR_COUNTER "Startup Affinity Configs Invalid Count:"
+  LABELVALUEDESC <%= target_name %>  CFE_TA_HK RECEIVED_COUNT "Packets Received:"
+END
+
+VERTICAL 
+TITLE "<%= target_name %> CFE_TA Task Affinity Telemetry" Courier 20 Normal true 
+SETTING TEXTCOLOR <%= cfs_target_num_color(target_name) %> 
+
+# --- Global Config --- 
+LABEL "=== TA Configuration ===" 
+HORIZONTAL 
+  LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_TLM CORES_CONFIGURED "Cores Configured:"
+  LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_TLM TA_CORES_MAX "Max Affinity Bits:"
+  LABELVALUEDESC <%= target_name %> CFE_TA_AFFINITY_TLM RECEIVED_COUNT "Packets Received:"
+END 
+LABEL " " 
+
+# --- Task Array --- 
+LABEL "=== Task Affinity Info ===" 
+
+# Compact table header alignment
+HORIZONTAL
+  LABEL "ID / Name"
+  LABEL "       "  # Empty space matching the first box width
+  LABEL "Affinity Mask"
+  LABEL "                           "  # Space matching the Mask 
+END
+
+VERTICAL 
+  <% 64.times do |i| %> 
+    HORIZONTAL 
+      # Appending '30' forces COSMOS 7 to render a much wider value box container
+      VALUE <%= target_name %> CFE_TA_AFFINITY_TLM TASK_NAME_<%= i %> 20
+      LABEL " "
+      VALUE <%= target_name %> CFE_TA_AFFINITY_TLM AFFINITY_MASK_<%= i %> FORMATTED 30
+    END 
+  <% end %> 
+END
