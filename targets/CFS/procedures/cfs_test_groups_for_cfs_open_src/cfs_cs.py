@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from openc3.script.suite import Group
 # Verify CS commands work properly.  Not testing error cases.
 
@@ -46,40 +48,62 @@ class cfs_test_group_cfs_cs(Group):
         wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
     
 
+    @contextmanager
+    def _one_shot(self):
+        """Start an observable one-shot on the sample library's 16-byte buffer.
+
+        With the default 1000 ms child-task delay and one byte per cycle, this
+        leaves time to observe the running state in housekeeping telemetry.
+        """
+        target = "<%= target_name %>"
+        wait_check_packet(target, "MM_HK", 1, 100)
+        mm_count = tlm(f"{target} MM_HK COMMAND_COUNTER")
+        cmd(f"{target} MM_CMD_LOOKUP_SYM with SYMNAME 'SAMPLE_LIB_Buffer'")
+        wait_check(f"{target} MM_HK COMMAND_COUNTER == {(mm_count + 1) % 256}", 100)
+        wait_check(f"{target} MM_HK LAST_ACTION == 'SYM_LOOKUP'", 100)
+        address = tlm(f"{target} MM_HK ADDRESS")
+        if not address:
+            raise RuntimeError("SAMPLE_LIB_Buffer did not resolve to a usable address")
+
+        wait_check_packet(target, "CS_HK", 1, 100)
+        wait_check(f"{target} CS_HK RECOMPUTE_IN_PROGRESS == 0", 100)
+        wait_check(f"{target} CS_HK ONE_SHOT_IN_PROGRESS == 0", 100)
+        cmd_count = tlm(f"{target} CS_HK COMMAND_COUNTER")
+        error_count = tlm(f"{target} CS_HK COMMAND_ERROR_COUNTER")
+        cmd(f"{target} CS_CMD_ONE_SHOT with ADDRESS {address}, SIZE 16, MAX_BYTES_PER_CYCLE 1")
+        try:
+            cmd(f"{target} CS_SEND_HK_CMD")
+            wait_check(f"{target} CS_HK ONE_SHOT_IN_PROGRESS == 1", 100)
+            wait_check(f"{target} CS_HK COMMAND_COUNTER == {(cmd_count + 1) % 256}", 100)
+            wait_check(f"{target} CS_HK RECOMPUTE_IN_PROGRESS == 0", 100)
+            wait_check(f"{target} CS_HK LAST_ONE_SHOT_ADDRESS == {address}", 100)
+            wait_check(f"{target} CS_HK LAST_ONE_SHOT_SIZE == 16", 100)
+            wait_check(f"{target} CS_HK LAST_ONE_SHOT_MAX_BYTES_PER_CYCLE == 1", 100)
+            yield cmd_count, error_count
+        finally:
+            # A failed assertion must not leave this child task running for later tests.
+            if tlm(f"{target} CS_HK ONE_SHOT_IN_PROGRESS"):
+                cmd(f"{target} CS_CMD_CANCEL_ONE_SHOT")
+                wait_check(f"{target} CS_HK ONE_SHOT_IN_PROGRESS == 0", 100)
+
     def test_02_OneShot(self):
-        """
-        Test the OneShot command.
-        """
-        
-        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
-        
-        cmd("<%= target_name %> CS_CMD_ONE_SHOT with ADDRESS 0x00000000, SIZE 1, MAX_BYTES_PER_CYCLE 1")
-        
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 1}", 100)
-        
-        # Verify any other telemetry changes
-        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_ADDRESS == 0x00000000", 100)
-        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_SIZE == 1", 100)
-        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_MAX_BYTES_PER_CYCLE == 1", 100)
-        wait_check(f"<%= target_name %> CS_HK LAST_ONE_SHOT_CHECKSUM == 0", 100)
-        # RECOMPUTE_IN_PROGRESS does not stay FALSE long enough to show in packet.
-        # ONE_SHOT_IN_PROGRESS does not stay TRUE long enough to show in packet.
-    
+        """Observe one-shot progress and natural completion on real sample memory."""
+        target = "<%= target_name %>"
+        with self._one_shot() as (cmd_count, error_count):
+            wait_check(f"{target} CS_HK ONE_SHOT_IN_PROGRESS == 0", 100)
+            wait_check(f"{target} CS_HK RECOMPUTE_IN_PROGRESS == 0", 100)
+            wait_check(f"{target} CS_HK COMMAND_COUNTER == {(cmd_count + 1) % 256}", 100)
+            wait_check(f"{target} CS_HK COMMAND_ERROR_COUNTER == {error_count}", 100)
 
     def test_03_CancelOneShot(self):
-        """
-        Test the CancelOneShot command.
-        """
-        
-        cmd_count = tlm(f"<%= target_name %> CS_HK COMMAND_COUNTER")
-        
-        cmd("<%= target_name %> CS_CMD_ONE_SHOT with ADDRESS 0x00000000, SIZE 1, MAX_BYTES_PER_CYCLE 1")
-        cmd("<%= target_name %> CS_CMD_CANCEL_ONE_SHOT")
-        
-        # Verify command count incremented
-        wait_check(f"<%= target_name %> CS_HK COMMAND_COUNTER >= {cmd_count + 2}", 100)
-    
+        """Cancel only after telemetry confirms the one-shot is running."""
+        target = "<%= target_name %>"
+        with self._one_shot() as (cmd_count, error_count):
+            cmd(f"{target} CS_CMD_CANCEL_ONE_SHOT")
+            wait_check(f"{target} CS_HK COMMAND_COUNTER == {(cmd_count + 2) % 256}", 100)
+            wait_check(f"{target} CS_HK ONE_SHOT_IN_PROGRESS == 0", 100)
+            wait_check(f"{target} CS_HK RECOMPUTE_IN_PROGRESS == 0", 100)
+            wait_check(f"{target} CS_HK COMMAND_ERROR_COUNTER == {error_count}", 100)
 
     def test_04_EnableAllCS(self):
         """
