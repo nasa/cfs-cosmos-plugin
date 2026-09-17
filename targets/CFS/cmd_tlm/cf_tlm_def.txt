@@ -2,7 +2,7 @@
     APPEND_ITEM COMMAND_COUNTER 16 UINT "Command success counter"
     APPEND_ITEM COMMAND_ERROR_COUNTER 16 UINT "Command error counter"
     APPEND_ITEM PADDING 32 UINT
-<% 2.times do |chan_idx| %>
+<% (1..2).each do |chan_idx| %>
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SENT_FILE_DATA_BYTES 64 UINT "Sent file data bytes"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SENT_PDU 32 UINT "Sent PDUs counter"
     APPEND_ITEM CHANNEL_HK_<%= chan_idx %>_SENT_NAK_SEGMENT_REQUESTS 32 UINT "Sent NAK segment requests counter"

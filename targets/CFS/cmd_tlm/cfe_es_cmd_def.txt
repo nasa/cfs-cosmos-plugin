@@ -61,12 +61,12 @@
    APPEND_PARAMETER DATA_FILE_NAME 512 STRING "" "ASCII text string of full path and filename of file Performance Analyzer data is to be written"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_SET_PERF_FILTER_MASK',  16, "Telecommand Message") %>
-   APPEND_PARAMETER FILTER_MASK_NUM 32 UINT 0 MAX_UINT32 0 "Index into array of Filter Masks"
-   APPEND_PARAMETER FILTER_MASK 32 UINT 0 MAX_UINT32 0 "New Mask for specified entry in array of Filter Masks"
+   APPEND_PARAMETER FILTER_MASK_NUM 8 UINT 0 MAX_UINT8 0 "Index into array of Filter Masks"
+   APPEND_PARAMETER FILTER_MASK 8 UINT 0 MAX_UINT8 0 "New Mask for specified entry in array of Filter Masks"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_SET_PERF_TRIGGER_MASK',  17, "Telecommand Message") %>
-   APPEND_PARAMETER TRIGGER_MASK_NUM 32 UINT 0 MAX_UINT32 0 "Index into array of Trigger Masks"
-   APPEND_PARAMETER TRIGGER_MASK 32 UINT 0 MAX_UINT32 0 "New Mask for specified entry in array of Trigger Masks"
+   APPEND_PARAMETER TRIGGER_MASK_NUM 8 UINT 0 MAX_UINT8 0 "Index into array of Trigger Masks"
+   APPEND_PARAMETER TRIGGER_MASK 8 UINT 0 MAX_UINT8 0 "New Mask for specified entry in array of Trigger Masks"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_OVER_WRITE_SYS_LOG',  18, "Telecommand Message") %>
    APPEND_PARAMETER MODE 32 UINT 0 1 0 "Identifies handling of log messages after storage is filled"
@@ -82,7 +82,7 @@
    APPEND_PARAMETER CDS_NAME 320 STRING "" "ASCII text string containing name of CDS to delete"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_SEND_MEM_POOL_STATS',  22, "Telecommand Message") %>
-   APPEND_PARAMETER APPLICATION 160 STRING "" "Application Name"
+   APPEND_PARAMETER NOT_USED 160 STRING "" "Parameter is not used. Comment in Code: /** - RESERVED - should be all zeroes */"
    APPEND_PARAMETER POOL_HANDLE 32 UINT 0 MAX_UINT32 0 "Memory Pool Handle"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_DUMP_CDS_REGISTRY',  23, "Telecommand Message") %>
