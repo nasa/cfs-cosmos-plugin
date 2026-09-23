@@ -58,11 +58,16 @@
       STATE CENTER 1
       STATE END    2
    APPEND_ITEM PERF_TRIGGER_COUNT 32 UINT "Number of Times Performance Analyzer has Triggered"
-<% 128.times do |perf_id_index| %>
-   APPEND_ITEM PERF_FILTER_MASK_<%= perf_id_index %> 1 UINT "Single true/false status bit"
+<% if $cfs_globals_eds_enabled %>
+<%   perf_mask_ids_in_packet_order = (0...128).to_a %>
+<% else %>
+<%   perf_mask_ids_in_packet_order = (0...128).map { |p| (p / 8) * 8 + (7 - (p % 8)) } %>
 <% end %>
-<% 128.times do |perf_id_index| %>
-   APPEND_ITEM PERF_TRIGGER_MASK_<%= perf_id_index %> 1 UINT "Single true/false status bit"
+<% perf_mask_ids_in_packet_order.each do |perf_id| %>
+   APPEND_ITEM PERF_FILTER_MASK_<%= perf_id %> 1 UINT "Filter status bit for perf ID <%= perf_id %>"
+<% end %>
+<% perf_mask_ids_in_packet_order.each do |perf_id| %>
+   APPEND_ITEM PERF_TRIGGER_MASK_<%= perf_id %> 1 UINT "Trigger status bit for perf ID <%= perf_id %>"
 <% end %>
    APPEND_ITEM PERF_DATA_START 32 UINT "Identifies First Stored Entry in Performance Analyzer Log"
    APPEND_ITEM PERF_DATA_END 32 UINT "Identifies Last Stored Entry in Performance Analyzer Log"
