@@ -82,7 +82,7 @@
    APPEND_PARAMETER CDS_NAME 320 STRING "" "ASCII text string containing name of CDS to delete"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_SEND_MEM_POOL_STATS',  22, "Telecommand Message") %>
-   APPEND_PARAMETER APPLICATION 160 STRING "" "Application Name"
+   APPEND_PARAMETER NOT_USED 160 STRING "" "Parameter is not used. Comment in Code: /** - RESERVED - should be all zeroes */"
    APPEND_PARAMETER POOL_HANDLE 32 UINT 0 MAX_UINT32 0 "Memory Pool Handle"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_ES_CMD_DUMP_CDS_REGISTRY',  23, "Telecommand Message") %>

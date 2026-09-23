@@ -442,7 +442,7 @@ class cfs_test_group_cfe_es(Group):
         cmd_count = tlm(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER")
         
         # Send command under test
-        cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with APPLICATION 'TO', POOL_HANDLE {sb_mempool_handle}")
+        cmd(f"<%= target_name %> CFE_ES_CMD_SEND_MEM_POOL_STATS with POOL_HANDLE {sb_mempool_handle}")
         
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count + 1}", 20)

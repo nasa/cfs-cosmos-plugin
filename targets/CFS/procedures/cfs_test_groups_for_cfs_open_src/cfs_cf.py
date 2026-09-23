@@ -51,7 +51,7 @@ class cfs_test_group_cfs_cf(Group):
             and verify frozen state toggles in housekeeping telemetry
         - Purge queues to confirm the queue management command path executes without error
         """
-        channel = 0
+        channel = 1
 
         Group.print("Testing CF channel management commands on <%= target_name %>")
 
@@ -108,7 +108,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_ENABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255"
+            f"<%= target_name %> CF_CMD_ENABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR ALL"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -119,7 +119,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_DISABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR 255"
+            f"<%= target_name %> CF_CMD_DISABLE_DIR_POLLING with CHANNEL_NUM {channel}, POLL_DIR ALL"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -130,7 +130,7 @@ class cfs_test_group_cfs_cf(Group):
         self._require_hk("CF")
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
         cmd(
-            f"<%= target_name %> CF_CMD_PURGE_QUEUE with CHANNEL_NUM {channel}, QUEUE_TYPE 2"
+            f"<%= target_name %> CF_CMD_PURGE_QUEUE with CHANNEL_NUM {channel}, QUEUE_TYPE HISTORY"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -141,7 +141,7 @@ class cfs_test_group_cfs_cf(Group):
         - Send suspend/resume/cancel/abandon with no active transactions
             then verify the error counter increments to reflect the guarded failure path
         """
-        channel = 0
+        channel = 1
 
         Group.print("Testing CF transaction control commands on <%= target_name %>")
 
@@ -193,7 +193,7 @@ class cfs_test_group_cfs_cf(Group):
         - Set and get a configuration parameter
             then verify the command counter increments for successful operations
         """
-        channel = 0
+        channel = 1
 
         Group.print("Testing CF file/configuration commands on <%= target_name %>")
         self._require_hk("CF")
@@ -203,7 +203,7 @@ class cfs_test_group_cfs_cf(Group):
         #------------- Command 1: TX File (expected error) -------------------------
         Group.print("Testing CF tx_file error handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_TX_FILE with CFDP_CLASS 0, KEEP_FILE_FLAG 1, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_src', DEST_FILENAME '/ram/missing_dst'"
+            f"<%= target_name %> CF_CMD_TX_FILE with CFDP_CLASS CLASS_1, KEEP_FILE_FLAG KEEP, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_src', DEST_FILENAME '/ram/missing_dst'"
         )
         try:
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 10)
@@ -221,7 +221,7 @@ class cfs_test_group_cfs_cf(Group):
 
         Group.print("Testing CF playback_dir error handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_PLAYBACK_DIR with CFDP_CLASS 0, KEEP 1, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_dir', DST_FILENAME '/ram/missing_dir'"
+            f"<%= target_name %> CF_CMD_PLAYBACK_DIR with CFDP_CLASS CLASS_1, KEEP_FILE_FLAG KEEP, CHAN_NUM {channel}, PRIORITY 1, DEST_ID {CFDP_GROUND_ENTITY_ID}, SRC_FILENAME '/cf/missing_dir', DST_FILENAME '/ram/missing_dir'"
         )
         try:
             wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 10)
@@ -239,7 +239,7 @@ class cfs_test_group_cfs_cf(Group):
 
         Group.print("Testing CF write_queue error handling on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_WRITE_QUEUE with TYPE 1, CHAN {channel}, QUEUE 0, FILENAME '/cf/tmp/cf_queue_error.txt'"
+            f"<%= target_name %> CF_CMD_WRITE_QUEUE with TYPE UP, CHAN {channel}, QUEUE PENDING, FILENAME '/cf/tmp/cf_queue_error.txt'"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count + 1}", 100)
@@ -251,7 +251,7 @@ class cfs_test_group_cfs_cf(Group):
 
         Group.print("Testing CF set_param on <%= target_name %>")
         cmd(
-            f"<%= target_name %> CF_CMD_SET_PARAM with VALUE 4, KEY 6, CHAN_NUM {channel}"
+            f"<%= target_name %> CF_CMD_SET_PARAM with VALUE 4, KEY ACK_LIMIT, CHAN_NUM {channel}"
         )
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
@@ -262,7 +262,7 @@ class cfs_test_group_cfs_cf(Group):
         err_count = tlm("<%= target_name %> CF_HK COMMAND_ERROR_COUNTER")
 
         Group.print("Testing CF get_param on <%= target_name %>")
-        cmd(f"<%= target_name %> CF_CMD_GET_PARAM with KEY 6, CHAN_NUM {channel}")
+        cmd(f"<%= target_name %> CF_CMD_GET_PARAM with KEY ACK_LIMIT, CHAN_NUM {channel}")
         wait_check(f"<%= target_name %> CF_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
         wait_check(f"<%= target_name %> CF_HK COMMAND_ERROR_COUNTER == {err_count}", 100)
 
