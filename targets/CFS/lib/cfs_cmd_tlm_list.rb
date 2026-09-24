@@ -490,20 +490,21 @@ $CFS_CMD_TLM_LIST = {
             "DS_SEND_HK_CMD",
         ]
     ),
-    "TA_CMD" => FswMsgInfo.new(
+    "CFE_TA_CMD" => FswMsgInfo.new(
     base_stream_id: 0x1812,
     packet_names: [
-            "TA_CMD_NOOP",
-            "TA_CMD_RESET_COUNTERS",
-            "TA_CMD_QUERY_ALL_TASKS",
-            "TA_CMD_SET_TASK_AFFINITY",
-            "TA_CMD_GET_TASK_AFFINITY",
+            "CFE_TA_CMD_NOOP",
+            "CFE_TA_CMD_RESET_COUNTERS",
+            "CFE_TA_CMD_QUERY_ALL_TASKS",
+            "CFE_TA_CMD_SET_TASK_AFFINITY",
+            "CFE_TA_CMD_GET_TASK_AFFINITY",
+            "CFE_TA_CMD_QUERY_TASK_AFFINITY",
         ]
     ),
-    "TA_SEND_HK_CMD" => FswMsgInfo.new(
+    "CFE_TA_SEND_HK_CMD" => FswMsgInfo.new(
         base_stream_id: 0x1813,
         packet_names: [
-            "TA_SEND_HK_CMD",
+            "CFE_TA_SEND_HK_CMD",
         ]
     ),    
 
@@ -804,10 +805,16 @@ $CFS_CMD_TLM_LIST = {
             "DS_COMP",
         ]
     ),   
-    "TA_HK" => FswMsgInfo.new(
+    "CFE_TA_HK" => FswMsgInfo.new(
         base_stream_id: 0x080F,
         packet_names: [
-            "TA_HK",
+            "CFE_TA_HK",
+        ]
+    ),
+    "CFE_TA_AFFINITY_TLM" => FswMsgInfo.new(
+        base_stream_id: 0x0811,
+        packet_names: [
+            "CFE_TA_AFFINITY_TLM",
         ]
     ),
 }

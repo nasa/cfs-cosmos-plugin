@@ -1,15 +1,20 @@
-# Set this to match your OSAL configuration!
-os_max_cpus = 64
+# Get OSAL Max CPU Configuration
+os_max_cpus = Integer("<%= cfs_max_os_cpus %>")
 
 # Calculate dynamic byte widths
 mask_bytes = (os_max_cpus + 7) / 8
+
 # Calculate compiler padding before the 32-bit Type enum (Struct offset is 20 + 2*mask_bytes)
 pre_enum_offset = 20 + (2 * mask_bytes)
 padding_bytes = (4 - (pre_enum_offset % 4)) % 4
 
 struct_bytes = 20 + (2 * mask_bytes) + padding_bytes + 4 + 4
 
-raw = File.binread(get_target_file('CFS-1/lib/ta_dump.bin').path)[64..-1]
+# Prompt for dump file to read
+file = open_file_dialog("Open Task Affinity Dump File", "Select Task Affinity Dump File", filter: nil)
+
+# Read dump file
+raw = file.read()[64..-1]
 
 data = { 
   'CORES_CONFIGURED' => raw[0,2].unpack1('v'), 
@@ -42,4 +47,8 @@ raw[4..-1].unpack(unpack_fmt * num_tasks).each_slice(5).with_index do |t, i|
               "TA_STATUS_#{i}"   => stat_str) 
 end
 
-inject_tlm('CFS-1', 'TA_AFFINITY_FILE', data)
+inject_tlm('<%= target_name %>', 'CFE_TA_AFFINITY_FILE', data)
+
+# File object delete
+file.delete
+

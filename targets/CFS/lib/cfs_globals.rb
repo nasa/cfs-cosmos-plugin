@@ -57,6 +57,26 @@ end
 
 
 # -------------------------------------------------------------------------------------------------
+# OSAL Max CPUs
+# Number of maximum cpus configured in OSAL 
+# -------------------------------------------------------------------------------------------------
+$cfs_globals_max_os_cpus = 64
+
+# Set the related global variable, based on the input (called from plugin.txt)
+# This relates to OSAL maximum CPUs, as defined by: `OSAL_CONFIG_MAX_CPUS`
+def cfs_globals_set_max_os_cpus(cfs_max_os_cpus_input_string)
+    $cfs_globals_max_os_cpus = Integer(cfs_max_os_cpus_input_string)
+rescue ArgumentError
+    $cfs_globals_max_os_cpus = 1
+end
+
+# Gets the related global variable for OSAL Max CPUs
+def cfs_globals_get_max_os_cpus()
+  return $cfs_globals_max_os_cpus
+end
+
+
+# -------------------------------------------------------------------------------------------------
 # FSW Target's Processor Endianness
 # Must be "LITTLE_ENDIAN" or "BIG_ENDIAN"
 # -------------------------------------------------------------------------------------------------
