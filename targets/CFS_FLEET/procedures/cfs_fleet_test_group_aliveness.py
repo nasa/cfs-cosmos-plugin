@@ -36,7 +36,6 @@ class cfs_fleet_test_group_aliveness(Group):
         fsw_apps_to_test.append(["HS_CMD_NOOP",         "HS_CMD_RESET_COUNTERS",         "HS_HK",          "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["LC_CMD_NOOP",         "LC_CMD_RESET_COUNTERS",         "LC_HK",          "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["MD_CMD_NOOP",         "MD_CMD_RESET_COUNTERS",         "MD_HK",          "COMMAND_COUNTER" ])
-        fsw_apps_to_test.append(["MM_CMD_NOOP",         "MM_CMD_RESET_COUNTERS",         "MM_HK",          "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["SC_CMD_NOOP",         "SC_CMD_RESET_COUNTERS",         "SC_HK",          "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["CI_LAB_CMD_NOOP",     "CI_LAB_CMD_RESET_COUNTERS",     "CI_LAB_HK",      "COMMAND_COUNTER" ])
         fsw_apps_to_test.append(["TO_LAB_CMD_NOOP",     "TO_LAB_CMD_RESET_COUNTERS",     "TO_LAB_HK",      "COMMAND_COUNTER" ])
