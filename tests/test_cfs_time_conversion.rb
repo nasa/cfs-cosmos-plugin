@@ -43,6 +43,17 @@ class CfsTimeConversionTest < Minitest::Test
     end
   end
 
+  def test_binary_fraction_converter_preserves_epoch_offset_hook
+    packet = packet_for(16)
+    packet.write('SECONDS', 10)
+    packet.write('SUBSECS', 32_768)
+    conversion = packet.get_item('PACKET_TIME').read_conversion
+
+    conversion.instance_variable_set(:@epoch_offset_seconds, 100)
+
+    assert_equal Rational(221, 2), conversion.call(nil, packet, packet.buffer).to_r
+  end
+
   def test_explicit_buffer_is_used_without_mutating_packet
     packet = packet_for(16)
     packet.write('SECONDS', 10)

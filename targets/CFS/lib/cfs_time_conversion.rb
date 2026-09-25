@@ -9,6 +9,11 @@ module OpenC3
       @seconds_item_name = seconds_item_name
       @subseconds_item_name = subseconds_item_name
       @subseconds_bits = Integer(subseconds_bits)
+      # Keep the same mission-specific epoch adjustment hook as the legacy
+      # UnixTimeConversionEpochOffset conversion. Missions that use a non-UNIX
+      # epoch can change this value locally without altering the subsecond
+      # binary-fraction decoding.
+      @epoch_offset_seconds = 0
       unless [16, 32].include?(@subseconds_bits)
         raise ArgumentError, 'cFS subseconds must be 16 or 32 bits'
       end
@@ -19,7 +24,7 @@ module OpenC3
     def call(value, packet, buffer)
       seconds = packet.read(@seconds_item_name, :RAW, buffer)
       fraction = Rational(packet.read(@subseconds_item_name, :RAW, buffer), 1 << @subseconds_bits)
-      Time.at(seconds + fraction).sys
+      Time.at(seconds + fraction).sys + @epoch_offset_seconds
     end
 
     def to_s
