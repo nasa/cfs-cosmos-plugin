@@ -37,15 +37,15 @@ class cfs_test_group_cfs_sample_app(Group):
         - Send command process
             then verify the command was received (by checking the command counter incremented)
         """
-        
+
         Group.print(f"Testing SAMPLE_APP command process on <%= target_name %>")
-        
+
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"SAMPLE_APP_HK", 1, 100)
-        
+
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER")
-        
+
         # Check accepted Command Process
         cmd(f"<%= target_name %> SAMPLE_APP_CMD_PROCESS")
         wait_check(f"<%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
@@ -56,17 +56,17 @@ class cfs_test_group_cfs_sample_app(Group):
         - Send display param command
             then verify the command was received (by checking the command counter incremented)
         """
-        
+
         Group.print(f"Testing SAMPLE_APP display param command on <%= target_name %>")
-        
+
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"SAMPLE_APP_HK", 1, 100)
-        
+
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER")
-        
+
         # Check accepted Display Param command
-        cmd(f"<%= target_name %> SAMPLE_APP_CMD_DISPLAY_PARAM with VAL_U32 10, VAL_I16 -4, VAL_STR 'Hello'")    
+        cmd(f"<%= target_name %> SAMPLE_APP_CMD_DISPLAY_PARAM with VAL_U32 10, VAL_I16 -4, VAL_STR 'Hello'")
         wait_check(f"<%= target_name %> SAMPLE_APP_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
     def setup(self):

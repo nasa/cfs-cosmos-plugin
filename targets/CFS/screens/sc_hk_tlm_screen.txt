@@ -9,12 +9,12 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  SC_HK COMMAND_ERROR_COUNTER  "Command Error Count:"
 
   TABBOOK
-    TABITEM "ATS Info" 
+    TABITEM "ATS Info"
       LABELVALUEDESC <%= target_name %>  SC_HK ATS_CMD_CTR "ATS Command Count:"
       LABELVALUEDESC <%= target_name %>  SC_HK ATS_CMD_ERR_CTR "ATS Command Error Count:"
       LABELVALUEDESC <%= target_name %>  SC_HK LAST_ATS_ERR_SEQ "Last ATS Errant Sequence Number:"
       LABELVALUEDESC <%= target_name %>  SC_HK LAST_ATS_ERR_CMD "Last ATS Errant Command Number:"
-      LABELVALUEDESC <%= target_name %>  SC_HK NEXT_ATS_TIME "Next ATS Command Time:"      
+      LABELVALUEDESC <%= target_name %>  SC_HK NEXT_ATS_TIME "Next ATS Command Time:"
       LABELVALUEDESC <%= target_name %>  SC_HK ATS_NUMBER "Current ATS Number:"
       LABELVALUEDESC <%= target_name %>  SC_HK ATP_STATE "Current ATP State:"
       LABELVALUEDESC <%= target_name %>  SC_HK CONT_ATS_ON_FAIL "Continue ATS on Failure?"
@@ -29,7 +29,7 @@ VERTICAL
 <% end %>
 	  END
 
-    TABITEM "RTS Info" 
+    TABITEM "RTS Info"
       LABELVALUEDESC <%= target_name %>  SC_HK RTS_CMD_CTR "RTS Command Count:"
       LABELVALUEDESC <%= target_name %>  SC_HK RTS_CMD_ERR_CTR "RTS Command Error Count:"
       LABELVALUEDESC <%= target_name %>  SC_HK LAST_RTS_ERR_SEQ "Last RTS Errant Sequence Number:"
@@ -44,7 +44,7 @@ VERTICAL
       LABELVALUEDESC <%= target_name %>  SC_HK RTS_W<%=n%>_DIS_STATUS "RTS Disabled Status Word <%=n%>:"
 <% end %>
 	  END
-    
+
   END
 END
 
@@ -57,12 +57,12 @@ HORIZONTAL
     LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
-  
+
   VERTICALBOX
     VALUE <%= target_name %> SC_HK PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %> SC_HK RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %> SC_HK RECEIVED_COUNT 
-  END 
+    VALUE <%= target_name %> SC_HK RECEIVED_COUNT
+  END
  END
 
 

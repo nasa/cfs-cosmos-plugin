@@ -1,5 +1,5 @@
 ############################################
-# 
+#
 # Wrapper allowing the ci_lab_test_methods class to be
 # used in COSMOS.  This just calls the corresponding method.
 #
@@ -24,7 +24,7 @@ class cfs_test_group_cfs_ci_lab(Group):
             then verify the command was received (by checking the command counter was cleared)
         """
         return self.Methods.execute("test_aliveness")
-    
+
     def setup(self):
         """
         Test Group Setup

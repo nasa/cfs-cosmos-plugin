@@ -12,7 +12,7 @@
         STATE MEM8   3
         STATE MEM16  4
         STATE MEM32  5
-     
+
     APPEND_ARRAY_PARAMETER PADDING                   8 UINT 24 "Padding for alignment"
 <% if $cfs_globals_mem_addr_size == 64 %>
     APPEND_PARAMETER       SRC_SYM_ADDRESS_OFFSET   64 UINT MIN MAX 0 "Symbolic source peek address"

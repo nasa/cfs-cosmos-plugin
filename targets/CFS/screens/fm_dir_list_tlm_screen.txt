@@ -15,7 +15,7 @@ VERTICAL
   <% 2.times do |tab_num| %>
   TABBOOK
     <% 10.times do |entry_idx| %>
-    TABITEM "File <%= entry_idx + (10 * tab_num) %>" 
+    TABITEM "File <%= entry_idx + (10 * tab_num) %>"
       LABELVALUEDESC <%= target_name %> FM_DIR_LIST FILE_LIST_<%= entry_idx + (10 * tab_num) %>_ENTRY_NAME "File Name:"
       LABELVALUEDESC <%= target_name %> FM_DIR_LIST FILE_LIST_<%= entry_idx + (10 * tab_num) %>_ENTRY_SIZE "File Size:"
       LABELVALUEDESC <%= target_name %> FM_DIR_LIST FILE_LIST_<%= entry_idx + (10 * tab_num) %>_MODIFY_TIME "Last Modification Time:"
@@ -38,7 +38,7 @@ HORIZONTAL
   VERTICALBOX
     VALUE <%= target_name %>  FM_DIR_LIST PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %>  FM_DIR_LIST RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %>  FM_DIR_LIST RECEIVED_COUNT 
+    VALUE <%= target_name %>  FM_DIR_LIST RECEIVED_COUNT
   END
 END
 

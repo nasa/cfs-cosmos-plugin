@@ -9,7 +9,7 @@ VERTICAL
 
   TABBOOK
   <% 8.times do |free_space_entry| %>
-    TABITEM "App Data <%= free_space_entry %>" 
+    TABITEM "App Data <%= free_space_entry %>"
         LABELVALUEDESC <%= target_name %> FM_MONITOR_TLM FILE_SYS_<%= free_space_entry %>_REPORT_TYPE "Report Type:"
         LABELVALUEDESC <%= target_name %> FM_MONITOR_TLM FILE_SYS_<%= free_space_entry %>_NAME "File System Name:"
         LABELVALUEDESC <%= target_name %> FM_MONITOR_TLM FILE_SYS_<%= free_space_entry %>_BLOCKS "Block Count:"

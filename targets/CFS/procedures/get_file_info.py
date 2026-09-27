@@ -1,6 +1,6 @@
 #
 # Procedure: Get information about a flight software file and check the return output
-# 
+#
 # Assumptions:
 #   - Telemetry output has already been enabled by the user
 #
@@ -11,7 +11,7 @@ exp_file_crc = 0x17DB
 # Get current packet count
 curr_file_info_pkt_count = tlm(f"<%= target_name %> FM_FILE_INFO RECEIVED_COUNT")
 if curr_file_info_pkt_count is None:
-    curr_file_info_pkt_count = 0        
+    curr_file_info_pkt_count = 0
 exp_file_info_pkt_count = curr_file_info_pkt_count + 1
 
 # Send FM get file information command

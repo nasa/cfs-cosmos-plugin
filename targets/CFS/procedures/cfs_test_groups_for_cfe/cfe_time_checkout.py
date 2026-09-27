@@ -31,7 +31,7 @@ class cfs_test_group_cfe_time_checkout(Group):
         #cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SIGNAL with TONE_SOURCE 'TONE_PRI'")
         #cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_DELAY with SECONDS 1, MICROSECONDS 2")
         #cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_DELAY with SECONDS 1, MICROSECONDS 2")
-        
+
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_TIME with SECONDS 3, MICROSECONDS 4")
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_MET with SECONDS 4, MICROSECONDS 5")
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STCF with SECONDS 5, MICROSECONDS 6")
@@ -40,9 +40,9 @@ class cfs_test_group_cfe_time_checkout(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ADJUST with SECONDS 1, MICROSECONDS 2")
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_ONE_HZ_ADJUSTMENT with SECONDS 1, SUBSECONDS 2")
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ONE_HZ_ADJUSTMENT with SECONDS 3, SUBSECONDS 4")
-        
+
         set_line_delay(0.0)
-        
+
         # Check final command count has incremented by the number of commands sent
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count} + 11", 12)
 

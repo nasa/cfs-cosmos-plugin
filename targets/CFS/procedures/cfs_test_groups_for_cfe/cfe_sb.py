@@ -28,11 +28,11 @@ class cfs_test_group_cfe_sb(Group):
         # Check accepted Reset Counters command
         cmd(f"<%= target_name %> CFE_SB_CMD_RESET_COUNTERS")
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER == 0", 20)
-        
+
     def test_01_sb_cmd_sb_stats(self):
         """
         FSW Send SB Stats Cmd Test
-        - Send a CFE_SB_CMD_SEND_SB_STATS 
+        - Send a CFE_SB_CMD_SEND_SB_STATS
             then verify the command was received (by checking the command counter incremented)
             then verify the CFE_SB_STATS packet was received (by checking the received counter)
         """
@@ -65,7 +65,7 @@ class cfs_test_group_cfe_sb(Group):
             then verify the command was received (by checking the command counter incremented)
         - Send a FM_CMD_GET_FILE_INFO for /cf/func_file_route.dat
             then verify that we receive a FM_FILE_INFO pkt which has the correct file name and a status as closed
-        """      
+        """
         Group.print(f"Testing CFE_SB's CFE_SB_CMD_WRITE_ROUTING_INFO command functionality on <%= target_name %>")
 
         # Delete /cf/func_file_route.dat before attempting CFE_SB_CMD_WRITE_ROUTING_INFO command
@@ -73,7 +73,7 @@ class cfs_test_group_cfe_sb(Group):
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
@@ -95,7 +95,7 @@ class cfs_test_group_cfe_sb(Group):
         wait_check(f"<%= target_name %> FM_FILE_INFO RECEIVED_COUNT >= {curr_fm_file_info_pkt_count + 1}", 20)
 
         # Verify the file was created
-        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_route.dat'", 20)  
+        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_route.dat'", 20)
         wait_check(f"<%= target_name %> FM_FILE_INFO STATUS == 'CLOSED_FILE'", 20)
 
 
@@ -114,7 +114,7 @@ class cfs_test_group_cfe_sb(Group):
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest hk command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
@@ -136,8 +136,8 @@ class cfs_test_group_cfe_sb(Group):
         wait_check(f"<%= target_name %> FM_FILE_INFO RECEIVED_COUNT >= {curr_fm_file_info_pkt_count + 1}", 20)
 
         # Verify the file was created
-        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_pipe.dat'", 20)  
-        wait_check(f"<%= target_name %> FM_FILE_INFO STATUS == 'CLOSED_FILE'", 20)  
+        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_pipe.dat'", 20)
+        wait_check(f"<%= target_name %> FM_FILE_INFO STATUS == 'CLOSED_FILE'", 20)
 
 
     def test_04_sb_cmd_write_map_info(self):
@@ -155,7 +155,7 @@ class cfs_test_group_cfe_sb(Group):
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest hk command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
@@ -177,8 +177,8 @@ class cfs_test_group_cfe_sb(Group):
         wait_check(f"<%= target_name %> FM_FILE_INFO RECEIVED_COUNT >= {curr_fm_file_info_pkt_count + 1}", 20)
 
         # Verify the file name
-        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_map.dat'", 20)  
-        wait_check(f"<%= target_name %> FM_FILE_INFO STATUS == 'CLOSED_FILE'", 20)  
+        wait_check(f"<%= target_name %> FM_FILE_INFO NAME == '/cf/func_file_map.dat'", 20)
+        wait_check(f"<%= target_name %> FM_FILE_INFO STATUS == 'CLOSED_FILE'", 20)
 
     def test_05_sb_cmd_enable_disable_route(self):
         """
@@ -195,11 +195,11 @@ class cfs_test_group_cfe_sb(Group):
         # Get current packet count of CFE_SB_STATS
         curr_sb_stats_pkt_count = tlm(f"<%= target_name %> CFE_SB_STATS RECEIVED_COUNT")
         if curr_sb_stats_pkt_count is None:
-          curr_sb_stats_pkt_count = 0        
+          curr_sb_stats_pkt_count = 0
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest HK command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
@@ -215,7 +215,7 @@ class cfs_test_group_cfe_sb(Group):
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest HK command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 
@@ -242,11 +242,11 @@ class cfs_test_group_cfe_sb(Group):
         # Get current packet count of CFE_SB_STATS
         curr_sb_stats_pkt_count = tlm(f"<%= target_name %> CFE_SB_STATS RECEIVED_COUNT")
         if curr_sb_stats_pkt_count is None:
-          curr_sb_stats_pkt_count = 0        
+          curr_sb_stats_pkt_count = 0
 
         # Verify that we have a recent HK packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"CFE_SB_HK", 1, 20)
-        
+
         # Assuming no one else is sending commands, grab the latest HK command count
         cmd_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER")
 

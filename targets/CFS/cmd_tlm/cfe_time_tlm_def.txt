@@ -47,19 +47,19 @@
    APPEND_ITEM CURRENT_UTC_SUBSECONDS 32 UINT "Current UTC (subsecs)"
    APPEND_ITEM CLOCK_SET_STATE 16 INT "Time has been set"
       STATE NOT_SET 0
-      STATE WAS_SET 1   
+      STATE WAS_SET 1
    APPEND_ITEM CLOCK_FLY_STATE 16 INT "Current fly-wheel state"
       STATE NO_FLY 0
-      STATE IS_FLY 1   
+      STATE IS_FLY 1
    APPEND_ITEM CLOCK_SOURCE 16 INT "Internal vs external, etc."
       STATE INTERNAL 1
       STATE EXTERNAL 2
    APPEND_ITEM CLOCK_SIGNAL 16 INT "Primary vs redundant, etc."
       STATE PRIMARY   1
-      STATE REDUNDANT 2  
+      STATE REDUNDANT 2
    APPEND_ITEM SERVER_FLY_STATE 16 INT "Used by clients only"
       STATE NO_FLY 0
-      STATE IS_FLY 1   
+      STATE IS_FLY 1
    APPEND_ITEM FORCED_2_FLY 16 INT "Commanded into flywheel"
       STATE FALSE    0
       STATE TRUE     1
@@ -67,13 +67,13 @@
       FORMAT_STRING "0x%04X"
    APPEND_ITEM ONE_TIME_DIRECTION 16 INT "One time STCF adjustment direction (Add = 1, Sub = 2)"
       STATE ADD      1
-      STATE SUBTRACT 2   
+      STATE SUBTRACT 2
    APPEND_ITEM ONE_HZ_DIRECTION 16 INT "1Hz STCF adjustment direction"
       STATE ADD      1
-      STATE SUBTRACT 2   
+      STATE SUBTRACT 2
    APPEND_ITEM DELAY_DIRECTION 16 INT "Client latency adjustment direction"
       STATE ADD      1
-      STATE SUBTRACT 2   
+      STATE SUBTRACT 2
    APPEND_ITEM ONE_TIME_ADJUST_SECONDS 32 UINT "Previous one-time STCF adjustment (secs)"
    APPEND_ITEM ONE_TIME_ADJUST_SUBSECONDS 32 UINT "Previous one-time STCF adjustment (subsecs)"
    APPEND_ITEM ONE_HZ_ADJUST_SECONDS 32 UINT "Current 1Hz STCF adjustment (secs)"

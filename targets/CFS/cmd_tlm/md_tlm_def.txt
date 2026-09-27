@@ -28,7 +28,7 @@
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
     APPEND_ITEM RATE       32 UINT "Number of counts between packet sends"
     APPEND_ITEM SIGNATURE 256 STRING "Signature"
-    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
+    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"
 
 # The dwell telemetry packets all have the same structure, just different message IDs
 <%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_2', 'MD Dwell Tlm') %>
@@ -37,7 +37,7 @@
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
     APPEND_ITEM RATE       32 UINT "Number of counts between packet sends"
     APPEND_ITEM SIGNATURE 256 STRING "Signature"
-    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
+    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"
 
 # The dwell telemetry packets all have the same structure, just different message IDs
 <%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_3', 'MD Dwell Tlm') %>
@@ -46,7 +46,7 @@
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
     APPEND_ITEM RATE       32 UINT "Number of counts between packet sends"
     APPEND_ITEM SIGNATURE 256 STRING "Signature"
-    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
+    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"
 
 # The dwell telemetry packets all have the same structure, just different message IDs
 <%= cfs_tlm_hdr(target_name, 'MD_DWELL_PKT_4', 'MD Dwell Tlm') %>
@@ -55,4 +55,4 @@
     APPEND_ITEM BYTE_COUNT 16 UINT "Number of bytes of dwell data"
     APPEND_ITEM RATE       32 UINT "Number of counts between packet sends"
     APPEND_ITEM SIGNATURE 256 STRING "Signature"
-    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"  
+    APPEND_ARRAY_ITEM DATA  8 UINT 800 "Dwell data"

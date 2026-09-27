@@ -8,7 +8,7 @@
           STATE LOAD_FILE     3
           STATE LOAD_WID      4
           STATE DUMP_FILE     5
-          STATE DUMP_EVENT    6  
+          STATE DUMP_EVENT    6
           STATE FILL          7
           STATE SYM_LOOKUP    8
           STATE SYM_DUMP      9

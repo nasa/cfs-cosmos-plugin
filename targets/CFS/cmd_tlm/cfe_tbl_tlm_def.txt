@@ -77,4 +77,3 @@
       READ_CONVERSION unix_time_conversion_epoch_offset.rb TIME_OF_LAST_UPDATE_SECONDS TIME_OF_LAST_UPDATE_SUBSECONDS
    ITEM FILE_CREATE_TIME 0 0 DERIVED "Ruby time based on cFE timestamp"
       READ_CONVERSION unix_time_conversion_epoch_offset.rb FILE_CREATE_TIME_SECONDS FILE_CREATE_TIME_SUB_SECONDS
-   

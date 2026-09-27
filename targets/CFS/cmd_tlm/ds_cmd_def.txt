@@ -20,7 +20,7 @@
    APPEND_PARAMETER FILTER_TYPE       16 UINT 0 MAX_UINT16 0 "Filter type (packet count or time)"
       STATE BY_COUNT 1
       STATE BY_TIME  2
-      
+
 <%= cfs_cmd_hdr(target_name, 'DS_CMD_SET_FILTER_PARAMS', 5, "Telecommand Message") %>
    APPEND_PARAMETER MESSAGE_ID        32 UINT 0 MAX_UINT32 0 "Message ID of existing entry in Packet Filter Table"
    APPEND_PARAMETER FILTER_PARAMS_IDX 16 UINT 0 MAX_UINT16 0 "Index into Filter Params Array"

@@ -9,4 +9,3 @@
   APPEND_ARRAY_PARAMETER MSG_BUF_<%= entry_idx%> 16 UINT 512
 <% end %>
 
-  

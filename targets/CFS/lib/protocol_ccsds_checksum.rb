@@ -11,11 +11,11 @@ module OpenC3
             checksum = 0xFF
             data.each_byte {|x| checksum = checksum ^ x}
             packet.write('CCSDS_CHECKSUM', checksum)
-   
+
             return packet
-	  
+	
         end # write()
- 
+
     end # class
- 
+
 end # module

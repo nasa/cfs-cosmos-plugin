@@ -60,7 +60,7 @@
       STATE FALSE 0
       STATE TRUE  1
    APPEND_ARRAY_PARAMETER PADDING1 8 UINT 24 "Padding for packet alignment"
-   
+
 <%= cfs_cmd_hdr(target_name, 'FM_CMD_GET_DIR_LIST_PKT', 15, "Telecommand Message") %>
    APPEND_PARAMETER PATH 512 STRING "" "Path to directory to output"
    APPEND_PARAMETER OFFSET 32 UINT 0 MAX_UINT32 0 "Index of first entry to put in packet"

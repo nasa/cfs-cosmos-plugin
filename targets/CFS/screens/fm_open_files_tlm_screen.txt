@@ -14,7 +14,7 @@ VERTICAL
   <% 5.times do |tab_num| %>
   TABBOOK
     <% 10.times do |entry_idx| %>
-    TABITEM "File <%= entry_idx + (10 * tab_num) %>" 
+    TABITEM "File <%= entry_idx + (10 * tab_num) %>"
       LABELVALUEDESC <%= target_name %> FM_OPEN_FILES OPEN_FILES_LIST_<%= entry_idx + (10 * tab_num) %>_LOGICAL_NAME "File Name:"
       LABELVALUEDESC <%= target_name %> FM_OPEN_FILES OPEN_FILES_LIST_<%= entry_idx + (10 * tab_num) %>_APP_NAME "App that Opened File:"
   	END
@@ -35,7 +35,7 @@ HORIZONTAL
   VERTICALBOX
     VALUE <%= target_name %>  FM_OPEN_FILES PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %>  FM_OPEN_FILES RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %>  FM_OPEN_FILES RECEIVED_COUNT 
+    VALUE <%= target_name %>  FM_OPEN_FILES RECEIVED_COUNT
   END
 END
 

@@ -20,7 +20,7 @@ class cfs_test_group_cfe_sb_checkout(Group):
         cmd_err_count = tlm(f"<%= target_name %> CFE_SB_HK COMMAND_ERROR_COUNTER")
 
         set_line_delay(0.15)  # 0.15 is about as fast as it can go.  0.1 causes a missed cmd.
-        
+
         cmd(f"<%= target_name %> CFE_SB_CMD_NOOP")
         cmd(f"<%= target_name %> CFE_SB_CMD_SEND_SB_STATS")
         wait(0.5) # Without these waits, some commands fail
@@ -35,7 +35,7 @@ class cfs_test_group_cfe_sb_checkout(Group):
         cmd(f"<%= target_name %> CFE_SB_CMD_ENABLE_ROUTE with PIPE {pipe_id}, MSG_ID_VALUE {input_cmd_msg_id}")
 
         set_line_delay(0.0)
-        
+
         # Check final command count has incremented by the number of commands sent
         wait_check(f"<%= target_name %> CFE_SB_HK COMMAND_COUNTER >= {cmd_count} + 7", 12)
         check(f"<%= target_name %> CFE_SB_HK COMMAND_ERROR_COUNTER == {cmd_err_count}")

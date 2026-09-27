@@ -505,7 +505,7 @@ $CFS_CMD_TLM_LIST = {
         packet_names: [
             "TA_SEND_HK_CMD",
         ]
-    ),    
+    ),
 
     # -------------------------------------------------------------------------
     # Telemetry
@@ -767,19 +767,19 @@ $CFS_CMD_TLM_LIST = {
         packet_names: [
             "CS_HK",
         ]
-    ),    
+    ),
     "LC_HK" => FswMsgInfo.new(
         base_stream_id: 0x08A7,
         packet_names: [
             "LC_HK",
         ]
-    ),    
+    ),
     "SC_HK" => FswMsgInfo.new(
         base_stream_id: 0x08AA,
         packet_names: [
             "SC_HK",
         ]
-    ),    
+    ),
 	"HS_HK" => FswMsgInfo.new(
         base_stream_id: 0x08AD,
         packet_names: [
@@ -803,7 +803,7 @@ $CFS_CMD_TLM_LIST = {
         packet_names: [
             "DS_COMP",
         ]
-    ),   
+    ),
     "TA_HK" => FswMsgInfo.new(
         base_stream_id: 0x080F,
         packet_names: [

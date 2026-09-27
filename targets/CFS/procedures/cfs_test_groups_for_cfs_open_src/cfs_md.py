@@ -41,15 +41,15 @@ class cfs_test_group_cfs_md(Group):
 
         This test checks out three related commands: Jam Dwell, Start Dwell, and Stop Dwell.
         The commands are tested in the order that makes sense functionally.
-        - Send a jam_dwell command 
+        - Send a jam_dwell command
             then verify the command was received (by checking the command counter incremented)
             and verify that the command specified dwell table address count incremented (by checking the dwell table address count value)
 
-        - Send a start_dwell command 
+        - Send a start_dwell command
             then verify the command was received (by checking the command counter incremented)
             and verify that the command specified dwell table is enabled (by checking the dwell mask value)
 
-        - Send a stop_dwell command 
+        - Send a stop_dwell command
             then verify the command was received (by checking the command counter incremented)
             and verify that the command specified dwell table is cleared (by checking the dwell mask value)
         """
@@ -70,14 +70,14 @@ class cfs_test_group_cfs_md(Group):
         # Assuming no one else is sending commands, grab the dwell table address count 1
         dwell_mask = tlm(f"<%= target_name %> MD_HK DWELL_TBL_ADDR_COUNT_1")
 
-        # send the jam dwell command - parameters are: table, entry/row, field size, delay, offset, and symbol 
+        # send the jam dwell command - parameters are: table, entry/row, field size, delay, offset, and symbol
         cmd(f"<%= target_name %> MD_CMD_JAM_DWELL with TABLE_ID 1, ENTRY_ID 1, FIELD_LENGTH 4, DWELL_DELAY {dwell_delay}, OFFSET 0, SYM_NAME {dwell_sym} ")
         wait_check(f"<%= target_name %> MD_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-        # Check Dwell Table Address Count 1 
+        # Check Dwell Table Address Count 1
         wait_check(f"<%= target_name %> MD_HK DWELL_TBL_ADDR_COUNT_1 == 1", 100)
-        
-        # Check Dwell Num Waits per Packet 1 
+
+        # Check Dwell Num Waits per Packet 1
         wait_check(f"<%= target_name %> MD_HK NUM_WAITS_PER_PKT_1 == {dwell_delay}", 100)
 
         #------------- Command 2: Start Dwell ---------------------------------------
@@ -89,14 +89,14 @@ class cfs_test_group_cfs_md(Group):
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> MD_HK COMMAND_COUNTER")
 
-        # Assuming no one else is sending commands, grab the latest dwell mask 
+        # Assuming no one else is sending commands, grab the latest dwell mask
         dwell_mask = tlm(f"<%= target_name %> MD_HK DWELL_ENABLED_MASK")
 
-        # send the start dwell command - parameters are table mask and padding 
+        # send the start dwell command - parameters are table mask and padding
         cmd(f"<%= target_name %> MD_CMD_START_DWELL with TABLE_MASK 1, PADDING 0")
         wait_check(f"<%= target_name %> MD_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-        # Check Dwell Mask  - Make sure the dwell enabled mask first bit is set 
+        # Check Dwell Mask  - Make sure the dwell enabled mask first bit is set
         wait_check(f"<%= target_name %> MD_HK DWELL_ENABLED_MASK & 1 == 1", 100)
 
         #------------- Command 3: Stop Dwell ----------------------------------------
@@ -106,14 +106,14 @@ class cfs_test_group_cfs_md(Group):
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> MD_HK COMMAND_COUNTER")
 
-        # Assuming no one else is sending commands, grab the latest dwell mask 
+        # Assuming no one else is sending commands, grab the latest dwell mask
         dwell_mask = tlm(f"<%= target_name %> MD_HK DWELL_ENABLED_MASK")
 
-        # send the stop dwell command - parameters are table mask and padding 
+        # send the stop dwell command - parameters are table mask and padding
         cmd(f"<%= target_name %> MD_CMD_STOP_DWELL with TABLE_MASK 1, PADDING 0")
         wait_check(f"<%= target_name %> MD_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
-        # Check Dwell Mask  - Make sure the dwell enabled mask first bit is clear 
+        # Check Dwell Mask  - Make sure the dwell enabled mask first bit is clear
         wait_check(f"<%= target_name %> MD_HK DWELL_ENABLED_MASK & 1 == 0", 100)
 
         #------------- Command 4: Jam Dwell (restore original table value ) ---------
@@ -137,7 +137,7 @@ class cfs_test_group_cfs_md(Group):
     def test_cmd_set_signature(self):
         """
         FSW Memory Dwell Set Signature command Test
-        - Send a set_signature command 
+        - Send a set_signature command
             then verify the command was received (by checking the command counter incremented)
         """
 

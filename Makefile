@@ -3,7 +3,7 @@
 #
 # Makefile for building COSMOS gem file
 #
-# This makefile implements logic to create the gem, allowing for 
+# This makefile implements logic to create the gem, allowing for
 # test scripts to be sourced from other submodules in the cFS tree.
 # (that is, avoiding the need to put all tests locally in this repo)
 #

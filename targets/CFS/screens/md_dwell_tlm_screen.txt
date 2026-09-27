@@ -7,7 +7,7 @@ VERTICAL
 
   TABBOOK
   <% $md_num_dwell_tables.times do |pkt_idx| %>
-    TABITEM "Dwell Packet <%= pkt_idx+1 %>" 
+    TABITEM "Dwell Packet <%= pkt_idx+1 %>"
       VERTICAL
         LABELVALUEDESC <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> TABLE_ID "Table ID:"
         LABELVALUEDESC <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> ADDR_COUNT "Address Count:"
@@ -28,12 +28,12 @@ VERTICAL
             LABEL "Packets Received:"
             SETTING TEXTALIGN RIGHT
           END
-  
+
         VERTICALBOX
           VALUE <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> PACKET_TIMEFORMATTED CONVERTED 23
           VALUE <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> RECEIVED_TIMEFORMATTED CONVERTED 23
-          VALUE <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> RECEIVED_COUNT 
-        END 
+          VALUE <%= target_name %> MD_DWELL_PKT_<%= pkt_idx+1 %> RECEIVED_COUNT
+        END
       END
 
 	  END
