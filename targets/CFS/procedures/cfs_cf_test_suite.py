@@ -13,14 +13,14 @@ class cfs_cf_test_suite(Suite):
       # these are added in alphabetical order
       # -----------------------------------------------------------------------
       self.add_group(cfs_test_group_cfs_cf)
-    
+
 
   def setup(self):
       # Run when Suite Setup button is pressed
       # Run before all groups when Suite Start is pressed
       Group.print(f"Starting CF Integration Test Suite against the following target:")
       Group.print(f"cFS Target Name (target_name): <%= target_name %>")
-      
+
       # Send the command, TO_LAB_CMD_ENABLE_OUTPUT
       to_lab_dest_ip = "<%= global_tlm_output_ip %>"
       cmd(f"<%= target_name %> TO_LAB_CMD_ENABLE_OUTPUT with DEST_IP '{to_lab_dest_ip}'")

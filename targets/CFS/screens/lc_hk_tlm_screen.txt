@@ -17,7 +17,7 @@ VERTICAL
 
   TABBOOK
   <% 4.times do |idx| %>
-    TABITEM "WP Results <%=(idx*4)+0%> through <%=(idx*4)+3%>" 
+    TABITEM "WP Results <%=(idx*4)+0%> through <%=(idx*4)+3%>"
       	LABELVALUEDESC <%= target_name %> LC_HK WP_<%=(idx*4)+0%>_RESULT "WP <%=(idx*4)+0%>"
       	LABELVALUEDESC <%= target_name %> LC_HK WP_<%=(idx*4)+1%>_RESULT "WP <%=(idx*4)+1%>"
       	LABELVALUEDESC <%= target_name %> LC_HK WP_<%=(idx*4)+2%>_RESULT "WP <%=(idx*4)+2%>"
@@ -28,7 +28,7 @@ VERTICAL
 
   TABBOOK
   <% 2.times do |idx| %>
-    TABITEM "AP Results <%=(idx*2)+0%> through <%=(idx*2)+1%>" 
+    TABITEM "AP Results <%=(idx*2)+0%> through <%=(idx*2)+1%>"
       	LABELVALUEDESC <%= target_name %> LC_HK AP_<%=(idx*2)+0%>_STATE  "AP State <%=(idx*2)+0%>"
       	LABELVALUEDESC <%= target_name %> LC_HK AP_<%=(idx*2)+0%>_RESULT "AP Result <%=(idx*2)+0%>"
 
@@ -36,7 +36,7 @@ VERTICAL
       	LABELVALUEDESC <%= target_name %> LC_HK AP_<%=(idx*2)+1%>_RESULT "AP Result <%=(idx*2)+1%>"
 	  END
   <% end %>
-  END  
+  END
 
 END
 
@@ -49,10 +49,10 @@ HORIZONTAL
     LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
-  
+
   VERTICALBOX
     VALUE <%= target_name %> LC_HK PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %> LC_HK RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %> LC_HK RECEIVED_COUNT 
-  END 
+    VALUE <%= target_name %> LC_HK RECEIVED_COUNT
+  END
  END

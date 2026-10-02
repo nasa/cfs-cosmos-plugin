@@ -9,9 +9,9 @@ VERTICAL
 
   HORIZONTAL <Margin>
     TABBOOK
-      TABITEM "AT TONE" 
-             
-          TITLE "AT TONE Time Telemetry" 
+      TABITEM "AT TONE"
+
+          TITLE "AT TONE Time Telemetry"
           SETTING TEXTCOLOR YELLOW
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG AT_TONE_MET_SECONDS "MET Seconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG AT_TONE_MET_SUBSECONDS "MET Subseconds:"
@@ -22,12 +22,12 @@ VERTICAL
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG AT_TONE_LATCH_SECONDS "Latch Seconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG AT_TONE_LATCH_SUBSECONDS "Latch Subseconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG AT_TONE_LEAP_SECONDS "Leap Seconds:"
-        
+
       END
-      
+
       TABITEM "CURRENT"
-        
-          TITLE "CURRENT Time Telemetry" 
+
+          TITLE "CURRENT Time Telemetry"
           SETTING TEXTCOLOR YELLOW
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CURRENT_LATCH_SECONDS "Latch Seconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CURRENT_LATCH_SUBSECONDS "Latch Subseconds:"
@@ -37,12 +37,12 @@ VERTICAL
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CURRENT_TAI_SUBSECONDS "TAI Subseconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CURRENT_UTC_SECONDS "UTC Seconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CURRENT_UTC_SUBSECONDS "UTC Subseconds:"
-        
+
       END
-      
+
       TABITEM "TONE"
-        
-          TITLE "TONE Time Telemetry" 
+
+          TITLE "TONE Time Telemetry"
           SETTING TEXTCOLOR YELLOW
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_SIGNAL_LATCH_SECONDS "Signal Latch Seconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_SIGNAL_LATCH_SUBSECONDS "Signal Latch Subseconds:"
@@ -56,12 +56,12 @@ VERTICAL
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_INT_ERROR_COUNTER "ISR Error Counter:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_TASK_COUNTER "Task Counter:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TIME_SINCE_TONE_SECONDS "Time Since Tone Seconds:"
-          LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TIME_SINCE_TONE_SUBSECONDS "Time Since Tone Subseconds:" 
+          LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TIME_SINCE_TONE_SUBSECONDS "Time Since Tone Subseconds:"
           LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_OVER_LIMIT "Tone Over Limit:"
-          LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_UNDER_LIMIT "Tone Under Limit:"          
+          LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG TONE_UNDER_LIMIT "Tone Under Limit:"
       END
     END
- 
+
     VERTICALBOX
       LABELVALUEDESC <%= target_name %>  CFE_TIME_DIAG CLOCK_STATE_API "Clock State API:"
 
@@ -103,7 +103,7 @@ HORIZONTAL
   VERTICALBOX
     VALUE <%= target_name %>  CFE_TIME_DIAG PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %>  CFE_TIME_DIAG RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %>  CFE_TIME_DIAG RECEIVED_COUNT 
-  END  
+    VALUE <%= target_name %>  CFE_TIME_DIAG RECEIVED_COUNT
+  END
 END
 

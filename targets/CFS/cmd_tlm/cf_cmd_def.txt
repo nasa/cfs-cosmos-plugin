@@ -104,7 +104,7 @@
     APPEND_PARAMETER TYPE 8 UINT MIN MAX 0 "Transaction direction: all=0, up=1, down=2"
         STATE ALL   0
         STATE UP    1
-        STATE DOWN  2 
+        STATE DOWN  2
     APPEND_PARAMETER CHAN 8 UINT MIN MAX 0 "Channel number"
     APPEND_PARAMETER QUEUE 8 UINT MIN MAX 0 "Queue type"
         STATE ALL     0  # Unspecified - Select all queues

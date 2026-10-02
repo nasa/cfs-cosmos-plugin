@@ -21,7 +21,7 @@
   APPEND_PARAMETER OFFSET       64 UINT 0 MAX_UINT16 0 "Offset"
 <% else %>
   APPEND_PARAMETER OFFSET       32 UINT 0 MAX_UINT16 0 "Offset"
-<% end %>  
+<% end %>
   APPEND_PARAMETER SYM_NAME     512 STRING "" "Symbol name"
 
 <%= cfs_cmd_hdr(target_name, 'MD_CMD_SET_SIGNATURE', 5, "Telecommand Message") %>

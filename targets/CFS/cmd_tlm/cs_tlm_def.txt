@@ -46,7 +46,7 @@
     APPEND_ITEM LAST_ONE_SHOT_ADDRESS             64 UINT  "Address used in last one shot checksum command"
 <% else %>
     APPEND_ITEM LAST_ONE_SHOT_ADDRESS             32 UINT  "Address used in last one shot checksum command"
-<% end %>    
+<% end %>
     APPEND_ITEM LAST_ONE_SHOT_SIZE                32 UINT  "Size used in the last one shot checksum command"
     APPEND_ITEM LAST_ONE_SHOT_MAX_BYTES_PER_CYCLE 32 UINT  "Max bytes per cycle for last one shot checksum command"
     APPEND_ITEM LAST_ONE_SHOT_CHECKSUM            32 UINT  "Checksum of the last one shot checksum command"

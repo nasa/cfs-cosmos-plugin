@@ -63,7 +63,7 @@
       STATE ONE   1
       STATE TWO   2
       STATE THREE 4
-      STATE FOUR  8   
+      STATE FOUR  8
    APPEND_PARAMETER PADDING 8 UINT 0 0 0 "Pad to even byte"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_EVS_CMD_DISABLE_PORTS',  12, "Telecommand Message") %>
@@ -71,7 +71,7 @@
       STATE ONE   1
       STATE TWO   2
       STATE THREE 4
-      STATE FOUR  8      
+      STATE FOUR  8
    APPEND_PARAMETER PADDING 8 UINT 0 0 0 "Pad to even byte"
 
 <%= cfs_cmd_hdr(target_name, 'CFE_EVS_CMD_RESET_FILTER',  13, "Telecommand Message") %>

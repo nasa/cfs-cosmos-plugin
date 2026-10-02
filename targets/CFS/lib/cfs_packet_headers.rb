@@ -75,7 +75,7 @@ def cfs_file_hdr(target_name, file_pkt_name, file_desc)
     filePacket << "    APPEND_ITEM PROCESSOR_ID 32 UINT \"Processor that generated the file\" BIG_ENDIAN \n"
     filePacket << "    APPEND_ITEM APPLICATION_ID 32 UINT \"Application that generated the file\" BIG_ENDIAN \n"
     filePacket << "    APPEND_ITEM CREATE_TIME_SECONDS 32 UINT \"File creation timestamp (seconds)\" BIG_ENDIAN \n"
-    filePacket << "    APPEND_ITEM CREATE_TIME_SUBSECS 32 UINT \"File creation timestamp (sub-seconds)\" BIG_ENDIAN \n"    
+    filePacket << "    APPEND_ITEM CREATE_TIME_SUBSECS 32 UINT \"File creation timestamp (sub-seconds)\" BIG_ENDIAN \n"
     filePacket << "    APPEND_ITEM DESCRIPTION 256 STRING \"File description\" \n"
     # Automatically calculate the Ruby time
     filePacket << "    ITEM FILE_CREATE_TIME 0 0 DERIVED \"Ruby time based on SECONDS and SUBSECS\" \n"

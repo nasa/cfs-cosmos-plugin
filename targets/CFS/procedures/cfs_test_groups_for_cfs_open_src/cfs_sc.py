@@ -30,17 +30,17 @@ class cfs_test_group_cfs_sc(Group):
         # Check accepted Reset Counters command
         cmd(f"<%= target_name %> SC_CMD_RESET_COUNTERS")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == 0", 20)
-    
+
 
     def test_01_NoOp(self):
         """
         Test the no-op command.
         """
-        
+
         exp_cmd_count = tlm(f"<%= target_name %> SC_HK COMMAND_COUNTER")
-        
+
         cmd(f"<%= target_name %> SC_CMD_NOOP")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count + 1}", 20)
 
@@ -52,7 +52,7 @@ class cfs_test_group_cfs_sc(Group):
             then verify the command was received (by checking the command counter incremented)
             and set back to default value (True)
         """
-        
+
         Group.print(f"Testing SC Continue ATS on Failure on <%= target_name %>")
 
         # Assuming no one else is sending commands, grab the latest command count
@@ -69,7 +69,7 @@ class cfs_test_group_cfs_sc(Group):
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK CONT_ATS_ON_FAIL == 'TRUE'", 20)
-    
+
 
     def test_03_ats_operations(self):
         """
@@ -78,9 +78,9 @@ class cfs_test_group_cfs_sc(Group):
         - Test jump ATS command
         - Test switch ATS command
         - Test append ATS command
-        - Test stop ATS 
+        - Test stop ATS
         """
-        
+
         Group.print(f"Testing SC ATS operations on <%= target_name %>")
 
         tbl_exp_cmd_count = tlm(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER")
@@ -94,7 +94,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME 'SC.ATS_TBL1'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
-        
+
         # Activate ATS A table
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME 'SC.ATS_TBL1'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
@@ -109,7 +109,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME 'SC.ATS_TBL2'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
-        
+
         # Activate ATS B table
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME 'SC.ATS_TBL2'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
@@ -126,7 +126,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> CFE_TBL_CMD_VALIDATE with ACTIVE_TABLE_FLAG INACTIVE, TABLE_NAME 'SC.APPEND_TBL'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER == {tbl_exp_cmd_count}", 20)
-        
+
         # Activate ATS Append table
         cmd(f"<%= target_name %> CFE_TBL_CMD_ACTIVATE with TABLE_NAME 'SC.APPEND_TBL'")
         tbl_exp_cmd_count = tbl_exp_cmd_count + 1
@@ -167,7 +167,7 @@ class cfs_test_group_cfs_sc(Group):
         check(f"<%= target_name %> SC_HK SWITCH_PEND_FLAG == 'NO'")
 
         cmd(f"<%= target_name %> SC_CMD_SWITCH_ATS")
-        
+
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
 
@@ -185,13 +185,13 @@ class cfs_test_group_cfs_sc(Group):
         # Send this command twice: first to have a known initial value of APPEND_CMD_ARG
 
         cmd(f"<%= target_name %> SC_CMD_APPEND_ATS with ATS_NUM 1")
-        
+
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK APPEND_CMD_ARG == 1", 20)
 
         cmd(f"<%= target_name %> SC_CMD_APPEND_ATS with ATS_NUM 2")
-        
+
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK APPEND_CMD_ARG == 2", 20)
@@ -207,7 +207,7 @@ class cfs_test_group_cfs_sc(Group):
         check(f"<%= target_name %> SC_HK NEXT_ATS_TIME != {new_time}")
 
         cmd(f"<%= target_name %> SC_CMD_JUMP_ATS with NEW_TIME {new_time}")
-        
+
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
         wait_check(f"<%= target_name %> SC_HK NEXT_ATS_TIME == 1000130", 20)
@@ -222,7 +222,7 @@ class cfs_test_group_cfs_sc(Group):
         ########################
 
         check(f"<%= target_name %> SC_HK ATP_STATE == 'EXECUTING'")
-        
+
         cmd(f"<%= target_name %> SC_CMD_STOP_ATS")
 
         exp_cmd_count = exp_cmd_count + 1
@@ -277,11 +277,11 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS with RTS_NUM 1")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
-        
+
         # Check RTS_W0_DIS_STATUS, bit 0, equals 0 (enabled)
         wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x0001 == 0x0000",
                                       20, 0.25, globals())
-        
+
         # NOTE: expected event message text: "Enabled RTS 001"
 
         ########################
@@ -303,7 +303,7 @@ class cfs_test_group_cfs_sc(Group):
         # Check RTS_W0_EXE_STATUS, bit 0, equals 1 (executing)
         wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x0001 == 0x0001",
                                       20, 0.25, globals())
-        
+
         wait_check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 1", 20)
 
         # NOTE: expected event message text: "RTS Number 001 Started"
@@ -313,7 +313,7 @@ class cfs_test_group_cfs_sc(Group):
         #######################
         # Test Stop RTS command
         #######################
-        
+
         check(f"<%= target_name %> SC_HK NUM_RTS_ACTIVE == 1")
 
         # Note: Can't reliably check for an exact value for command count here, because the
@@ -322,7 +322,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> SC_CMD_STOP_RTS with RTS_NUM 1")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER >= {exp_cmd_count}", 20)
-        
+
         # Check RTS_W0_EXE_STATUS, bit 0, equals 0 (idle)
         wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_EXE_STATUS') & 0x0001 == 0x0000",
                               20, 0.25, globals())
@@ -356,15 +356,15 @@ class cfs_test_group_cfs_sc(Group):
 
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 0 (enabled)
         check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x0000", globals())
-        
+
         cmd(f"<%= target_name %> SC_CMD_DISABLE_RTS_GRP with FIRST_RTS_NUM 2, LAST_RTS_NUM 4")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
-        
+
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 1 (disabled)
         wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x000E",
                                       20, 0.25, globals())
-        
+
         # NOTE: expected event message text: "Disable RTS group: FirstID=2, LastID=4, Modified=3"
 
         #############################################
@@ -374,7 +374,7 @@ class cfs_test_group_cfs_sc(Group):
         cmd(f"<%= target_name %> SC_CMD_ENABLE_RTS_GRP with FIRST_RTS_NUM 2, LAST_RTS_NUM 4")
         exp_cmd_count = exp_cmd_count + 1
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == {exp_cmd_count}", 20)
-        
+
         # Check RTS_W0_DIS_STATUS, bits 2-4, equal 0 (enabled)
         wait_check_expression("tlm('<%= target_name %> SC_HK RTS_W0_DIS_STATUS') & 0x000E == 0x0000",
                                       20, 0.25, globals())
@@ -394,7 +394,7 @@ class cfs_test_group_cfs_sc(Group):
         # The RTS will send 9 commands, but we can't check that here, because we need to
         # call Stop RTS Group before all commands have been sent, to test Stop RTS Group.
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER >= {exp_cmd_count}", 20)
-        
+
         # Check RTS_W0_EXE_STATUS, bit 2-4, equal 1 (executing)
         wait_check(f"<%= target_name %> SC_HK RTS_W0_EXE_STATUS == 0x000E", 20)
 
@@ -434,7 +434,7 @@ class cfs_test_group_cfs_sc(Group):
         # Cause COMMAND_COUNTER to increment
         cmd("<%= target_name %> SC_CMD_NOOP")
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER > 0", 20)
-        
+
         # Cause COMMAND_ERROR_COUNTER to increment
         cmd(f"<%= target_name %> SC_CMD_START_RTS with RTS_NUM 2")
         wait(5)
@@ -444,7 +444,7 @@ class cfs_test_group_cfs_sc(Group):
 
         # Send ResetCounters command
         cmd(f"<%= target_name %> SC_CMD_RESET_COUNTERS")
-        
+
         # Verify counters are reset to zero
         wait_check(f"<%= target_name %> SC_HK COMMAND_COUNTER == 0", 20)
         wait_check(f"<%= target_name %> SC_HK COMMAND_ERROR_COUNTER == 0", 20)
@@ -454,7 +454,7 @@ class cfs_test_group_cfs_sc(Group):
         wait_check(f"<%= target_name %> SC_HK ATS_CMD_ERR_CTR == 0", 20)
         wait_check(f"<%= target_name %> SC_HK RTS_CMD_CTR == 0", 20)
         wait_check(f"<%= target_name %> SC_HK RTS_CMD_ERR_CTR == 0", 20)
-        
+
 
     def setup(self):
         """

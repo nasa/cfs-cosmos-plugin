@@ -22,7 +22,7 @@ VERTICAL
   LABELVALUEDESC <%= target_name %>  HS_HK CPU_UTIL_PEAK "CPU Utilization Peak:"
 END
 
-VERTICALBOX 
+VERTICALBOX
   LABEL "Execution Counts:"
   ARRAY <%= target_name %>  HS_HK EXEC_CNTS 600 200 nil 10 RAW
 END
@@ -36,10 +36,10 @@ HORIZONTAL
     LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
-  
+
   VERTICALBOX
     VALUE <%= target_name %> HS_HK PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %> HS_HK RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %> HS_HK RECEIVED_COUNT 
-  END 
+    VALUE <%= target_name %> HS_HK RECEIVED_COUNT
+  END
  END

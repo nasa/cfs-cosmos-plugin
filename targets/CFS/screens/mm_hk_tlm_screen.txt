@@ -24,12 +24,12 @@ HORIZONTAL
     LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
-  
+
   VERTICALBOX
     VALUE <%= target_name %> MM_HK PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %> MM_HK RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %> MM_HK RECEIVED_COUNT 
-  END 
+    VALUE <%= target_name %> MM_HK RECEIVED_COUNT
+  END
  END
 
 

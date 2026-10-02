@@ -1,5 +1,5 @@
 ############################################
-# 
+#
 # Wrapper allowing the to_lab_test_methods class to be
 # used in COSMOS.  This just calls the corresponding method.
 #

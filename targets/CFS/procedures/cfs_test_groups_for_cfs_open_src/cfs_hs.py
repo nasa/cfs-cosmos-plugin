@@ -11,20 +11,20 @@ class cfs_test_group_cfs_hs(Group):
         Utility to setup command under test
         - Display command under test message and return current command counter
         """
-        
+
         Group.print(f"Testing {app_name} {test_cmd} command on <%= target_name %>")
 
         # Enable EVS events
         cmd(f"<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENT_TYPE with APP_NAME {app_name}, BIT_MASK INFO")
         cmd(f"<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME {app_name}")
         wait(1)
-       
+
         # Verify that we have a recent packet (by waiting for a new one to arrive)
         wait_check_packet(f"<%= target_name %>", f"{app_name}_HK", 1, 100)
 
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm(f"<%= target_name %> {app_name}_HK COMMAND_COUNTER")
-         
+
         return cmd_count
 
     def util_verify_command_count(self, app_name, cmd_count):
@@ -38,7 +38,7 @@ class cfs_test_group_cfs_hs(Group):
         """
         Utility to verify correct event message was generated
         """
-        # Validate Display Param event generation 
+        # Validate Display Param event generation
         #wait_check_expression(
         #    f"tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_APP_NAME') == '{app_name}' and " +
         #    f"tlm('<%= target_name %> CFE_EVS_LONG_EVENT_MSG PACKET_ID_EVENT_ID') == '{event_id}' and " +

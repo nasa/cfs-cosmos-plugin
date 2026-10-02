@@ -25,10 +25,10 @@ VERTICAL
   <% 4.times do |tab_num| %>
   TABBOOK
   <% 8.times do |pipe_index| %>
-      TABITEM "Pipe Stats <%= pipe_index + (8 * tab_num) %>" 
+      TABITEM "Pipe Stats <%= pipe_index + (8 * tab_num) %>"
           LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_PIPE_ID "Pipe ID:"
           LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_MAX_QUEUE_DEPTH "Maximum Queue Depth:"
-          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_CURRENT_QUEUE_DEPTH "Current Queue Depth:" 
+          LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_CURRENT_QUEUE_DEPTH "Current Queue Depth:"
           LABELVALUEDESC <%= target_name %>  CFE_SB_STATS PIPE_DEPTH_STATS_<%= pipe_index + (8 * tab_num) %>_PEAK_QUEUE_DEPTH "Peak Queue Depth:"
       END
     <% end %>
@@ -45,10 +45,10 @@ HORIZONTAL
     LABEL "Packets Received:"
     SETTING TEXTALIGN RIGHT
   END
-  
+
   VERTICALBOX
     VALUE <%= target_name %> CFE_SB_STATS PACKET_TIMEFORMATTED CONVERTED 23
     VALUE <%= target_name %> CFE_SB_STATS RECEIVED_TIMEFORMATTED CONVERTED 23
-    VALUE <%= target_name %> CFE_SB_STATS RECEIVED_COUNT 
-  END   
+    VALUE <%= target_name %> CFE_SB_STATS RECEIVED_COUNT
+  END
 END

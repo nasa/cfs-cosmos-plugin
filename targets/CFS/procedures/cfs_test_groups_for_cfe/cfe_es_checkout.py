@@ -31,7 +31,7 @@ class cfs_test_group_cfe_es_checkout(Group):
 
         cmd(f"<%= target_name %> CFE_ES_CMD_QUERY_ONE with APPLICATION 'CS'")
 
-        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")        
+        cmd(f"<%= target_name %> CFE_ES_CMD_STOP_APP with APPLICATION 'CS'")
         wait(7) # wait for the application to stop
         cmd(f"<%= target_name %> CFE_ES_CMD_DELETE_CDS with CDS_NAME 'CS.CS_CDS'")
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'CS', APP_ENTRY_POINT 'CS_AppMain', APP_FILE_NAME 'cs', STACK_SIZE 16384, EXCEPTION_ACTION 0, PRIORITY 65")
@@ -62,13 +62,13 @@ class cfs_test_group_cfe_es_checkout(Group):
         cmd(f"<%= target_name %> CFE_ES_CMD_DUMP_CDS_REGISTRY with DUMP_FILENAME '/cf/dumpfile.txt'")
 
         set_line_delay(0.0)
-        
+
         # Check final command count has incremented by the number of commands sent
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == {cmd_count} + 23", 12)
 
         cmd(f"<%= target_name %> CFE_ES_CMD_RESET_COUNTERS")
         wait_check(f"<%= target_name %> CFE_ES_HK COMMAND_COUNTER == 0", 12)
-    
+
 
     def setup(self):
         """

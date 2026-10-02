@@ -46,7 +46,7 @@ class cfs_test_group_cfe_tbl_checkout(Group):
         cmd(f"<%= target_name %> CFE_ES_CMD_START_APP with APPLICATION 'MD', APP_ENTRY_POINT 'MD_AppMain', APP_FILE_NAME '/cf/md.so'")
 
         set_line_delay(0.0)
-        
+
         # Check final command count has incremented by the number of commands sent
         wait_check(f"<%= target_name %> CFE_TBL_HK COMMAND_COUNTER >= {cmd_count} + 9", 12)
         check(f"<%= target_name %> CFE_TBL_HK COMMAND_ERROR_COUNTER == {cmd_err_count}")

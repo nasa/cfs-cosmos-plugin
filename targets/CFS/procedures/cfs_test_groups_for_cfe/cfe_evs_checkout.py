@@ -45,7 +45,7 @@ class cfs_test_group_cfe_evs_checkout(Group):
         cmd(f"<%= target_name %> CFE_EVS_CMD_CLEAR_LOG")
 
         set_line_delay(0.0)
-        
+
         # Check final command count has incremented by the number of commands sent
         wait_check(f"<%= target_name %> CFE_EVS_HK COMMAND_COUNTER >= {cmd_count} + 21", 12)
         check(f"<%= target_name %> CFE_EVS_HK COMMAND_ERROR_COUNTER == {cmd_err_count}")

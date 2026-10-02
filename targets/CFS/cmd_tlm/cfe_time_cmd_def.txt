@@ -60,4 +60,3 @@
    APPEND_PARAMETER TONE_SOURCE 16 UINT 1 2 1 "Tone Signal Selection Parameters"
       STATE TONE_PRI 1
       STATE TONE_RED 2
-      

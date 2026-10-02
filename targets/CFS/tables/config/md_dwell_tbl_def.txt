@@ -11,7 +11,7 @@
     APPEND_PARAMETER OFFSET_<%= entry_idx %> 64 UINT 0 MAX_UINT64 0
   <% else %>
     APPEND_PARAMETER OFFSET_<%= entry_idx %> 32 UINT 0 MAX_UINT32 0
-  <% end %>  
+  <% end %>
     APPEND_PARAMETER SYM_NAME_<%= entry_idx %> 512 STRING ""
 <% end %>
     APPEND_PARAMETER PADDING 32 UINT 0 0 0

@@ -6,7 +6,7 @@ class cfs_test_group_cfe_time(Group):
     """
     - Methods beginning with script_ or test_ are added to Script dropdown
     """
-    
+
     def test_00_Aliveness(self):
         """
         FSW Aliveness Test
@@ -15,36 +15,36 @@ class cfs_test_group_cfe_time(Group):
         - Reset the command counter
             then verify the command was received (by checking the command counter was cleared)
         """
-        
+
         Group.print("Testing CFE_TIME aliveness on <%= target_name %>")
-        
+
         wait_check_packet("<%= target_name %>", "CFE_TIME_HK", 1, 100)
-        
+
         # Assuming no one else is sending commands, grab the latest command count
         cmd_count = tlm("<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send NOOP command, then check result to prove application is up and running
         cmd("<%= target_name %> CFE_TIME_CMD_NOOP")
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-        
+
         # Send Reset Counters command, check resullt
         cmd("<%= target_name %> CFE_TIME_CMD_RESET_COUNTERS")
         wait_check("<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == 0", 100)
-    
-    
+
+
     def test_01_NoOp(self):
         """
         Test the no-op command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         cmd("<%= target_name %> CFE_TIME_CMD_NOOP")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
-    
-    
+
+
     def test_02_SendDiagnosticTlm(self):
         """
         Test the SendDiagnosticTlm command.
@@ -81,10 +81,10 @@ class cfs_test_group_cfe_time(Group):
         """
 
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'INVALID'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -96,12 +96,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetStateCmd command specifying VALID mode.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'VALID'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -113,12 +113,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetStateCmd command specifying FLYWHEEL mode.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STATE with CLOCK_STATE 'FLYWHEEL'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -132,12 +132,12 @@ class cfs_test_group_cfe_time(Group):
                 CFE_PLATFORM_TIME_CFG_SOURCE set FALSE
         Test the SetSourceCmd command specifying INTERNAL source.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SOURCE with TIME_SOURCE 'INTERNAL'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -154,12 +154,12 @@ class cfs_test_group_cfe_time(Group):
                 CFE_PLATFORM_TIME_CFG_SOURCE set FALSE
         Test the SetSourceCmd command specifying EXTERNAL source.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SOURCE with TIME_SOURCE 'EXTERNAL'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -176,12 +176,12 @@ class cfs_test_group_cfe_time(Group):
                 CFE_PLATFORM_TIME_CFG_SIGNAL set FALSE
         Test the SetSignalCmd command specifying PRIMARY source.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SIGNAL with TONE_SOURCE 'TONE_PRI'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -198,12 +198,12 @@ class cfs_test_group_cfe_time(Group):
                 CFE_PLATFORM_TIME_CFG_SIGNAL set FALSE
         Test the SetSignalCmd command specifying REDUNDANT source.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_SIGNAL with TONE_SOURCE 'TONE_RED'")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -220,19 +220,19 @@ class cfs_test_group_cfe_time(Group):
                 CFE_PLATFORM_TIME_CFG_CLIENT set FALSE
         Test the AddDelayCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_DELAY with SECONDS 1, MICROSECONDS 2")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
         # Verify correct delay is set
         wait_check(f"<%= target_name %> CFE_TIME_HK SECONDS_DELAY == 1", 100)
         wait_check(f"<%= target_name %> CFE_TIME_HK SUBSECONDS_DELAY == 2", 100)
-       
+
 
 
     def disabled_test_11_SubDelayCmd(self):
@@ -242,12 +242,12 @@ class cfs_test_group_cfe_time(Group):
         Test the SubDelayCmd command.
         Note: This test assumes the test for AddDelay was run previously.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_DELAY with SECONDS 1, MICROSECONDS 2")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -260,12 +260,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetTimeCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_TIME with SECONDS 3, MICROSECONDS 4")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -274,12 +274,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetMETCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_MET with SECONDS 4, MICROSECONDS 5")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -291,12 +291,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetSTCFCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_STCF with SECONDS 5, MICROSECONDS 6")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -310,12 +310,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SetLeapSecondsCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SET_LEAP_SECONDS with LEAP_SECONDS 99")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -327,12 +327,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the AddAdjustCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_ADJUST with SECONDS 1, MICROSECONDS 2")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -341,12 +341,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SubAdjustCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ADJUST with SECONDS 1, MICROSECONDS 2")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -355,12 +355,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the AddOneHzAdjustmentCmd command.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_ONE_HZ_ADJUSTMENT with SECONDS 1, SUBSECONDS 2")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -389,12 +389,12 @@ class cfs_test_group_cfe_time(Group):
         """
         Test the SubOneHzAdjustmentCmd command.  Note: This test assumes the test for AddOneHzAdjustment was run previously.
         """
-        
+
         cmd_count = tlm(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER")
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_SUB_ONE_HZ_ADJUSTMENT with SECONDS 3, SUBSECONDS 4")
-        
+
         # Verify command count incremented
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == {cmd_count + 1}", 100)
 
@@ -428,10 +428,10 @@ class cfs_test_group_cfe_time(Group):
         cmd(f"<%= target_name %> CFE_TIME_CMD_ADD_DELAY with SECONDS 1, MICROSECONDS 2")
 
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_ERROR_COUNTER > 0", 100)
-        
+
         # Send command under test
         cmd(f"<%= target_name %> CFE_TIME_CMD_RESET_COUNTERS")
-        
+
         # Verify counters are reset to zero
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_COUNTER == 0", 100)
         wait_check(f"<%= target_name %> CFE_TIME_HK COMMAND_ERROR_COUNTER == 0", 100)
@@ -448,7 +448,7 @@ class cfs_test_group_cfe_time(Group):
         # Ensure that TIME events are enabled
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_APP_EVENTS with APP_NAME 'CFE_TIME'")
         wait(1)
-        
+
         # Ensure that DEBUG and INFO events are enabled
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK DEBUG")
         cmd("<%= target_name %> CFE_EVS_CMD_ENABLE_EVENT_TYPE with BIT_MASK INFO")
