@@ -13,6 +13,7 @@ load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_lab_apps/cfs
 
 # Load the Open-Source cFS App Test Groups
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_cf.py")
+load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_cf_compat.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_cs.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_ds.py")
 load_utility("<%= target_name %>/procedures/cfs_test_groups_for_cfs_open_src/cfs_fm.py")
@@ -49,6 +50,7 @@ class cfs_test_suite(Suite):
       self.add_group(cfs_test_group_cfs_to_lab)
       # Load the Open-Source cFS App Test Groups
       self.add_group(cfs_test_group_cfs_cf)
+      self.add_group(cfs_test_group_cfs_cf_compat)
       self.add_group(cfs_test_group_cfs_cs)
       self.add_group(cfs_test_group_cfs_ds)
       self.add_group(cfs_test_group_cfs_fm)
