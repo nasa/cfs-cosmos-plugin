@@ -1,6 +1,6 @@
 require 'cfs_globals.rb'
 require 'cfs_cmd_tlm_list.rb'
-require 'unix_time_conversion_epoch_offset.rb'
+require 'cfs_time_conversion.rb'
 
 # Output a CCSDS Command Packet with the GSFC Secondary Header (Command Code and Checksum fields)
 def cfs_cmd_hdr(target_name, cmd_name, func_code, pkt_desc)
@@ -33,7 +33,7 @@ def cfs_tlm_hdr(target_name, tlm_name, pkt_desc)
     tlmPacket << "     APPEND_ITEM    SUBSECS              16 UINT         \"CCSDS Telemetry Secondary Header (subseconds)\" BIG_ENDIAN \n"
     tlmPacket << "     APPEND_ITEM    SPARE_FOR_64_ALIGN   32 UINT         \"Spare padding for 64-bit alignment\" \n"
     tlmPacket << "     ITEM PACKET_TIME 0 0 DERIVED \"Ruby time based on SECONDS and SUBSECS\" \n"
-    tlmPacket << "       READ_CONVERSION unix_time_conversion_epoch_offset.rb SECONDS SUBSECS \n"
+    tlmPacket << "       READ_CONVERSION cfs_time_conversion.rb SECONDS SUBSECS 16 \n"
     return tlmPacket
 end
 
@@ -79,6 +79,6 @@ def cfs_file_hdr(target_name, file_pkt_name, file_desc)
     filePacket << "    APPEND_ITEM DESCRIPTION 256 STRING \"File description\" \n"
     # Automatically calculate the Ruby time
     filePacket << "    ITEM FILE_CREATE_TIME 0 0 DERIVED \"Ruby time based on SECONDS and SUBSECS\" \n"
-    filePacket << "      READ_CONVERSION unix_time_conversion_epoch_offset.rb CREATE_TIME_SECONDS CREATE_TIME_SUBSECS \n"
+    filePacket << "      READ_CONVERSION cfs_time_conversion.rb CREATE_TIME_SECONDS CREATE_TIME_SUBSECS 32 \n"
     return filePacket
 end
