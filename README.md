@@ -237,3 +237,8 @@ This protects both you and us and you retain full rights to any code you write.
 
 This NASA OpenC3 COSMOS cFS plugin is released under the Apache 2.0 License.
 See [LICENSE.txt](LICENSE.txt)
+
+### CS one-shot test prerequisites
+
+See [CS one-shot procedure checks](docs/cs-one-shot-tests.md) for the sample
+memory, telemetry timing, and offline-test requirements.
