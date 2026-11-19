@@ -695,28 +695,28 @@ $CFS_CMD_TLM_LIST = {
             "MD_HK",
         ]
     ),
-	"MD_DWELL_PKT_1" => FswMsgInfo.new(
+	"MD_DWELL_1" => FswMsgInfo.new(
         base_stream_id: 0x0891,
         packet_names: [
-            "MD_DWELL_PKT_1",
+            "MD_DWELL_1",
         ]
     ),
-	"MD_DWELL_PKT_2" => FswMsgInfo.new(
+	"MD_DWELL_2" => FswMsgInfo.new(
         base_stream_id: 0x0892,
         packet_names: [
-            "MD_DWELL_PKT_2",
+            "MD_DWELL_2",
         ]
     ),
-	"MD_DWELL_PKT_3" => FswMsgInfo.new(
+	"MD_DWELL_3" => FswMsgInfo.new(
         base_stream_id: 0x0893,
         packet_names: [
-            "MD_DWELL_PKT_3",
+            "MD_DWELL_3",
         ]
     ),
-	"MD_DWELL_PKT_4" => FswMsgInfo.new(
+	"MD_DWELL_4" => FswMsgInfo.new(
         base_stream_id: 0x0894,
         packet_names: [
-            "MD_DWELL_PKT_4",
+            "MD_DWELL_4",
         ]
     ),
     "HK_HK" => FswMsgInfo.new(
